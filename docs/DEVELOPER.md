@@ -27,13 +27,22 @@ npm install
 ```
 ├── public/          # Static assets
 ├── src/
-│   ├── main.jsx     # Entry point
-│   ├── App.jsx      # Root component
-│   └── assets/      # Images, icons
+│   ├── components/  # Reusable UI (e.g., SampleHeading.jsx)
+│   ├── pages/       # Route components (Home.jsx, NotFound.jsx)
+│   ├── assets/      # Images, icons
+│   ├── main.jsx     # Entry point & Routing
+│   └── index.css    # Tailwind v4 entry & Theme
 ├── docs/            # Documentation
-├── vite.config.js   # Vite config
-└── package.json
+├── vite.config.js   # Vite config (Tailwind plugin enabled)
+└── package.json     # Deps: GSAP, React Router, Tailwind v4
+
 ```
+
+## Tech Stack
+
+* **Styling:** Tailwind CSS v4 (Vite-native)
+* **Animation:** GSAP with `@gsap/react`
+* **Routing:** React Router v6
 
 ## Contributing
 
