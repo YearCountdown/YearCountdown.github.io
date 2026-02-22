@@ -19,21 +19,29 @@ const THEME_COLORS = {
   [THEMES.LIGHT]: '#ffffff',
 };
 
+export const getSystemTheme = () => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT;
+};
+
 export const resolveTheme = (value) => {
-  return value === THEMES.LIGHT ? THEMES.LIGHT : THEMES.DARK;
+  if (value === THEMES.LIGHT || value === THEMES.DARK) {
+    return value;
+  }
+
+  return getSystemTheme();
 };
 
 export const readThemeCookie = () => {
   const match = document.cookie.match(new RegExp(`(?:^|; )${THEME_COOKIE_KEY}=([^;]*)`));
 
   if (!match) {
-    return THEMES.DARK;
+    return getSystemTheme();
   }
 
   try {
     return resolveTheme(decodeURIComponent(match[1]));
   } catch {
-    return THEMES.DARK;
+    return getSystemTheme();
   }
 };
 
