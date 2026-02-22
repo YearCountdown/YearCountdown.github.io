@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Home from './pages/Home';
+import Home from './pages/Home/Home.jsx';
 import NotFound from './pages/errors/NotFound';
 
 import './index.css';
