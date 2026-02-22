@@ -15,7 +15,7 @@ const FAVICON_ID_TO_PATH = {
 };
 
 const THEME_COLORS = {
-  [THEMES.DARK]: '#111827',
+  [THEMES.DARK]: '#000000',
   [THEMES.LIGHT]: '#ffffff',
 };
 
