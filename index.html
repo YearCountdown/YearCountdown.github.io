@@ -1,9 +1,72 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link id="icon-32" rel="icon" type="image/png" sizes="32x32" href="/favicons/dark/favicon-32x32.png" />
+    <link id="icon-16" rel="icon" type="image/png" sizes="16x16" href="/favicons/dark/favicon-16x16.png" />
+    <link id="icon-ico" rel="icon" type="image/x-icon" href="/favicons/dark/favicon.ico" />
+    <link id="apple-touch-icon" rel="apple-touch-icon" sizes="180x180" href="/favicons/dark/apple-touch-icon.png" />
+    <link id="site-manifest" rel="manifest" href="/favicons/dark/site.webmanifest" />
+    <meta name="theme-color" content="#111827" />
+
+    <script>
+      (function () {
+        var THEME_COOKIE_KEY = 'yc_theme';
+        var DARK = 'dark';
+        var LIGHT = 'light';
+        var COOKIE_RE = new RegExp('(?:^|; )' + THEME_COOKIE_KEY + '=([^;]*)');
+
+        function resolveTheme(value) {
+          return value === LIGHT ? LIGHT : DARK;
+        }
+
+        function getCookieTheme() {
+          var match = document.cookie.match(COOKIE_RE);
+          if (!match) return DARK;
+          try {
+            return decodeURIComponent(match[1]);
+          } catch {
+            return DARK;
+          }
+        }
+
+        function setThemeOnDocument(theme) {
+          var root = document.documentElement;
+          root.dataset.theme = theme;
+          root.classList.toggle(DARK, theme === DARK);
+        }
+
+        function applyFavicon(theme) {
+          var base = '/favicons/' + theme;
+          var mappings = [
+            ['icon-32', base + '/favicon-32x32.png'],
+            ['icon-16', base + '/favicon-16x16.png'],
+            ['icon-ico', base + '/favicon.ico'],
+            ['apple-touch-icon', base + '/apple-touch-icon.png'],
+            ['site-manifest', base + '/site.webmanifest']
+          ];
+
+          for (var i = 0; i < mappings.length; i += 1) {
+            var node = document.getElementById(mappings[i][0]);
+            if (node) {
+              node.setAttribute('href', mappings[i][1]);
+            }
+          }
+
+          var metaThemeColor = document.querySelector('meta[name="theme-color"]');
+          if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', theme === LIGHT ? '#ffffff' : '#111827');
+          }
+        }
+
+        var resolvedTheme = resolveTheme(getCookieTheme());
+        setThemeOnDocument(resolvedTheme);
+        applyFavicon(resolvedTheme);
+      })();
+    </script>
+
     <title>YearCountdown</title>
   </head>
   <body>
