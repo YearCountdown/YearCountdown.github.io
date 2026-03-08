@@ -95,10 +95,10 @@ const Home = () => {
           });
         }
 
-        const wallpaperShapes = section.querySelectorAll('[data-wallpaper-shape]');
-        if (wallpaperShapes.length) {
+        const wallpaperAccents = section.querySelectorAll('[data-wallpaper-accent]');
+        if (wallpaperAccents.length) {
           gsap.fromTo(
-            wallpaperShapes,
+            wallpaperAccents,
             { autoAlpha: 0, y: 14 },
             {
               autoAlpha: 1,
@@ -113,13 +113,54 @@ const Home = () => {
             },
           );
 
-          gsap.to(wallpaperShapes, {
+          gsap.to(wallpaperAccents, {
             y: index % 2 === 0 ? -10 : 10,
             x: index % 2 === 0 ? 6 : -6,
             rotation: index % 2 === 0 ? 5 : -5,
             duration: 3.2,
             ease: 'sine.inOut',
             stagger: 0.09,
+            repeat: -1,
+            yoyo: true,
+          });
+        }
+
+        const wallpaperDevice = section.querySelector('[data-wallpaper-device]');
+        if (wallpaperDevice) {
+          gsap.fromTo(
+            wallpaperDevice,
+            { autoAlpha: 0, y: 22, scale: 0.96 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.65,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 84%',
+              },
+            },
+          );
+
+          gsap.to(wallpaperDevice, {
+            y: -8,
+            duration: 3.6,
+            ease: 'sine.inOut',
+            repeat: -1,
+            yoyo: true,
+          });
+        }
+
+        const wallpaperScreenShapes = section.querySelectorAll('[data-wallpaper-screen-shape]');
+        if (wallpaperScreenShapes.length) {
+          gsap.to(wallpaperScreenShapes, {
+            y: index % 2 === 0 ? -6 : 6,
+            x: index % 2 === 0 ? 3 : -3,
+            scale: 1.02,
+            duration: 4,
+            ease: 'sine.inOut',
+            stagger: 0.08,
             repeat: -1,
             yoyo: true,
           });

@@ -33,7 +33,7 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
       {!isEmbed ? <Header variant="view" /> : null}
       <main
         className={`flex h-screen min-h-screen items-center justify-center overflow-hidden ${
-          fullBleed ? '' : 'px-4 sm:px-6 lg:px-10'
+          fullBleed || isEmbed ? '' : 'px-4 sm:px-6 lg:px-10'
         } ${mainClassName}`}
       >
         {children}

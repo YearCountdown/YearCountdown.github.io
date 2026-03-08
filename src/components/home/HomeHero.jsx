@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 
+import heroMessages from '../../content/heroMessages.json';
 import useCountdown from '../../hooks/useCountdown';
-
-const HERO_MESSAGES = ['TIME IS A RIVER', 'THE YEAR UNFOLDS', 'CAPTURE THE MOMENT'];
 
 const UNIT_LABELS = {
   days: 'Days',
@@ -14,6 +13,20 @@ const UNIT_LABELS = {
 };
 
 const formatNumber = (value) => String(value).padStart(2, '0');
+
+const getRandomIndex = (length) => {
+  return Math.floor(Math.random() * length);
+};
+
+const getInitialHeadlineState = () => {
+  const currentIndex = getRandomIndex(heroMessages.length);
+  const remainingIndices = heroMessages.map((_, index) => index).filter((index) => index !== currentIndex);
+
+  return {
+    currentIndex,
+    remainingIndices,
+  };
+};
 
 const CountdownCell = ({ value, label }) => {
   return (
@@ -30,12 +43,27 @@ const CountdownCell = ({ value, label }) => {
 
 const HomeHero = () => {
   const countdown = useCountdown();
-  const [messageIndex, setMessageIndex] = useState(0);
+  const [headlineState, setHeadlineState] = useState(getInitialHeadlineState);
   const headlineRef = useRef(null);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
-      setMessageIndex((current) => (current + 1) % HERO_MESSAGES.length);
+      setHeadlineState((current) => {
+        let available = current.remainingIndices;
+
+        if (!available.length) {
+          available = heroMessages.map((_, index) => index).filter((index) => index !== current.currentIndex);
+        }
+
+        const nextPoolIndex = getRandomIndex(available.length);
+        const nextIndex = available[nextPoolIndex];
+        const nextRemaining = available.filter((_, index) => index !== nextPoolIndex);
+
+        return {
+          currentIndex: nextIndex,
+          remainingIndices: nextRemaining,
+        };
+      });
     }, 4200);
 
     return () => {
@@ -60,9 +88,9 @@ const HomeHero = () => {
         clearProps: 'transform,filter',
       },
     );
-  }, [messageIndex]);
+  }, [headlineState.currentIndex]);
 
-  const headline = HERO_MESSAGES[messageIndex];
+  const headline = heroMessages[headlineState.currentIndex];
 
   const heroLinks = useMemo(
     () => [
@@ -89,14 +117,11 @@ const HomeHero = () => {
       <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-14 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:items-center lg:gap-12">
         <div className="max-w-2xl space-y-5 lg:space-y-6">
           <p className="text-xs uppercase tracking-[0.36em] text-black/45 dark:text-white/45">Present Year</p>
-          <h1 ref={headlineRef} className="text-[clamp(2.8rem,8vw,5.8rem)] font-light uppercase leading-[0.9] tracking-[0.08em] text-black dark:text-white">
+          <h1 ref={headlineRef} className="text-[clamp(1.68rem,4.8vw,3.48rem)] font-light uppercase leading-[0.9] tracking-[0.08em] text-black dark:text-white">
             {headline}
           </h1>
           <p className="text-lg font-light uppercase tracking-[0.24em] text-black/56 dark:text-white/56 sm:text-xl">
             See the year as one clear measure.
-          </p>
-          <p className="max-w-xl text-base leading-8 text-black/60 dark:text-white/60 sm:text-lg">
-            Move between countdown, dots, pie, and progress without changing the clock. The shell stays minimal so the year remains the subject.
           </p>
           <div className="flex flex-wrap gap-x-6 gap-y-3 pt-3">
             {heroLinks.map((link) => (
