@@ -61,6 +61,81 @@ const copyText = async (value) => {
   document.body.removeChild(input);
 };
 
+const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
+  return (
+    <div key={control.key} className="min-w-0 flex-1">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {control.label}
+        </p>
+        <span className="shrink-0 text-xs text-black/45 dark:text-white/45">
+          {value}
+          {control.suffix ? ` ${control.suffix}` : ''}
+        </span>
+      </div>
+      <input
+        type="number"
+        min={control.min}
+        max={control.max}
+        step={control.step}
+        value={value}
+        onChange={(event) => updateViewSetting(viewId, control.key, event.target.value)}
+        className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
+      />
+    </div>
+  );
+};
+
+const renderControls = ({ controls, viewId, viewState, updateViewSetting }) => {
+  const state = viewState?.[viewId];
+  const renderedControls = [];
+
+  for (let index = 0; index < controls.length; index += 1) {
+    const control = controls[index];
+
+    if (typeof control.showWhen === 'function' && !control.showWhen(state)) {
+      continue;
+    }
+
+    if (control.type === 'number' && control.inlineGroup) {
+      const groupControls = [control];
+
+      while (index + 1 < controls.length) {
+        const nextControl = controls[index + 1];
+
+        if (nextControl.type !== 'number' || nextControl.inlineGroup !== control.inlineGroup) {
+          break;
+        }
+
+        if (typeof nextControl.showWhen === 'function' && !nextControl.showWhen(state)) {
+          break;
+        }
+
+        groupControls.push(nextControl);
+        index += 1;
+      }
+
+      renderedControls.push(
+        <div key={control.inlineGroup} className="grid grid-cols-2 gap-3">
+          {groupControls.map((groupControl) =>
+            renderNumberControl({
+              control: groupControl,
+              value: state?.[groupControl.key],
+              viewId,
+              updateViewSetting,
+            }),
+          )}
+        </div>,
+      );
+      continue;
+    }
+
+    renderedControls.push(renderControl({ control, viewId, viewState, updateViewSetting }));
+  }
+
+  return renderedControls;
+};
+
 const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
   const state = viewState?.[viewId];
   const value = state?.[control.key];
@@ -130,28 +205,7 @@ const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
   }
 
   if (control.type === 'number') {
-    return (
-      <div key={control.key}>
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-            {control.label}
-          </p>
-          <span className="text-xs text-black/45 dark:text-white/45">
-            {value}
-            {control.suffix ? ` ${control.suffix}` : ''}
-          </span>
-        </div>
-        <input
-          type="number"
-          min={control.min}
-          max={control.max}
-          step={control.step}
-          value={value}
-          onChange={(event) => updateViewSetting(viewId, control.key, event.target.value)}
-          className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
-        />
-      </div>
-    );
+    return renderNumberControl({ control, value, viewId, updateViewSetting });
   }
 
   return null;
@@ -277,7 +331,7 @@ const ViewSettingsGear = ({
               </div>
             </div>
 
-            {controls.map((control) => renderControl({ control, viewId, viewState, updateViewSetting }))}
+            {renderControls({ controls, viewId, viewState, updateViewSetting })}
 
             <div>
               <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">

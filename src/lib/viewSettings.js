@@ -71,13 +71,24 @@ export const VIEW_SETTINGS_CONFIG = {
         showWhen: (state) => state.shape === 'triangle' && state.triangleMode === 'angle',
       },
       {
-        key: 'gap',
+        key: 'gapX',
         type: 'number',
-        label: 'Gap',
+        label: 'H Gap',
         min: 0,
         max: 8,
         step: 0.1,
         suffix: '%',
+        inlineGroup: 'dots-gap',
+      },
+      {
+        key: 'gapY',
+        type: 'number',
+        label: 'V Gap',
+        min: 0,
+        max: 8,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'dots-gap',
       },
       {
         key: 'inset',
@@ -87,6 +98,26 @@ export const VIEW_SETTINGS_CONFIG = {
         max: 12,
         step: 0.1,
         suffix: '%',
+      },
+      {
+        key: 'outerX',
+        type: 'number',
+        label: 'Outer X',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'dots-outer',
+      },
+      {
+        key: 'outerY',
+        type: 'number',
+        label: 'Outer Y',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'dots-outer',
       },
     ],
   },
@@ -138,7 +169,7 @@ export const getSharedViewUrl = ({ pathname, search, origin, theme }) => {
 
 export const COUNTDOWN_DEFAULT_SETTINGS = {
   mode: 'all',
-  frame: true,
+  frame: false,
   labels: true,
 };
 
@@ -146,8 +177,11 @@ export const DOTS_DEFAULT_SETTINGS = {
   shape: 'circle',
   triangleMode: 'upright',
   triangleAngle: 0,
-  gap: 0.5,
+  gapX: 0.5,
+  gapY: 0.5,
   inset: 0.5,
+  outerX: 0,
+  outerY: 0,
 };
 
 const clampNumber = (value, min, max, fallback) => {
@@ -171,9 +205,16 @@ export const normalizeDotsSettingValue = (key, value) => {
     case 'triangleAngle':
       return clampNumber(value, 0, 360, DOTS_DEFAULT_SETTINGS.triangleAngle);
     case 'gap':
-      return clampNumber(value, 0, 8, DOTS_DEFAULT_SETTINGS.gap);
+    case 'gapX':
+      return clampNumber(value, 0, 8, DOTS_DEFAULT_SETTINGS.gapX);
+    case 'gapY':
+      return clampNumber(value, 0, 8, DOTS_DEFAULT_SETTINGS.gapY);
     case 'inset':
       return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.inset);
+    case 'outerX':
+      return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.outerX);
+    case 'outerY':
+      return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.outerY);
     default:
       return value;
   }
@@ -196,6 +237,7 @@ export const getCountdownSettingsFromSearchParams = (searchParams) => {
 export const getDotsSettingsFromSearchParams = (searchParams) => {
   const shape = searchParams.get('shape');
   const triangleMode = searchParams.get('triangleMode');
+  const legacyGap = searchParams.get('gap');
 
   return {
     shape: ['circle', 'square', 'triangle'].includes(shape) ? shape : DOTS_DEFAULT_SETTINGS.shape,
@@ -203,8 +245,11 @@ export const getDotsSettingsFromSearchParams = (searchParams) => {
       ? triangleMode
       : DOTS_DEFAULT_SETTINGS.triangleMode,
     triangleAngle: clampNumber(searchParams.get('triangleAngle'), 0, 360, DOTS_DEFAULT_SETTINGS.triangleAngle),
-    gap: clampNumber(searchParams.get('gap'), 0, 8, DOTS_DEFAULT_SETTINGS.gap),
+    gapX: clampNumber(searchParams.get('gapX') ?? legacyGap, 0, 8, DOTS_DEFAULT_SETTINGS.gapX),
+    gapY: clampNumber(searchParams.get('gapY') ?? legacyGap, 0, 8, DOTS_DEFAULT_SETTINGS.gapY),
     inset: clampNumber(searchParams.get('inset'), 0, 12, DOTS_DEFAULT_SETTINGS.inset),
+    outerX: clampNumber(searchParams.get('outerX'), 0, 12, DOTS_DEFAULT_SETTINGS.outerX),
+    outerY: clampNumber(searchParams.get('outerY'), 0, 12, DOTS_DEFAULT_SETTINGS.outerY),
   };
 };
 

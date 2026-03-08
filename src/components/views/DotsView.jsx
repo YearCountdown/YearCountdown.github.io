@@ -26,14 +26,14 @@ const getDotStyle = ({ status, shape, size, rotation }) => {
   }
 
   const opacityByStatus = {
-    past: 0.6,
+    past: 1,
     current: 1,
     future: 0.14,
   };
 
   const scaleByStatus = {
     past: 1,
-    current: 1.06,
+    current: 1,
     future: 1,
   };
 
@@ -50,22 +50,22 @@ const getDotStyle = ({ status, shape, size, rotation }) => {
     return {
       ...baseStyle,
       borderRadius: '9999px',
-      boxShadow: status === 'current' ? '0 0 0.75rem color-mix(in srgb, currentColor 28%, transparent)' : 'none',
+      boxShadow: 'none',
     };
   }
 
   if (shape === 'square') {
     return {
       ...baseStyle,
-      borderRadius: status === 'current' ? '22%' : '12%',
-      boxShadow: status === 'current' ? '0 0 0.75rem color-mix(in srgb, currentColor 20%, transparent)' : 'none',
+      borderRadius: '12%',
+      boxShadow: 'none',
     };
   }
 
   return {
     ...baseStyle,
     clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-    boxShadow: status === 'current' ? '0 0 0.85rem color-mix(in srgb, currentColor 24%, transparent)' : 'none',
+    boxShadow: 'none',
   };
 };
 
@@ -73,12 +73,18 @@ const DotsView = ({
   shape = 'circle',
   triangleMode = 'upright',
   triangleAngle = 0,
-  gap = 0.5,
+  gapX = 0.5,
+  gapY = 0.5,
   inset = 0.5,
+  outerX = 0,
+  outerY = 0,
 }) => {
   const { containerRef, dots, grid } = useDotsGrid({
-    gapPercent: gap,
+    gapXPercent: gapX,
+    gapYPercent: gapY,
     insetPercent: inset,
+    outerXPercent: outerX,
+    outerYPercent: outerY,
   });
 
   return (
@@ -90,8 +96,8 @@ const DotsView = ({
           height: `${grid.innerHeight}px`,
           gridTemplateColumns: `repeat(${grid.columns}, ${grid.dotSize}px)`,
           gridAutoRows: `${grid.dotSize}px`,
-          columnGap: `${grid.gapPx}px`,
-          rowGap: `${grid.gapPx}px`,
+          columnGap: `${grid.gapXPx}px`,
+          rowGap: `${grid.gapYPx}px`,
           justifyContent: 'space-between',
           alignContent: 'space-between',
         }}

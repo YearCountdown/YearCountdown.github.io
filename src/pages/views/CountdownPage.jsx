@@ -3,10 +3,10 @@ import useViewShell from '../../hooks/useViewShell';
 import ViewLayout from '../../layouts/ViewLayout/ViewLayout';
 
 const CountdownPage = () => {
-  const { viewState } = useViewShell();
+  const { isEmbed, viewState } = useViewShell();
 
   return (
-    <ViewLayout>
+    <ViewLayout mainClassName={isEmbed ? '' : 'px-2 pb-3 pt-[4.5rem] sm:px-3 sm:pb-4 sm:pt-[5rem]'}>
       <CountdownView
         mode={viewState.countdown.mode}
         frame={viewState.countdown.frame}

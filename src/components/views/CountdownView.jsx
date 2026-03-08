@@ -1,4 +1,5 @@
 import useCountdown from '../../hooks/useCountdown';
+import useResponsiveCountdown from '../../hooks/useResponsiveCountdown';
 
 const MODE_LABELS = {
   all: 'Year ends in',
@@ -8,11 +9,26 @@ const MODE_LABELS = {
   seconds: 'Seconds remaining',
 };
 
+const SHORT_MODE_LABELS = {
+  all: 'Ends in',
+  days: 'Days left',
+  hours: 'Hours left',
+  minutes: 'Minutes left',
+  seconds: 'Seconds left',
+};
+
 const UNIT_LABELS = {
   days: 'Days',
   hours: 'Hours',
   minutes: 'Minutes',
   seconds: 'Seconds',
+};
+
+const SHORT_UNIT_LABELS = {
+  days: 'D',
+  hours: 'H',
+  minutes: 'M',
+  seconds: 'S',
 };
 
 const formatNumber = (value, minDigits = 2) => {
@@ -34,14 +50,27 @@ const getSingleModeValue = (countdown, mode) => {
   }
 };
 
-const CountdownUnit = ({ value, label, showLabels }) => {
+const CountdownUnit = ({ value, label, showLabels, tokens }) => {
   return (
     <div className="flex min-w-0 flex-col items-center justify-center">
-      <span className="block text-[clamp(2.8rem,11vw,7rem)] font-light leading-none tracking-[0.08em] text-black dark:text-white">
+      <span
+        className="block font-light leading-none text-black dark:text-white"
+        style={{
+          fontSize: `${tokens.numberSize}px`,
+          letterSpacing: `${tokens.numberTracking}em`,
+        }}
+      >
         {formatNumber(value)}
       </span>
       {showLabels ? (
-        <span className="mt-3 text-[0.62rem] uppercase tracking-[0.28em] text-black/42 dark:text-white/42 sm:text-[0.68rem]">
+        <span
+          className="mt-2 uppercase text-black/42 dark:text-white/42"
+          style={{
+            fontSize: `${tokens.labelSize}px`,
+            letterSpacing: `${tokens.labelTracking}em`,
+            marginTop: `${Math.max(4, tokens.labelSize * 0.65)}px`,
+          }}
+        >
           {label}
         </span>
       ) : null}
@@ -49,52 +78,115 @@ const CountdownUnit = ({ value, label, showLabels }) => {
   );
 };
 
-const CountdownView = ({ mode = 'all', frame = true, labels = true }) => {
+const getShellStyle = ({ frame, tokens }) => {
+  if (!frame) {
+    return {
+      gap: `${tokens.stackGap}px`,
+    };
+  }
+
+  return {
+    gap: `${tokens.stackGap}px`,
+    padding: `${tokens.frame.y}px ${tokens.frame.x}px`,
+    borderRadius: `${tokens.frame.radius}px`,
+    border: '1px solid color-mix(in srgb, currentColor 12%, transparent)',
+  };
+};
+
+const CountdownView = ({ mode = 'all', frame = false, labels = true }) => {
   const countdown = useCountdown();
+  const { containerRef, tokens } = useResponsiveCountdown({ mode, labels });
+  const modeLabel = tokens.tier === 'micro' ? SHORT_MODE_LABELS[mode] : MODE_LABELS[mode];
 
   if (mode !== 'all') {
     const singleValue = getSingleModeValue(countdown, mode);
-    const minDigits = mode === 'seconds' || mode === 'minutes' ? 2 : 2;
+    const unitLabel = tokens.useShortLabels ? SHORT_UNIT_LABELS[mode] : UNIT_LABELS[mode];
 
     return (
-      <section className="flex h-full w-full items-center justify-center">
-        <div
-          className={`mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-6 text-center ${
-            frame ? 'rounded-[2rem] border border-black/10 px-6 py-10 dark:border-white/10 sm:px-10 sm:py-12' : ''
-          }`}
-        >
-          <p className="text-[0.62rem] uppercase tracking-[0.34em] text-black/38 dark:text-white/38">
-            {MODE_LABELS[mode]}
-          </p>
-          <span className="block text-[clamp(4rem,19vw,11rem)] font-light leading-none tracking-[0.08em] text-black dark:text-white">
-            {formatNumber(singleValue, minDigits)}
-          </span>
-          {labels ? (
-            <span className="text-[0.65rem] uppercase tracking-[0.34em] text-black/42 dark:text-white/42">
-              {UNIT_LABELS[mode]}
+      <section ref={containerRef} className="flex h-full w-full items-center justify-center overflow-hidden">
+        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center">
+          <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
+            <p
+              className="uppercase text-black/38 dark:text-white/38"
+              style={{
+                fontSize: `${tokens.subtitleSize}px`,
+                letterSpacing: `${tokens.subtitleTracking}em`,
+              }}
+            >
+              {modeLabel}
+            </p>
+            <span
+              className="block font-light leading-none text-black dark:text-white"
+              style={{
+                fontSize: `${tokens.numberSize}px`,
+                letterSpacing: `${tokens.numberTracking}em`,
+              }}
+            >
+              {formatNumber(singleValue)}
             </span>
-          ) : null}
+            {labels ? (
+              <span
+                className="uppercase text-black/42 dark:text-white/42"
+                style={{
+                  fontSize: `${tokens.labelSize}px`,
+                  letterSpacing: `${tokens.labelTracking}em`,
+                }}
+              >
+                {unitLabel}
+              </span>
+            ) : null}
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="flex h-full w-full items-center justify-center">
-      <div
-        className={`mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8 text-center ${
-          frame ? 'rounded-[2rem] border border-black/10 px-6 py-10 dark:border-white/10 sm:px-10 sm:py-12 lg:px-14 lg:py-14' : ''
-        }`}
-      >
-        <p className="text-[0.62rem] uppercase tracking-[0.34em] text-black/38 dark:text-white/38">
-          {MODE_LABELS.all}
-        </p>
+    <section ref={containerRef} className="flex h-full w-full items-center justify-center overflow-hidden">
+      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
+          <p
+            className="uppercase text-black/38 dark:text-white/38"
+            style={{
+              fontSize: `${tokens.subtitleSize}px`,
+              letterSpacing: `${tokens.subtitleTracking}em`,
+            }}
+          >
+            {tokens.tier === 'micro' ? SHORT_MODE_LABELS.all : MODE_LABELS.all}
+          </p>
 
-        <div className="grid w-full grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-4 md:gap-x-8 lg:gap-x-10">
-          <CountdownUnit value={countdown.days} label={UNIT_LABELS.days} showLabels={labels} />
-          <CountdownUnit value={countdown.hours} label={UNIT_LABELS.hours} showLabels={labels} />
-          <CountdownUnit value={countdown.minutes} label={UNIT_LABELS.minutes} showLabels={labels} />
-          <CountdownUnit value={countdown.seconds} label={UNIT_LABELS.seconds} showLabels={labels} />
+          <div
+            className="grid w-full min-w-0 items-center"
+            style={{
+              gridTemplateColumns: `repeat(${tokens.columns}, minmax(0, 1fr))`,
+              gap: `${tokens.gap}px`,
+            }}
+          >
+            <CountdownUnit
+              value={countdown.days}
+              label={tokens.useShortLabels ? SHORT_UNIT_LABELS.days : UNIT_LABELS.days}
+              showLabels={labels}
+              tokens={tokens}
+            />
+            <CountdownUnit
+              value={countdown.hours}
+              label={tokens.useShortLabels ? SHORT_UNIT_LABELS.hours : UNIT_LABELS.hours}
+              showLabels={labels}
+              tokens={tokens}
+            />
+            <CountdownUnit
+              value={countdown.minutes}
+              label={tokens.useShortLabels ? SHORT_UNIT_LABELS.minutes : UNIT_LABELS.minutes}
+              showLabels={labels}
+              tokens={tokens}
+            />
+            <CountdownUnit
+              value={countdown.seconds}
+              label={tokens.useShortLabels ? SHORT_UNIT_LABELS.seconds : UNIT_LABELS.seconds}
+              showLabels={labels}
+              tokens={tokens}
+            />
+          </div>
         </div>
       </div>
     </section>
