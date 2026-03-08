@@ -62,7 +62,12 @@ const copyText = async (value) => {
 };
 
 const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
-  const value = viewState?.[viewId]?.[control.key];
+  const state = viewState?.[viewId];
+  const value = state?.[control.key];
+
+  if (typeof control.showWhen === 'function' && !control.showWhen(state)) {
+    return null;
+  }
 
   if (control.type === 'select') {
     return (
@@ -120,6 +125,31 @@ const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
             {control.falseLabel}
           </button>
         </div>
+      </div>
+    );
+  }
+
+  if (control.type === 'number') {
+    return (
+      <div key={control.key}>
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+            {control.label}
+          </p>
+          <span className="text-xs text-black/45 dark:text-white/45">
+            {value}
+            {control.suffix ? ` ${control.suffix}` : ''}
+          </span>
+        </div>
+        <input
+          type="number"
+          min={control.min}
+          max={control.max}
+          step={control.step}
+          value={value}
+          onChange={(event) => updateViewSetting(viewId, control.key, event.target.value)}
+          className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
+        />
       </div>
     );
   }

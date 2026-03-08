@@ -3,12 +3,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
   COUNTDOWN_DEFAULT_SETTINGS,
+  DOTS_DEFAULT_SETTINGS,
   getCountdownSettingsFromSearchParams,
+  getDotsSettingsFromSearchParams,
   getSharedViewUrl,
   getViewConfigFromPathname,
   getViewIdFromPathname,
   getViewLinkMeta,
   isEmbedMode,
+  normalizeDotsSettingValue,
 } from '../lib/viewSettings';
 
 const useViewShell = (theme) => {
@@ -19,6 +22,7 @@ const useViewShell = (theme) => {
     const searchParams = new URLSearchParams(location.search);
     const viewConfig = getViewConfigFromPathname(location.pathname);
     const countdown = getCountdownSettingsFromSearchParams(searchParams);
+    const dots = getDotsSettingsFromSearchParams(searchParams);
 
     const updateSearchParam = (key, value, defaultValue) => {
       const nextParams = new URLSearchParams(location.search);
@@ -51,13 +55,17 @@ const useViewShell = (theme) => {
       viewLinkMeta: getViewLinkMeta(location.pathname),
       viewState: {
         countdown,
+        dots,
       },
       updateViewSetting: (viewId, key, value) => {
-        if (viewId !== 'countdown') {
+        if (viewId === 'countdown') {
+          updateSearchParam(key, value, COUNTDOWN_DEFAULT_SETTINGS[key]);
           return;
         }
 
-        updateSearchParam(key, value, COUNTDOWN_DEFAULT_SETTINGS[key]);
+        if (viewId === 'dots') {
+          updateSearchParam(key, normalizeDotsSettingValue(key, value), DOTS_DEFAULT_SETTINGS[key]);
+        }
       },
       sharedUrl: getSharedViewUrl({
         pathname: location.pathname,
