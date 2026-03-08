@@ -192,7 +192,80 @@ export const VIEW_SETTINGS_CONFIG = {
   progress: {
     id: 'progress',
     title: 'Progress',
-    controls: [],
+    controls: [
+      {
+        key: 'mode',
+        type: 'select',
+        label: 'Display',
+        options: [
+          { label: 'Field', value: 'field' },
+          { label: 'Line', value: 'line' },
+        ],
+      },
+      {
+        key: 'fullScreen',
+        type: 'boolean',
+        label: 'Mode',
+        trueLabel: 'Full Screen',
+        falseLabel: 'Centered',
+      },
+      {
+        key: 'decimals',
+        type: 'number',
+        label: 'Decimals',
+        min: 0,
+        max: 10,
+        step: 1,
+      },
+      {
+        key: 'fontSize',
+        type: 'number',
+        label: 'Font Size',
+        min: 0.6,
+        max: 2.5,
+        step: 0.1,
+        suffix: 'x',
+      },
+      {
+        key: 'lineWidth',
+        type: 'number',
+        label: 'Line Width',
+        min: 2,
+        max: 80,
+        step: 1,
+        suffix: 'px',
+        showWhen: (state) => state.mode === 'line',
+      },
+      {
+        key: 'inset',
+        type: 'number',
+        label: 'Inset',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+      },
+      {
+        key: 'outerX',
+        type: 'number',
+        label: 'Outer X',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'progress-outer',
+      },
+      {
+        key: 'outerY',
+        type: 'number',
+        label: 'Outer Y',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'progress-outer',
+      },
+    ],
   },
 };
 
@@ -257,6 +330,17 @@ export const PIE_DEFAULT_SETTINGS = {
   outerY: 0,
 };
 
+export const PROGRESS_DEFAULT_SETTINGS = {
+  mode: 'field',
+  fullScreen: true,
+  decimals: 2,
+  fontSize: 1,
+  lineWidth: 12,
+  inset: 0,
+  outerX: 0,
+  outerY: 0,
+};
+
 const clampNumber = (value, min, max, fallback) => {
   const parsed = Number.parseFloat(value);
 
@@ -314,6 +398,29 @@ export const normalizePieSettingValue = (key, value) => {
   }
 };
 
+export const normalizeProgressSettingValue = (key, value) => {
+  switch (key) {
+    case 'mode':
+      return ['field', 'line'].includes(value) ? value : PROGRESS_DEFAULT_SETTINGS.mode;
+    case 'fullScreen':
+      return value === true || value === 'true';
+    case 'decimals':
+      return clampNumber(value, 0, 10, PROGRESS_DEFAULT_SETTINGS.decimals);
+    case 'fontSize':
+      return clampNumber(value, 0.6, 2.5, PROGRESS_DEFAULT_SETTINGS.fontSize);
+    case 'lineWidth':
+      return clampNumber(value, 2, 80, PROGRESS_DEFAULT_SETTINGS.lineWidth);
+    case 'inset':
+      return clampNumber(value, 0, 12, PROGRESS_DEFAULT_SETTINGS.inset);
+    case 'outerX':
+      return clampNumber(value, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX);
+    case 'outerY':
+      return clampNumber(value, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY);
+    default:
+      return value;
+  }
+};
+
 export const getCountdownSettingsFromSearchParams = (searchParams) => {
   const mode = searchParams.get('mode');
   const frame = searchParams.get('frame');
@@ -360,6 +467,22 @@ export const getPieSettingsFromSearchParams = (searchParams) => {
     inset: clampNumber(searchParams.get('inset'), 0, 12, PIE_DEFAULT_SETTINGS.inset),
     outerX: clampNumber(searchParams.get('outerX'), 0, 12, PIE_DEFAULT_SETTINGS.outerX),
     outerY: clampNumber(searchParams.get('outerY'), 0, 12, PIE_DEFAULT_SETTINGS.outerY),
+  };
+};
+
+export const getProgressSettingsFromSearchParams = (searchParams) => {
+  const mode = searchParams.get('mode');
+  const fullScreen = searchParams.get('fullScreen');
+
+  return {
+    mode: ['field', 'line'].includes(mode) ? mode : PROGRESS_DEFAULT_SETTINGS.mode,
+    fullScreen: fullScreen === 'false' ? false : PROGRESS_DEFAULT_SETTINGS.fullScreen,
+    decimals: clampNumber(searchParams.get('decimals'), 0, 10, PROGRESS_DEFAULT_SETTINGS.decimals),
+    fontSize: clampNumber(searchParams.get('fontSize'), 0.6, 2.5, PROGRESS_DEFAULT_SETTINGS.fontSize),
+    lineWidth: clampNumber(searchParams.get('lineWidth'), 2, 80, PROGRESS_DEFAULT_SETTINGS.lineWidth),
+    inset: clampNumber(searchParams.get('inset'), 0, 12, PROGRESS_DEFAULT_SETTINGS.inset),
+    outerX: clampNumber(searchParams.get('outerX'), 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX),
+    outerY: clampNumber(searchParams.get('outerY'), 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY),
   };
 };
 

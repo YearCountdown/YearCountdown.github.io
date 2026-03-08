@@ -7,6 +7,7 @@ import { FEATURE_NAV_LINKS } from './lib/navigation';
 import CountdownPage from './pages/views/CountdownPage';
 import DotsPage from './pages/views/DotsPage';
 import PiePage from './pages/views/PiePage';
+import ProgressPage from './pages/views/ProgressPage';
 import FeaturePage from './pages/FeaturePage';
 import Home from './pages/Home/Home.jsx';
 import NotFound from './pages/errors/NotFound';
@@ -14,7 +15,12 @@ import NotFound from './pages/errors/NotFound';
 import './index.css';
 
 const featureRoutes = FEATURE_NAV_LINKS.filter((link) => {
-  return link.to !== '/view/countdown' && link.to !== '/view/dots' && link.to !== '/view/pie';
+  return (
+    link.to !== '/view/countdown' &&
+    link.to !== '/view/dots' &&
+    link.to !== '/view/pie' &&
+    link.to !== '/view/progress'
+  );
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -25,6 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/view/countdown" element={<CountdownPage />} />
         <Route path="/view/dots" element={<DotsPage />} />
         <Route path="/view/pie" element={<PiePage />} />
+        <Route path="/view/progress" element={<ProgressPage />} />
         {featureRoutes.map((link) => (
           <Route
             key={link.to}

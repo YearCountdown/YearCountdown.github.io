@@ -5,9 +5,11 @@ import {
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
   PIE_DEFAULT_SETTINGS,
+  PROGRESS_DEFAULT_SETTINGS,
   getCountdownSettingsFromSearchParams,
   getDotsSettingsFromSearchParams,
   getPieSettingsFromSearchParams,
+  getProgressSettingsFromSearchParams,
   getSharedViewUrl,
   getViewConfigFromPathname,
   getViewIdFromPathname,
@@ -15,6 +17,7 @@ import {
   isEmbedMode,
   normalizeDotsSettingValue,
   normalizePieSettingValue,
+  normalizeProgressSettingValue,
 } from '../lib/viewSettings';
 
 const useViewShell = (theme) => {
@@ -27,6 +30,7 @@ const useViewShell = (theme) => {
     const countdown = getCountdownSettingsFromSearchParams(searchParams);
     const dots = getDotsSettingsFromSearchParams(searchParams);
     const pie = getPieSettingsFromSearchParams(searchParams);
+    const progress = getProgressSettingsFromSearchParams(searchParams);
 
     const updateSearchParam = (key, value, defaultValue) => {
       const nextParams = new URLSearchParams(location.search);
@@ -61,6 +65,7 @@ const useViewShell = (theme) => {
         countdown,
         dots,
         pie,
+        progress,
       },
       updateViewSetting: (viewId, key, value) => {
         if (viewId === 'countdown') {
@@ -75,6 +80,11 @@ const useViewShell = (theme) => {
 
         if (viewId === 'pie') {
           updateSearchParam(key, normalizePieSettingValue(key, value), PIE_DEFAULT_SETTINGS[key]);
+          return;
+        }
+
+        if (viewId === 'progress') {
+          updateSearchParam(key, normalizeProgressSettingValue(key, value), PROGRESS_DEFAULT_SETTINGS[key]);
         }
       },
       sharedUrl: getSharedViewUrl({
