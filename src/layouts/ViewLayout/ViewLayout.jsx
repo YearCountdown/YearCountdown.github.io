@@ -31,11 +31,7 @@ const ViewLayout = ({ children }) => {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-stone-100 text-black dark:bg-zinc-950 dark:text-white">
       {!isEmbed ? <Header variant="view" /> : null}
-      <main
-        className={`flex h-screen min-h-screen items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-10 ${
-          isEmbed ? 'pt-0' : 'pt-24 sm:pt-28'
-        }`}
-      >
+      <main className="flex h-screen min-h-screen items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-10">
         {children}
       </main>
       <ViewSettingsGear
