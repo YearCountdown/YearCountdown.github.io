@@ -16,6 +16,8 @@ const DotsPage = () => {
         inset={viewState.dots.inset}
         outerX={viewState.dots.outerX}
         outerY={viewState.dots.outerY}
+        primaryColor={viewState.dots.primary}
+        alternateColor={viewState.dots.alternate}
       />
     </ViewLayout>
   );

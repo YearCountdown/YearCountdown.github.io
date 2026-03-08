@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import GuestLayout from '../../layouts/GuestLayout/GuestLayout';
 import HomeHero from '../../components/home/HomeHero';
+import HomeIntroLoader from '../../components/home/HomeIntroLoader';
 import HomepageSections from '../../components/home/HomepageSections';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -176,6 +177,7 @@ const Home = () => {
   return (
     <GuestLayout>
       <div ref={pageRef} className="relative w-full">
+        <HomeIntroLoader />
         <HomeHero />
         <HomepageSections />
       </div>

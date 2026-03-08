@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { useTheme } from '../context/ThemeContext';
 import {
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
   PIE_DEFAULT_SETTINGS,
   PROGRESS_DEFAULT_SETTINGS,
+  VIEW_COLOR_SETTINGS,
+  getDefaultViewColors,
   getCountdownSettingsFromSearchParams,
   getDotsSettingsFromSearchParams,
   getPieSettingsFromSearchParams,
@@ -15,22 +18,31 @@ import {
   getViewIdFromPathname,
   getViewLinkMeta,
   isEmbedMode,
-  normalizeDotsSettingValue,
-  normalizePieSettingValue,
-  normalizeProgressSettingValue,
+  normalizeCountdownSettingValue,
+  normalizeDotsSettingValueWithTheme,
+  normalizePieSettingValueWithTheme,
+  normalizeProgressSettingValueWithTheme,
 } from '../lib/viewSettings';
+import { resolveTheme } from '../lib/theme';
 
-const useViewShell = (theme) => {
+const useViewShell = (themeOverride) => {
+  const { theme: contextTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
   return useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
+    const queryTheme = searchParams.get('theme');
+    const theme =
+      queryTheme === 'light' || queryTheme === 'dark'
+        ? queryTheme
+        : resolveTheme(themeOverride ?? contextTheme);
     const viewConfig = getViewConfigFromPathname(location.pathname);
-    const countdown = getCountdownSettingsFromSearchParams(searchParams);
-    const dots = getDotsSettingsFromSearchParams(searchParams);
-    const pie = getPieSettingsFromSearchParams(searchParams);
-    const progress = getProgressSettingsFromSearchParams(searchParams);
+    const themeDefaults = getDefaultViewColors(theme);
+    const countdown = getCountdownSettingsFromSearchParams(searchParams, theme);
+    const dots = getDotsSettingsFromSearchParams(searchParams, theme);
+    const pie = getPieSettingsFromSearchParams(searchParams, theme);
+    const progress = getProgressSettingsFromSearchParams(searchParams, theme);
 
     const updateSearchParam = (key, value, defaultValue) => {
       const nextParams = new URLSearchParams(location.search);
@@ -56,7 +68,7 @@ const useViewShell = (theme) => {
       pathname: location.pathname,
       search: location.search,
       searchParams,
-      queryTheme: searchParams.get('theme'),
+      queryTheme,
       isEmbed: isEmbedMode(searchParams),
       viewId: getViewIdFromPathname(location.pathname),
       viewConfig,
@@ -69,22 +81,46 @@ const useViewShell = (theme) => {
       },
       updateViewSetting: (viewId, key, value) => {
         if (viewId === 'countdown') {
-          updateSearchParam(key, value, COUNTDOWN_DEFAULT_SETTINGS[key]);
+          const countdownDefaultValue =
+            key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate
+              ? themeDefaults[key]
+              : COUNTDOWN_DEFAULT_SETTINGS[key];
+
+          updateSearchParam(key, normalizeCountdownSettingValue(key, value, theme), countdownDefaultValue);
           return;
         }
 
         if (viewId === 'dots') {
-          updateSearchParam(key, normalizeDotsSettingValue(key, value), DOTS_DEFAULT_SETTINGS[key]);
+          const dotsDefaultValue =
+            key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate
+              ? themeDefaults[key]
+              : DOTS_DEFAULT_SETTINGS[key];
+
+          updateSearchParam(key, normalizeDotsSettingValueWithTheme(key, value, theme), dotsDefaultValue);
           return;
         }
 
         if (viewId === 'pie') {
-          updateSearchParam(key, normalizePieSettingValue(key, value), PIE_DEFAULT_SETTINGS[key]);
+          const pieDefaultValue =
+            key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate
+              ? themeDefaults[key]
+              : PIE_DEFAULT_SETTINGS[key];
+
+          updateSearchParam(key, normalizePieSettingValueWithTheme(key, value, theme), pieDefaultValue);
           return;
         }
 
         if (viewId === 'progress') {
-          updateSearchParam(key, normalizeProgressSettingValue(key, value), PROGRESS_DEFAULT_SETTINGS[key]);
+          const progressDefaultValue =
+            key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate
+              ? themeDefaults[key]
+              : PROGRESS_DEFAULT_SETTINGS[key];
+
+          updateSearchParam(
+            key,
+            normalizeProgressSettingValueWithTheme(key, value, theme),
+            progressDefaultValue,
+          );
         }
       },
       sharedUrl: getSharedViewUrl({
@@ -94,7 +130,7 @@ const useViewShell = (theme) => {
         theme,
       }),
     };
-  }, [location.pathname, location.search, navigate, theme]);
+  }, [contextTheme, location.pathname, location.search, navigate, themeOverride]);
 };
 
 export default useViewShell;

@@ -1,15 +1,14 @@
 import { useId } from 'react';
 
-import { useTheme } from '../../context/ThemeContext';
 import useProgressLayout from '../../hooks/useProgressLayout';
 import useYearProgress from '../../hooks/useYearProgress';
+import { getContrastingTextColor } from '../../lib/viewColors';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, theme, clipId }) => {
-  const remaining = theme === 'dark' ? 'rgb(9 9 11)' : 'rgb(255 255 255)';
-  const elapsed = theme === 'dark' ? 'rgb(255 255 255)' : 'rgb(0 0 0)';
-  const onElapsed = theme === 'dark' ? 'rgb(9 9 11)' : 'rgb(255 255 255)';
+const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, primaryColor, alternateColor, clipId }) => {
+  const onRemaining = getContrastingTextColor(alternateColor);
+  const onElapsed = getContrastingTextColor(primaryColor);
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
@@ -23,7 +22,7 @@ const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, theme,
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
-        fill={elapsed}
+        fill={onRemaining}
         style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
       >
         {label}
@@ -40,16 +39,16 @@ const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, theme,
           {label}
         </text>
       </g>
-      <rect x="0" y="0" width={width} height={height} fill={remaining} opacity="0" />
+      <rect x="0" y="0" width={width} height={height} fill={alternateColor} opacity="0" />
     </svg>
   );
 };
 
-const FieldMode = ({ width, height, percentage, label, fontSize, theme }) => {
+const FieldMode = ({ width, height, percentage, label, fontSize, primaryColor, alternateColor }) => {
   const clipId = useId().replace(/:/g, '');
   const progressWidth = Math.max(0, Math.min(width, (width * percentage) / 100));
-  const remaining = theme === 'dark' ? 'rgb(9 9 11)' : 'rgb(255 255 255)';
-  const elapsed = theme === 'dark' ? 'rgb(255 255 255)' : 'rgb(0 0 0)';
+  const remaining = alternateColor;
+  const elapsed = primaryColor;
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -61,16 +60,17 @@ const FieldMode = ({ width, height, percentage, label, fontSize, theme }) => {
         width={width}
         height={height}
         progressWidth={progressWidth}
-        theme={theme}
+        primaryColor={primaryColor}
+        alternateColor={alternateColor}
         clipId={clipId}
       />
     </div>
   );
 };
 
-const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, theme }) => {
-  const remaining = theme === 'dark' ? 'color-mix(in srgb, white 16%, transparent)' : 'color-mix(in srgb, black 16%, transparent)';
-  const elapsed = theme === 'dark' ? 'rgb(255 255 255)' : 'rgb(0 0 0)';
+const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, primaryColor, alternateColor }) => {
+  const remaining = alternateColor;
+  const elapsed = primaryColor;
   const lineThickness = clamp(lineWidth, 2, Math.max(2, height * 0.4));
   const lineY = height / 2 - lineThickness / 2;
 
@@ -94,7 +94,7 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, theme
           backgroundColor: elapsed,
         }}
       />
-      <div className="absolute inset-0 flex items-center justify-center text-black dark:text-white">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div
           className="text-center"
           style={{
@@ -102,6 +102,7 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, theme
             fontWeight: 300,
             letterSpacing: '-0.04em',
             lineHeight: 1,
+            color: primaryColor,
           }}
         >
           {label}
@@ -120,8 +121,9 @@ const ProgressView = ({
   inset = 0,
   outerX = 0,
   outerY = 0,
+  primaryColor,
+  alternateColor,
 }) => {
-  const { theme } = useTheme();
   const { percentage, percentageLabel } = useYearProgress(decimals);
   const { containerRef, layout } = useProgressLayout({
     mode,
@@ -152,7 +154,8 @@ const ProgressView = ({
             label={percentageLabel}
             fontSize={computedFontSize}
             lineWidth={lineWidth}
-            theme={theme}
+            primaryColor={primaryColor}
+            alternateColor={alternateColor}
           />
         ) : (
           <FieldMode
@@ -161,7 +164,8 @@ const ProgressView = ({
             percentage={percentage}
             label={percentageLabel}
             fontSize={computedFontSize}
-            theme={theme}
+            primaryColor={primaryColor}
+            alternateColor={alternateColor}
           />
         )}
       </div>

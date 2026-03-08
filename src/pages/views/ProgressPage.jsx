@@ -23,6 +23,8 @@ const ProgressPage = () => {
         inset={inset}
         outerX={outerX}
         outerY={outerY}
+        primaryColor={viewState.progress.primary}
+        alternateColor={viewState.progress.alternate}
       />
     </ViewLayout>
   );

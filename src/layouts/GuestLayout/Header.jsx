@@ -1,15 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 
+import BrandLockup from '../../components/BrandLockup';
 import { useTheme } from '../../context/ThemeContext';
 import { NAV_LINKS } from '../../lib/navigation';
 import { THEMES } from '../../lib/theme';
-
-const LOGO_BY_THEME = {
-  [THEMES.DARK]: '/logo/icon-light.svg',
-  [THEMES.LIGHT]: '/logo/icon-dark.svg',
-};
 
 const getNavLinkClassName = ({ isActive }) => {
   const baseClassName =
@@ -195,9 +191,7 @@ const Header = ({ variant = 'home' }) => {
 
     menuAnimationRef.current?.kill();
 
-    const timeline = gsap.timeline({
-      defaults: { ease: 'power2.out' },
-    });
+    const timeline = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
     gsap.set(overlayElement, { autoAlpha: 0, backdropFilter: 'blur(0px)' });
     gsap.set(menuContentElement, { y: 24, autoAlpha: 0 });
@@ -206,37 +200,14 @@ const Header = ({ variant = 'home' }) => {
     }
 
     timeline
-      .to(overlayElement, {
-        autoAlpha: 1,
-        duration: 0.22,
-      })
-      .to(
-        overlayElement,
-        {
-          backdropFilter: 'blur(18px)',
-          duration: 0.3,
-        },
-        0,
-      )
-      .to(
-        menuContentElement,
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.3,
-        },
-        0.06,
-      );
+      .to(overlayElement, { autoAlpha: 1, duration: 0.22 })
+      .to(overlayElement, { backdropFilter: 'blur(18px)', duration: 0.3 }, 0)
+      .to(menuContentElement, { y: 0, autoAlpha: 1, duration: 0.3 }, 0.06);
 
     if (menuItems?.length) {
       timeline.to(
         menuItems,
-        {
-          y: 0,
-          autoAlpha: 1,
-          stagger: 0.04,
-          duration: 0.2,
-        },
+        { y: 0, autoAlpha: 1, stagger: 0.04, duration: 0.2 },
         0.14,
       );
     }
@@ -260,7 +231,6 @@ const Header = ({ variant = 'home' }) => {
     };
 
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
 
@@ -284,7 +254,6 @@ const Header = ({ variant = 'home' }) => {
     };
   }, []);
 
-  const logoSrc = LOGO_BY_THEME[theme];
   const isViewLayout = variant === 'view';
   const rightNavLinks = isViewLayout ? NAV_LINKS.filter((link) => link.to !== '/') : NAV_LINKS;
 
@@ -303,13 +272,7 @@ const Header = ({ variant = 'home' }) => {
     <>
       <header className="absolute inset-x-0 top-0 z-40">
         <div className={`flex w-full items-center justify-between px-4 py-4 sm:px-6 ${isViewLayout ? 'sm:py-4' : 'sm:py-5'} lg:px-10`}>
-          <Link
-            to="/"
-            aria-label="Go to home page"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40"
-          >
-            <img src={logoSrc} alt="" className="h-9 w-9 object-contain" />
-          </Link>
+          <BrandLockup className="max-w-[12rem]" textClassName="inline" />
 
           <div className="flex items-center justify-end gap-2 sm:gap-3">
             <nav aria-label="Primary" className="hidden items-center gap-6 md:flex lg:gap-8">
@@ -344,14 +307,7 @@ const Header = ({ variant = 'home' }) => {
         >
           <div ref={menuContentRef} className="flex min-h-screen flex-col px-4 py-4 opacity-0 sm:px-6">
             <div className="flex items-center justify-between">
-              <Link
-                to="/"
-                onClick={() => closeMobileMenu(true)}
-                aria-label="Go to home page"
-                className="inline-flex h-12 w-12 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40"
-              >
-                <img src={logoSrc} alt="" className="h-9 w-9 object-contain" />
-              </Link>
+              <BrandLockup compact className="max-w-[12rem]" textClassName="inline" onClick={() => closeMobileMenu(true)} />
 
               <button
                 type="button"
@@ -363,10 +319,7 @@ const Header = ({ variant = 'home' }) => {
               </button>
             </div>
 
-            <nav
-              aria-label="Mobile primary"
-              className="flex flex-1 flex-col items-center justify-center gap-7 text-center pointer-events-auto"
-            >
+            <nav aria-label="Mobile primary" className="pointer-events-auto flex flex-1 flex-col items-center justify-center gap-7 text-center">
               {rightNavLinks.map((link) => (
                 <NavLink
                   key={link.to}
@@ -381,7 +334,7 @@ const Header = ({ variant = 'home' }) => {
             </nav>
 
             <div className="flex justify-center pb-6 pt-4">
-              <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} className="" />
+              <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
             </div>
           </div>
         </div>

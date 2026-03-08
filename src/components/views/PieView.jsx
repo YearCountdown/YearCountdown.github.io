@@ -1,8 +1,8 @@
 import { useId } from 'react';
 
-import { useTheme } from '../../context/ThemeContext';
 import usePieLayout from '../../hooks/usePieLayout';
 import useYearProgress from '../../hooks/useYearProgress';
+import { getContrastingTextColor } from '../../lib/viewColors';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -37,19 +37,19 @@ const getSectorPath = ({ centerX, centerY, radius, percentage }) => {
   ].join(' ');
 };
 
-const getSurfaceColors = () => {
+const getSurfaceColors = (primaryColor, alternateColor) => {
   return {
-    elapsed: 'var(--pie-elapsed, currentColor)',
-    remaining: 'var(--pie-remaining, transparent)',
-    outlineTrack: 'color-mix(in srgb, currentColor 14%, transparent)',
-    outlineFill: 'currentColor',
-    textOnElapsed: 'var(--pie-on-elapsed, var(--pie-remaining, white))',
-    textOnRemaining: 'var(--pie-on-remaining, currentColor)',
+    elapsed: primaryColor,
+    remaining: alternateColor,
+    outlineTrack: `color-mix(in srgb, ${alternateColor} 28%, transparent)`,
+    outlineFill: primaryColor,
+    textOnElapsed: getContrastingTextColor(primaryColor),
+    textOnRemaining: getContrastingTextColor(alternateColor),
   };
 };
 
-const FilledCenterLabel = ({ label, fontSize, outerClipId, sectorClipId, centerX, centerY }) => {
-  const colors = getSurfaceColors();
+const FilledCenterLabel = ({ label, fontSize, outerClipId, sectorClipId, centerX, centerY, primaryColor, alternateColor }) => {
+  const colors = getSurfaceColors(primaryColor, alternateColor);
 
   return (
     <>
@@ -83,8 +83,8 @@ const FilledCenterLabel = ({ label, fontSize, outerClipId, sectorClipId, centerX
   );
 };
 
-const CircleFilled = ({ width, height, percentage, label, ids, showCenterLabel, fontSize }) => {
-  const colors = getSurfaceColors();
+const CircleFilled = ({ width, height, percentage, label, ids, showCenterLabel, fontSize, primaryColor, alternateColor }) => {
+  const colors = getSurfaceColors(primaryColor, alternateColor);
   const centerX = width / 2;
   const centerY = height / 2;
   const clipRadius = Math.min(width, height) * 0.48;
@@ -112,14 +112,16 @@ const CircleFilled = ({ width, height, percentage, label, ids, showCenterLabel, 
           sectorClipId={ids.sector}
           centerX={centerX}
           centerY={centerY}
+          primaryColor={primaryColor}
+          alternateColor={alternateColor}
         />
       ) : null}
     </svg>
   );
 };
 
-const CircleOutline = ({ width, height, percentage, label, showCenterLabel, fontSize }) => {
-  const colors = getSurfaceColors();
+const CircleOutline = ({ width, height, percentage, label, showCenterLabel, fontSize, primaryColor, alternateColor }) => {
+  const colors = getSurfaceColors(primaryColor, alternateColor);
   const centerX = width / 2;
   const centerY = height / 2;
   const radius = Math.min(width, height) * 0.43;
@@ -147,7 +149,7 @@ const CircleOutline = ({ width, height, percentage, label, showCenterLabel, font
           y={centerY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="currentColor"
+          fill={primaryColor}
           style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
         >
           {label}
@@ -157,8 +159,8 @@ const CircleOutline = ({ width, height, percentage, label, showCenterLabel, font
   );
 };
 
-const RectFilled = ({ width, height, percentage, label, ids, showCenterLabel, fontSize }) => {
-  const colors = getSurfaceColors();
+const RectFilled = ({ width, height, percentage, label, ids, showCenterLabel, fontSize, primaryColor, alternateColor }) => {
+  const colors = getSurfaceColors(primaryColor, alternateColor);
   const centerX = width / 2;
   const centerY = height / 2;
   const sectorRadius = Math.hypot(width, height);
@@ -185,14 +187,16 @@ const RectFilled = ({ width, height, percentage, label, ids, showCenterLabel, fo
           sectorClipId={ids.sector}
           centerX={centerX}
           centerY={centerY}
+          primaryColor={primaryColor}
+          alternateColor={alternateColor}
         />
       ) : null}
     </svg>
   );
 };
 
-const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSize }) => {
-  const colors = getSurfaceColors();
+const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSize, primaryColor, alternateColor }) => {
+  const colors = getSurfaceColors(primaryColor, alternateColor);
   const centerX = width / 2;
   const centerY = height / 2;
   const strokeWidth = clamp(Math.min(width, height) * 0.045, 2, 8);
@@ -227,7 +231,7 @@ const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSi
           y={centerY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill="currentColor"
+          fill={primaryColor}
           style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
         >
           {label}
@@ -245,8 +249,9 @@ const PieView = ({
   inset = 0,
   outerX = 0,
   outerY = 0,
+  primaryColor,
+  alternateColor,
 }) => {
-  const { theme } = useTheme();
   const { percentage, percentageLabel } = useYearProgress(decimals);
   const { containerRef, layout } = usePieLayout({
     shape,
@@ -267,13 +272,8 @@ const PieView = ({
   return (
     <section
       ref={containerRef}
-      className="relative h-full w-full overflow-hidden text-black dark:text-white"
-      style={{
-        '--pie-elapsed': theme === 'dark' ? 'rgb(255 255 255)' : 'rgb(0 0 0)',
-        '--pie-remaining': theme === 'dark' ? 'rgb(9 9 11)' : 'rgb(255 255 255)',
-        '--pie-on-elapsed': theme === 'dark' ? 'rgb(9 9 11)' : 'rgb(255 255 255)',
-        '--pie-on-remaining': 'currentColor',
-      }}
+      className="relative h-full w-full overflow-hidden"
+      style={{ color: primaryColor }}
     >
       <div
         className="absolute"
@@ -294,6 +294,8 @@ const PieView = ({
               ids={ids}
               showCenterLabel={showCenterLabel}
               fontSize={layout.fullScreenFontSize}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
             />
           ) : (
             <RectOutline
@@ -303,6 +305,8 @@ const PieView = ({
               label={percentageLabel}
               showCenterLabel={showCenterLabel}
               fontSize={layout.fullScreenFontSize}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
             />
           )
         ) : isFilled ? (
@@ -314,6 +318,8 @@ const PieView = ({
             ids={ids}
             showCenterLabel={showCenterLabel}
             fontSize={layout.fullScreenFontSize}
+            primaryColor={primaryColor}
+            alternateColor={alternateColor}
           />
         ) : (
           <CircleOutline
@@ -323,13 +329,15 @@ const PieView = ({
             label={percentageLabel}
             showCenterLabel={showCenterLabel}
             fontSize={layout.fullScreenFontSize}
+            primaryColor={primaryColor}
+            alternateColor={alternateColor}
           />
         )}
       </div>
 
       {layout.showBelowLabel ? (
         <div
-          className="absolute text-center text-black dark:text-white"
+          className="absolute text-center"
           style={{
             left: 0,
             right: 0,
@@ -339,6 +347,7 @@ const PieView = ({
             fontWeight: 300,
             letterSpacing: '-0.04em',
             lineHeight: 1,
+            color: primaryColor,
           }}
         >
           {percentageLabel}

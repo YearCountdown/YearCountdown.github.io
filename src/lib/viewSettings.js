@@ -1,5 +1,6 @@
 import { NAV_LINKS } from './navigation';
 import { THEMES, resolveTheme } from './theme';
+import { VIEW_COLOR_PRESETS, getDefaultViewColors, normalizeHexColor, resolveViewColors } from './viewColors';
 
 export const VIEW_SETTINGS_CONFIG = {
   countdown: {
@@ -296,9 +297,16 @@ export const isEmbedMode = (searchParams) => {
 export const getSharedViewUrl = ({ pathname, search, origin, theme }) => {
   const currentTheme = resolveTheme(theme);
   const params = new URLSearchParams(search);
+  const resolvedColors = resolveViewColors({
+    theme: currentTheme,
+    primary: params.get('primary'),
+    alternate: params.get('alternate'),
+  });
 
   params.set('embed', 'true');
   params.set('theme', currentTheme === THEMES.DARK ? THEMES.DARK : THEMES.LIGHT);
+  params.set('primary', resolvedColors.primary);
+  params.set('alternate', resolvedColors.alternate);
 
   return `${origin}${pathname}?${params.toString()}`;
 };
@@ -341,6 +349,13 @@ export const PROGRESS_DEFAULT_SETTINGS = {
   outerY: 0,
 };
 
+export const VIEW_COLOR_SETTINGS = {
+  primary: 'primary',
+  alternate: 'alternate',
+};
+
+export { VIEW_COLOR_PRESETS, getDefaultViewColors };
+
 const clampNumber = (value, min, max, fallback) => {
   const parsed = Number.parseFloat(value);
 
@@ -349,6 +364,43 @@ const clampNumber = (value, min, max, fallback) => {
   }
 
   return Math.min(max, Math.max(min, parsed));
+};
+
+const getResolvedColorSettings = (searchParams, theme) => {
+  return resolveViewColors({
+    theme,
+    primary: searchParams.get(VIEW_COLOR_SETTINGS.primary),
+    alternate: searchParams.get(VIEW_COLOR_SETTINGS.alternate),
+  });
+};
+
+export const normalizeColorSettingValue = (key, value, theme) => {
+  const defaults = getDefaultViewColors(theme);
+
+  if (key === VIEW_COLOR_SETTINGS.primary) {
+    return normalizeHexColor(value, defaults.primary);
+  }
+
+  if (key === VIEW_COLOR_SETTINGS.alternate) {
+    return normalizeHexColor(value, defaults.alternate);
+  }
+
+  return value;
+};
+
+export const normalizeCountdownSettingValue = (key, value, theme) => {
+  switch (key) {
+    case 'mode':
+      return ['all', 'days', 'hours', 'minutes', 'seconds'].includes(value) ? value : COUNTDOWN_DEFAULT_SETTINGS.mode;
+    case 'frame':
+    case 'labels':
+      return value === true || value === 'true';
+    case VIEW_COLOR_SETTINGS.primary:
+    case VIEW_COLOR_SETTINGS.alternate:
+      return normalizeColorSettingValue(key, value, theme);
+    default:
+      return value;
+  }
 };
 
 export const normalizeDotsSettingValue = (key, value) => {
@@ -377,6 +429,14 @@ export const normalizeDotsSettingValue = (key, value) => {
   }
 };
 
+export const normalizeDotsSettingValueWithTheme = (key, value, theme) => {
+  if (key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate) {
+    return normalizeColorSettingValue(key, value, theme);
+  }
+
+  return normalizeDotsSettingValue(key, value);
+};
+
 export const normalizePieSettingValue = (key, value) => {
   switch (key) {
     case 'shape':
@@ -396,6 +456,14 @@ export const normalizePieSettingValue = (key, value) => {
     default:
       return value;
   }
+};
+
+export const normalizePieSettingValueWithTheme = (key, value, theme) => {
+  if (key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate) {
+    return normalizeColorSettingValue(key, value, theme);
+  }
+
+  return normalizePieSettingValue(key, value);
 };
 
 export const normalizeProgressSettingValue = (key, value) => {
@@ -421,10 +489,19 @@ export const normalizeProgressSettingValue = (key, value) => {
   }
 };
 
-export const getCountdownSettingsFromSearchParams = (searchParams) => {
+export const normalizeProgressSettingValueWithTheme = (key, value, theme) => {
+  if (key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate) {
+    return normalizeColorSettingValue(key, value, theme);
+  }
+
+  return normalizeProgressSettingValue(key, value);
+};
+
+export const getCountdownSettingsFromSearchParams = (searchParams, theme) => {
   const mode = searchParams.get('mode');
   const frame = searchParams.get('frame');
   const labels = searchParams.get('labels');
+  const colors = getResolvedColorSettings(searchParams, theme);
 
   return {
     mode: ['all', 'days', 'hours', 'minutes', 'seconds'].includes(mode)
@@ -432,13 +509,15 @@ export const getCountdownSettingsFromSearchParams = (searchParams) => {
       : COUNTDOWN_DEFAULT_SETTINGS.mode,
     frame: frame === 'false' ? false : COUNTDOWN_DEFAULT_SETTINGS.frame,
     labels: labels === 'false' ? false : COUNTDOWN_DEFAULT_SETTINGS.labels,
+    ...colors,
   };
 };
 
-export const getDotsSettingsFromSearchParams = (searchParams) => {
+export const getDotsSettingsFromSearchParams = (searchParams, theme) => {
   const shape = searchParams.get('shape');
   const triangleMode = searchParams.get('triangleMode');
   const legacyGap = searchParams.get('gap');
+  const colors = getResolvedColorSettings(searchParams, theme);
 
   return {
     shape: ['circle', 'square', 'triangle'].includes(shape) ? shape : DOTS_DEFAULT_SETTINGS.shape,
@@ -451,13 +530,15 @@ export const getDotsSettingsFromSearchParams = (searchParams) => {
     inset: clampNumber(searchParams.get('inset'), 0, 12, DOTS_DEFAULT_SETTINGS.inset),
     outerX: clampNumber(searchParams.get('outerX'), 0, 12, DOTS_DEFAULT_SETTINGS.outerX),
     outerY: clampNumber(searchParams.get('outerY'), 0, 12, DOTS_DEFAULT_SETTINGS.outerY),
+    ...colors,
   };
 };
 
-export const getPieSettingsFromSearchParams = (searchParams) => {
+export const getPieSettingsFromSearchParams = (searchParams, theme) => {
   const shape = searchParams.get('shape');
   const style = searchParams.get('style');
   const fullScreen = searchParams.get('fullScreen');
+  const colors = getResolvedColorSettings(searchParams, theme);
 
   return {
     shape: ['circle', 'rectangle'].includes(shape) ? shape : PIE_DEFAULT_SETTINGS.shape,
@@ -467,12 +548,14 @@ export const getPieSettingsFromSearchParams = (searchParams) => {
     inset: clampNumber(searchParams.get('inset'), 0, 12, PIE_DEFAULT_SETTINGS.inset),
     outerX: clampNumber(searchParams.get('outerX'), 0, 12, PIE_DEFAULT_SETTINGS.outerX),
     outerY: clampNumber(searchParams.get('outerY'), 0, 12, PIE_DEFAULT_SETTINGS.outerY),
+    ...colors,
   };
 };
 
-export const getProgressSettingsFromSearchParams = (searchParams) => {
+export const getProgressSettingsFromSearchParams = (searchParams, theme) => {
   const mode = searchParams.get('mode');
   const fullScreen = searchParams.get('fullScreen');
+  const colors = getResolvedColorSettings(searchParams, theme);
 
   return {
     mode: ['field', 'line'].includes(mode) ? mode : PROGRESS_DEFAULT_SETTINGS.mode,
@@ -483,6 +566,7 @@ export const getProgressSettingsFromSearchParams = (searchParams) => {
     inset: clampNumber(searchParams.get('inset'), 0, 12, PROGRESS_DEFAULT_SETTINGS.inset),
     outerX: clampNumber(searchParams.get('outerX'), 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX),
     outerY: clampNumber(searchParams.get('outerY'), 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY),
+    ...colors,
   };
 };
 

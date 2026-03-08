@@ -11,6 +11,8 @@ const CountdownPage = () => {
         mode={viewState.countdown.mode}
         frame={viewState.countdown.frame}
         labels={viewState.countdown.labels}
+        primaryColor={viewState.countdown.primary}
+        alternateColor={viewState.countdown.alternate}
       />
     </ViewLayout>
   );

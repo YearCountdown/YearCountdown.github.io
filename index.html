@@ -75,6 +75,31 @@
       })();
     </script>
 
+    <script>
+      (function () {
+        var redirectQuery = new URLSearchParams(window.location.search);
+        var redirectPath = redirectQuery.get('p');
+
+        if (!redirectPath) {
+          return;
+        }
+
+        var redirectSearch = redirectQuery.get('q');
+        var redirectHash = redirectQuery.get('h');
+        var nextUrl = redirectPath;
+
+        if (redirectSearch) {
+          nextUrl += '?' + redirectSearch;
+        }
+
+        if (redirectHash) {
+          nextUrl += '#' + redirectHash;
+        }
+
+        window.history.replaceState(null, '', nextUrl);
+      })();
+    </script>
+
     <title>YearCountdown</title>
   </head>
   <body>

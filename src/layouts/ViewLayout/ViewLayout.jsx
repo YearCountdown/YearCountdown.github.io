@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import BrandLockup from '../../components/BrandLockup';
 import { useTheme } from '../../context/ThemeContext';
 import useViewShell from '../../hooks/useViewShell';
 import Header from '../GuestLayout/Header';
@@ -38,6 +39,11 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
       >
         {children}
       </main>
+      {isEmbed ? (
+        <div className="pointer-events-none fixed left-2 top-2 z-30 opacity-50 sm:left-3 sm:top-3">
+          <BrandLockup iconOnly compact className="pointer-events-auto" textClassName="hidden" />
+        </div>
+      ) : null}
       <ViewSettingsGear
         viewId={viewId}
         viewTitle={viewTitle}

@@ -50,25 +50,27 @@ const getSingleModeValue = (countdown, mode) => {
   }
 };
 
-const CountdownUnit = ({ value, label, showLabels, tokens }) => {
+const CountdownUnit = ({ value, label, showLabels, tokens, primaryColor, alternateColor }) => {
   return (
     <div className="flex min-w-0 flex-col items-center justify-center">
       <span
-        className="block font-light leading-none text-black dark:text-white"
+        className="block font-light leading-none"
         style={{
           fontSize: `${tokens.numberSize}px`,
           letterSpacing: `${tokens.numberTracking}em`,
+          color: primaryColor,
         }}
       >
         {formatNumber(value)}
       </span>
       {showLabels ? (
         <span
-          className="mt-2 uppercase text-black/42 dark:text-white/42"
+          className="mt-2 uppercase"
           style={{
             fontSize: `${tokens.labelSize}px`,
             letterSpacing: `${tokens.labelTracking}em`,
             marginTop: `${Math.max(4, tokens.labelSize * 0.65)}px`,
+            color: alternateColor,
           }}
         >
           {label}
@@ -89,11 +91,11 @@ const getShellStyle = ({ frame, tokens }) => {
     gap: `${tokens.stackGap}px`,
     padding: `${tokens.frame.y}px ${tokens.frame.x}px`,
     borderRadius: `${tokens.frame.radius}px`,
-    border: '1px solid color-mix(in srgb, currentColor 12%, transparent)',
+    border: '1px solid var(--countdown-frame-color)',
   };
 };
 
-const CountdownView = ({ mode = 'all', frame = false, labels = true }) => {
+const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColor, alternateColor }) => {
   const countdown = useCountdown();
   const { containerRef, tokens } = useResponsiveCountdown({ mode, labels });
   const modeLabel = tokens.tier === 'micro' ? SHORT_MODE_LABELS[mode] : MODE_LABELS[mode];
@@ -103,33 +105,40 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true }) => {
     const unitLabel = tokens.useShortLabels ? SHORT_UNIT_LABELS[mode] : UNIT_LABELS[mode];
 
     return (
-      <section ref={containerRef} className="flex h-full w-full items-center justify-center overflow-hidden">
+      <section
+        ref={containerRef}
+        className="flex h-full w-full items-center justify-center overflow-hidden"
+        style={{ '--countdown-frame-color': `color-mix(in srgb, ${alternateColor} 34%, transparent)` }}
+      >
         <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center">
           <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
             <p
-              className="uppercase text-black/38 dark:text-white/38"
+              className="uppercase"
               style={{
                 fontSize: `${tokens.subtitleSize}px`,
                 letterSpacing: `${tokens.subtitleTracking}em`,
+                color: alternateColor,
               }}
             >
               {modeLabel}
             </p>
             <span
-              className="block font-light leading-none text-black dark:text-white"
+              className="block font-light leading-none"
               style={{
                 fontSize: `${tokens.numberSize}px`,
                 letterSpacing: `${tokens.numberTracking}em`,
+                color: primaryColor,
               }}
             >
               {formatNumber(singleValue)}
             </span>
             {labels ? (
               <span
-                className="uppercase text-black/42 dark:text-white/42"
+                className="uppercase"
                 style={{
                   fontSize: `${tokens.labelSize}px`,
                   letterSpacing: `${tokens.labelTracking}em`,
+                  color: alternateColor,
                 }}
               >
                 {unitLabel}
@@ -142,14 +151,19 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true }) => {
   }
 
   return (
-    <section ref={containerRef} className="flex h-full w-full items-center justify-center overflow-hidden">
+    <section
+      ref={containerRef}
+      className="flex h-full w-full items-center justify-center overflow-hidden"
+      style={{ '--countdown-frame-color': `color-mix(in srgb, ${alternateColor} 34%, transparent)` }}
+    >
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
           <p
-            className="uppercase text-black/38 dark:text-white/38"
+            className="uppercase"
             style={{
               fontSize: `${tokens.subtitleSize}px`,
               letterSpacing: `${tokens.subtitleTracking}em`,
+              color: alternateColor,
             }}
           >
             {tokens.tier === 'micro' ? SHORT_MODE_LABELS.all : MODE_LABELS.all}
@@ -167,24 +181,32 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true }) => {
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.days : UNIT_LABELS.days}
               showLabels={labels}
               tokens={tokens}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
             />
             <CountdownUnit
               value={countdown.hours}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.hours : UNIT_LABELS.hours}
               showLabels={labels}
               tokens={tokens}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
             />
             <CountdownUnit
               value={countdown.minutes}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.minutes : UNIT_LABELS.minutes}
               showLabels={labels}
               tokens={tokens}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
             />
             <CountdownUnit
               value={countdown.seconds}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.seconds : UNIT_LABELS.seconds}
               showLabels={labels}
               tokens={tokens}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
             />
           </div>
         </div>

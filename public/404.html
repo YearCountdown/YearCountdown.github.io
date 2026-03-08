@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>YearCountdown</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      (function () {
+        var path = window.location.pathname || '/';
+        var search = window.location.search ? window.location.search.slice(1) : '';
+        var hash = window.location.hash ? window.location.hash.slice(1) : '';
+        var redirect = '/?p=' + encodeURIComponent(path);
+
+        if (search) {
+          redirect += '&q=' + encodeURIComponent(search);
+        }
+
+        if (hash) {
+          redirect += '&h=' + encodeURIComponent(hash);
+        }
+
+        window.location.replace(redirect);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

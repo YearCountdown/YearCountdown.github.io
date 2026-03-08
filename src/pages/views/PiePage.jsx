@@ -22,6 +22,8 @@ const PiePage = () => {
         inset={inset}
         outerX={outerX}
         outerY={outerY}
+        primaryColor={viewState.pie.primary}
+        alternateColor={viewState.pie.alternate}
       />
     </ViewLayout>
   );

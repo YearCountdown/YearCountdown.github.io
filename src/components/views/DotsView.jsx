@@ -16,7 +16,7 @@ const getTriangleRotation = ({ triangleMode, triangleAngle, index }) => {
   return 0;
 };
 
-const getDotStyle = ({ status, shape, size, rotation }) => {
+const getDotStyle = ({ status, shape, size, rotation, primaryColor, alternateColor }) => {
   if (status === 'filler') {
     return {
       visibility: 'hidden',
@@ -25,24 +25,12 @@ const getDotStyle = ({ status, shape, size, rotation }) => {
     };
   }
 
-  const opacityByStatus = {
-    past: 1,
-    current: 1,
-    future: 0.14,
-  };
-
-  const scaleByStatus = {
-    past: 1,
-    current: 1,
-    future: 1,
-  };
-
   const baseStyle = {
     width: `${size}px`,
     height: `${size}px`,
-    backgroundColor: 'currentColor',
-    opacity: opacityByStatus[status],
-    transform: `rotate(${rotation}deg) scale(${scaleByStatus[status]})`,
+    backgroundColor: status === 'future' ? alternateColor : primaryColor,
+    opacity: status === 'future' ? 0.3 : 1,
+    transform: `rotate(${rotation}deg) scale(1)`,
     transition: 'transform 200ms ease, opacity 200ms ease',
   };
 
@@ -78,6 +66,8 @@ const DotsView = ({
   inset = 0.5,
   outerX = 0,
   outerY = 0,
+  primaryColor,
+  alternateColor,
 }) => {
   const { containerRef, dots, grid } = useDotsGrid({
     gapXPercent: gapX,
@@ -88,7 +78,7 @@ const DotsView = ({
   });
 
   return (
-    <section ref={containerRef} className="flex h-full w-full items-center justify-center text-black dark:text-white">
+    <section ref={containerRef} className="flex h-full w-full items-center justify-center">
       <div
         className="grid"
         style={{
@@ -118,6 +108,8 @@ const DotsView = ({
                       index,
                     })
                   : 0,
+              primaryColor,
+              alternateColor,
             })}
           />
         ))}
