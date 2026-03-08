@@ -67,7 +67,7 @@ const usePieLayout = ({ shape, fullScreen, insetPercent, outerXPercent, outerYPe
     const boxLeft = insetPx + outerXPx + (drawWidth - boxWidth) / 2;
     const boxTop = insetPx + outerYPx + (shapeAreaHeight - boxHeight) / 2;
     const shapeMin = Math.max(0, Math.min(boxWidth, boxHeight));
-    const fullScreenFontSize = clamp(shapeMin * (shape === 'rectangle' && fullScreen ? 0.03 : 0.04), 12, 20);
+    const fullScreenFontSize = clamp(shapeMin * (shape === 'rectangle' && fullScreen ? 0.15 : 0.2), 60, 100);
     const belowFontSize = clamp(shapeMin * 0.095, 18, 42);
 
     return {

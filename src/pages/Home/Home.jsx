@@ -16,11 +16,12 @@ const Home = () => {
       gsap.utils.toArray('[data-home-reveal]').forEach((element) => {
         gsap.fromTo(
           element,
-          { y: 22, autoAlpha: 0 },
+          { y: 22, autoAlpha: 0, filter: 'blur(6px)' },
           {
             y: 0,
             autoAlpha: 1,
-            duration: 0.55,
+            filter: 'blur(0px)',
+            duration: 0.6,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: element,
@@ -31,12 +32,31 @@ const Home = () => {
         );
       });
 
-      gsap.utils.toArray('[data-home-shape]').forEach((shape, index) => {
+      gsap.utils.toArray('[data-home-card]').forEach((element, index) => {
+        gsap.fromTo(
+          element,
+          { y: 26, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            delay: (index % 4) * 0.03,
+            scrollTrigger: {
+              trigger: element,
+              start: 'top 88%',
+              once: true,
+            },
+          },
+        );
+      });
+
+      gsap.utils.toArray('[data-home-hero-shape]').forEach((shape, index) => {
         gsap.to(shape, {
-          y: index % 2 === 0 ? -16 : 14,
-          x: index % 2 === 0 ? 10 : -8,
-          rotation: index % 2 === 0 ? 8 : -10,
-          duration: 2.8 + index * 0.18,
+          y: index % 2 === 0 ? -12 : 10,
+          x: index % 2 === 0 ? 8 : -8,
+          rotation: index % 2 === 0 ? 8 : -8,
+          duration: 3 + index * 0.15,
           ease: 'sine.inOut',
           repeat: -1,
           yoyo: true,
@@ -46,35 +66,64 @@ const Home = () => {
       gsap.utils.toArray('section').forEach((section, index) => {
         const localShapes = section.querySelectorAll('[data-section-shape]');
 
-        if (!localShapes.length) {
-          return;
+        if (localShapes.length) {
+          gsap.fromTo(
+            localShapes,
+            { y: 16, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.55,
+              ease: 'power2.out',
+              stagger: 0.07,
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 86%',
+              },
+            },
+          );
+
+          gsap.to(localShapes, {
+            y: index % 2 === 0 ? -8 : 8,
+            x: index % 2 === 0 ? 5 : -5,
+            rotation: index % 2 === 0 ? 6 : -6,
+            duration: 2.7,
+            ease: 'sine.inOut',
+            stagger: 0.08,
+            repeat: -1,
+            yoyo: true,
+          });
         }
 
-        gsap.fromTo(
-          localShapes,
-          { y: 12, autoAlpha: 0 },
-          {
-            y: 0,
-            autoAlpha: 1,
-            duration: 0.5,
-            ease: 'power2.out',
-            stagger: 0.08,
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 78%',
+        const wallpaperShapes = section.querySelectorAll('[data-wallpaper-shape]');
+        if (wallpaperShapes.length) {
+          gsap.fromTo(
+            wallpaperShapes,
+            { autoAlpha: 0, y: 14 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.45,
+              ease: 'power2.out',
+              stagger: 0.05,
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 82%',
+              },
             },
-          },
-        );
+          );
 
-        gsap.to(localShapes, {
-          y: index % 2 === 0 ? -10 : 10,
-          rotation: index % 2 === 0 ? 6 : -6,
-          duration: 3.1,
-          ease: 'sine.inOut',
-          stagger: 0.12,
-          repeat: -1,
-          yoyo: true,
-        });
+          gsap.to(wallpaperShapes, {
+            y: index % 2 === 0 ? -10 : 10,
+            x: index % 2 === 0 ? 6 : -6,
+            rotation: index % 2 === 0 ? 5 : -5,
+            duration: 3.2,
+            ease: 'sine.inOut',
+            stagger: 0.09,
+            repeat: -1,
+            yoyo: true,
+          });
+        }
       });
     }, pageRef);
 
@@ -87,7 +136,6 @@ const Home = () => {
     <GuestLayout>
       <div ref={pageRef} className="relative w-full">
         <HomeHero />
-        <div className="pointer-events-none absolute inset-x-0 top-[105vh] h-px bg-black/8 dark:bg-white/8" />
         <HomepageSections />
       </div>
     </GuestLayout>

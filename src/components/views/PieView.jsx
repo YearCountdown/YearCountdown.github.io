@@ -191,37 +191,36 @@ const RectFilled = ({ width, height, percentage, label, ids, showCenterLabel, fo
   );
 };
 
-const RectOutline = ({ width, height, percentage, label, ids, showCenterLabel, fontSize }) => {
+const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSize }) => {
   const colors = getSurfaceColors();
   const centerX = width / 2;
   const centerY = height / 2;
-  const radius = Math.hypot(width, height) / 2;
-  const strokeWidth = clamp(Math.min(width, height) * 0.06, 2, 8);
-  const circumference = 2 * Math.PI * radius;
+  const strokeWidth = clamp(Math.min(width, height) * 0.045, 2, 8);
+  const inset = strokeWidth / 2;
+  const rectWidth = Math.max(0, width - strokeWidth);
+  const rectHeight = Math.max(0, height - strokeWidth);
+  const perimeter = 2 * (rectWidth + rectHeight);
+  const pathD = [
+    `M ${inset + rectWidth / 2} ${inset}`,
+    `L ${inset + rectWidth} ${inset}`,
+    `L ${inset + rectWidth} ${inset + rectHeight}`,
+    `L ${inset} ${inset + rectHeight}`,
+    `L ${inset} ${inset}`,
+    `L ${inset + rectWidth / 2} ${inset}`,
+  ].join(' ');
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full overflow-visible" aria-hidden="true">
-      <defs>
-        <clipPath id={ids.outer}>
-          <rect x="0" y="0" width={width} height={height} rx="0" ry="0" />
-        </clipPath>
-      </defs>
-
-      <g clipPath={`url(#${ids.outer})`}>
-        <circle cx={centerX} cy={centerY} r={radius} fill="none" stroke={colors.outlineTrack} strokeWidth={strokeWidth} />
-        <circle
-          cx={centerX}
-          cy={centerY}
-          r={radius}
-          fill="none"
-          stroke={colors.outlineFill}
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - percentage / 100)}
-          strokeLinecap="round"
-          transform={`rotate(-90 ${centerX} ${centerY})`}
-        />
-      </g>
+      <path d={pathD} fill="none" stroke={colors.outlineTrack} strokeWidth={strokeWidth} strokeLinecap="butt" />
+      <path
+        d={pathD}
+        fill="none"
+        stroke={colors.outlineFill}
+        strokeWidth={strokeWidth}
+        strokeDasharray={perimeter}
+        strokeDashoffset={perimeter * (1 - percentage / 100)}
+        strokeLinecap="butt"
+      />
       {showCenterLabel ? (
         <text
           x={centerX}
@@ -302,7 +301,6 @@ const PieView = ({
               height={layout.boxHeight}
               percentage={percentage}
               label={percentageLabel}
-              ids={ids}
               showCenterLabel={showCenterLabel}
               fontSize={layout.fullScreenFontSize}
             />
