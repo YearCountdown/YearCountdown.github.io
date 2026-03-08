@@ -8,6 +8,10 @@ A minimal web app to visualize how much of the current year has passed.
 
 [yearcountdown.github.io](https://yearcountdown.github.io)
 
+Deploy targets:
+- GitHub Pages
+- Vercel
+
 ## Features
 
 - Year progress countdown & elapsed time

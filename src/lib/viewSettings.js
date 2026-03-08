@@ -1,6 +1,6 @@
 import { NAV_LINKS } from './navigation';
 import { THEMES, resolveTheme } from './theme';
-import { VIEW_COLOR_PRESETS, getDefaultViewColors, normalizeHexColor, resolveViewColors } from './viewColors';
+import { getDefaultViewColors, resolveViewColors } from './viewColors';
 
 export const VIEW_SETTINGS_CONFIG = {
   countdown: {
@@ -354,7 +354,7 @@ export const VIEW_COLOR_SETTINGS = {
   alternate: 'alternate',
 };
 
-export { VIEW_COLOR_PRESETS, getDefaultViewColors };
+export { getDefaultViewColors };
 
 const clampNumber = (value, min, max, fallback) => {
   const parsed = Number.parseFloat(value);
@@ -378,11 +378,11 @@ export const normalizeColorSettingValue = (key, value, theme) => {
   const defaults = getDefaultViewColors(theme);
 
   if (key === VIEW_COLOR_SETTINGS.primary) {
-    return normalizeHexColor(value, defaults.primary);
+    return defaults.primary;
   }
 
   if (key === VIEW_COLOR_SETTINGS.alternate) {
-    return normalizeHexColor(value, defaults.alternate);
+    return defaults.alternate;
   }
 
   return value;

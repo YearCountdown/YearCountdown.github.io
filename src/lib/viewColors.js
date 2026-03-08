@@ -1,22 +1,16 @@
 import { THEMES } from './theme';
 
-export const VIEW_COLOR_PRESETS = [
-  { id: 'mono-light', label: 'Mono', primary: '#111111', alternate: '#71717a' },
-  { id: 'mono-dark', label: 'Night', primary: '#ffffff', alternate: '#a1a1aa' },
-  { id: 'ocean', label: 'Ocean', primary: '#0f766e', alternate: '#67e8f9' },
-  { id: 'ember', label: 'Ember', primary: '#b91c1c', alternate: '#f59e0b' },
-  { id: 'orchid', label: 'Orchid', primary: '#4c1d95', alternate: '#f472b6' },
-  { id: 'forest', label: 'Forest', primary: '#166534', alternate: '#86efac' },
-];
+const WHITE = '#ffffff';
+const BLACK = '#000000';
 
 export const DEFAULT_VIEW_COLORS = {
   [THEMES.DARK]: {
-    primary: '#ffffff',
-    alternate: '#a1a1aa',
+    primary: WHITE,
+    alternate: BLACK,
   },
   [THEMES.LIGHT]: {
-    primary: '#111111',
-    alternate: '#71717a',
+    primary: BLACK,
+    alternate: WHITE,
   },
 };
 
@@ -45,13 +39,8 @@ export const getDefaultViewColors = (theme) => {
   return DEFAULT_VIEW_COLORS[theme] ?? DEFAULT_VIEW_COLORS[THEMES.LIGHT];
 };
 
-export const resolveViewColors = ({ theme, primary, alternate }) => {
-  const defaults = getDefaultViewColors(theme);
-
-  return {
-    primary: normalizeHexColor(primary, defaults.primary),
-    alternate: normalizeHexColor(alternate, defaults.alternate),
-  };
+export const resolveViewColors = ({ theme }) => {
+  return getDefaultViewColors(theme);
 };
 
 export const getContrastingTextColor = (color) => {

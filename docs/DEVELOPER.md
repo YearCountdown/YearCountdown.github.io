@@ -22,6 +22,23 @@ npm install
 | `npm run preview` | Preview production build |
 | `npm run lint` | Run ESLint |
 
+## Deployment
+
+### GitHub Pages
+
+- Push to `main`
+- GitHub Actions builds and deploys `dist/` using `.github/workflows/deploy.yml`
+- SPA deep-link reloads are handled by `public/404.html`
+
+### Vercel
+
+- Import the repository into Vercel
+- Vercel uses [vercel.json](../vercel.json) for:
+  - build command: `npm run build`
+  - output directory: `dist`
+  - SPA rewrites to `index.html`
+- No additional routing setup is required for `/view/*` routes
+
 ## Project Structure
 
 ```

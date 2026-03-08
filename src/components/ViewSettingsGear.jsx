@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useTheme } from '../context/ThemeContext';
-import { VIEW_COLOR_PRESETS } from '../lib/viewColors';
 
 const GearIcon = () => {
   return (
@@ -60,42 +59,6 @@ const copyText = async (value) => {
   input.select();
   document.execCommand('copy');
   document.body.removeChild(input);
-};
-
-const ColorSwatchButton = ({ preset, onApply }) => {
-  return (
-    <button
-      type="button"
-      onClick={() => onApply(preset)}
-      className="flex cursor-pointer items-center gap-3 rounded-2xl bg-black/6 px-3 py-2 text-left transition-colors hover:bg-black/10 dark:bg-white/6 dark:hover:bg-white/10"
-    >
-      <span className="flex items-center gap-1.5">
-        <span className="h-4 w-4 rounded-full border border-black/10 dark:border-white/10" style={{ backgroundColor: preset.primary }} />
-        <span className="h-4 w-4 rounded-full border border-black/10 dark:border-white/10" style={{ backgroundColor: preset.alternate }} />
-      </span>
-      <span className="text-sm text-black/72 dark:text-white/72">{preset.label}</span>
-    </button>
-  );
-};
-
-const ColorInputControl = ({ label, value, onChange }) => {
-  return (
-    <div className="min-w-0 flex-1">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">{label}</p>
-        <span className="shrink-0 font-mono text-xs text-black/45 dark:text-white/45">{value}</span>
-      </div>
-      <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-black/10 px-3 py-2 dark:border-white/10">
-        <input
-          type="color"
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="h-8 w-8 cursor-pointer rounded-full border-0 bg-transparent p-0"
-        />
-        <span className="text-sm text-black/68 dark:text-white/68">{label} color</span>
-      </label>
-    </div>
-  );
 };
 
 const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
@@ -262,10 +225,6 @@ const ViewSettingsGear = ({
   const [isCopied, setIsCopied] = useState(false);
   const containerRef = useRef(null);
   const copiedTimeoutRef = useRef(null);
-  const currentColors = {
-    primary: viewState?.[viewId]?.primary,
-    alternate: viewState?.[viewId]?.alternate,
-  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -328,11 +287,6 @@ const ViewSettingsGear = ({
     }
   };
 
-  const handleApplyPreset = (preset) => {
-    updateViewSetting(viewId, 'primary', preset.primary);
-    updateViewSetting(viewId, 'alternate', preset.alternate);
-  };
-
   return (
     <div ref={containerRef} className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
       {isOpen ? (
@@ -374,29 +328,6 @@ const ViewSettingsGear = ({
                 >
                   Dark
                 </button>
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-                Colors
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {VIEW_COLOR_PRESETS.map((preset) => (
-                  <ColorSwatchButton key={preset.id} preset={preset} onApply={handleApplyPreset} />
-                ))}
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <ColorInputControl
-                  label="Primary"
-                  value={currentColors.primary}
-                  onChange={(value) => updateViewSetting(viewId, 'primary', value)}
-                />
-                <ColorInputControl
-                  label="Alternate"
-                  value={currentColors.alternate}
-                  onChange={(value) => updateViewSetting(viewId, 'alternate', value)}
-                />
               </div>
             </div>
 
