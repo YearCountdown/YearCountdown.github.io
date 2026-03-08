@@ -8,3 +8,52 @@
   --color-brand-primary: #000000;
   --color-brand-secondary: #6b7280;
 }
+
+@layer base {
+  html {
+    background-color: #f5f5f4;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(24, 24, 27, 0.28) transparent;
+  }
+
+  body {
+    min-height: 100vh;
+    background: #f5f5f4;
+    overflow-y: auto;
+  }
+
+  html.dark {
+    background-color: #09090b;
+    scrollbar-color: rgba(244, 244, 245, 0.28) transparent;
+  }
+
+  html.dark body {
+    background: #09090b;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  body::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: rgba(24, 24, 27, 0.28);
+  }
+
+  .dark body::-webkit-scrollbar-thumb {
+    background: rgba(244, 244, 245, 0.28);
+  }
+}
