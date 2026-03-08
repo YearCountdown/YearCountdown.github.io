@@ -61,7 +61,81 @@ const copyText = async (value) => {
   document.body.removeChild(input);
 };
 
-const ViewSettingsGear = ({ viewTitle, sharedUrl, isHidden }) => {
+const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
+  const value = viewState?.[viewId]?.[control.key];
+
+  if (control.type === 'select') {
+    return (
+      <div key={control.key}>
+        <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {control.label}
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {control.options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => updateViewSetting(viewId, control.key, option.value)}
+              className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                value === option.value
+                  ? 'bg-black text-white dark:bg-white dark:text-black'
+                  : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (control.type === 'boolean') {
+    return (
+      <div key={control.key}>
+        <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {control.label}
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => updateViewSetting(viewId, control.key, true)}
+            className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+              value === true
+                ? 'bg-black text-white dark:bg-white dark:text-black'
+                : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+            }`}
+          >
+            {control.trueLabel}
+          </button>
+          <button
+            type="button"
+            onClick={() => updateViewSetting(viewId, control.key, false)}
+            className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+              value === false
+                ? 'bg-black text-white dark:bg-white dark:text-black'
+                : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+            }`}
+          >
+            {control.falseLabel}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+const ViewSettingsGear = ({
+  viewId,
+  viewTitle,
+  sharedUrl,
+  isHidden,
+  controls = [],
+  viewState,
+  updateViewSetting,
+}) => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -172,6 +246,8 @@ const ViewSettingsGear = ({ viewTitle, sharedUrl, isHidden }) => {
                 </button>
               </div>
             </div>
+
+            {controls.map((control) => renderControl({ control, viewId, viewState, updateViewSetting }))}
 
             <div>
               <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">

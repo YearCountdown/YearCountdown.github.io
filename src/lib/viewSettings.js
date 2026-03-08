@@ -5,7 +5,34 @@ export const VIEW_SETTINGS_CONFIG = {
   countdown: {
     id: 'countdown',
     title: 'Countdown',
-    controls: [],
+    controls: [
+      {
+        key: 'mode',
+        type: 'select',
+        label: 'Display',
+        options: [
+          { label: 'All', value: 'all' },
+          { label: 'Days', value: 'days' },
+          { label: 'Hours', value: 'hours' },
+          { label: 'Minutes', value: 'minutes' },
+          { label: 'Seconds', value: 'seconds' },
+        ],
+      },
+      {
+        key: 'frame',
+        type: 'boolean',
+        label: 'Outer Frame',
+        trueLabel: 'On',
+        falseLabel: 'Off',
+      },
+      {
+        key: 'labels',
+        type: 'boolean',
+        label: 'Labels',
+        trueLabel: 'Show',
+        falseLabel: 'Hide',
+      },
+    ],
   },
   dots: {
     id: 'dots',
@@ -56,6 +83,26 @@ export const getSharedViewUrl = ({ pathname, search, origin, theme }) => {
   params.set('theme', currentTheme === THEMES.DARK ? THEMES.DARK : THEMES.LIGHT);
 
   return `${origin}${pathname}?${params.toString()}`;
+};
+
+export const COUNTDOWN_DEFAULT_SETTINGS = {
+  mode: 'all',
+  frame: true,
+  labels: true,
+};
+
+export const getCountdownSettingsFromSearchParams = (searchParams) => {
+  const mode = searchParams.get('mode');
+  const frame = searchParams.get('frame');
+  const labels = searchParams.get('labels');
+
+  return {
+    mode: ['all', 'days', 'hours', 'minutes', 'seconds'].includes(mode)
+      ? mode
+      : COUNTDOWN_DEFAULT_SETTINGS.mode,
+    frame: frame === 'false' ? false : COUNTDOWN_DEFAULT_SETTINGS.frame,
+    labels: labels === 'false' ? false : COUNTDOWN_DEFAULT_SETTINGS.labels,
+  };
 };
 
 export const getViewLinkMeta = (pathname) => {

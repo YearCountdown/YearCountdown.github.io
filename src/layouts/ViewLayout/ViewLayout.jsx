@@ -7,7 +7,8 @@ import ViewSettingsGear from '../../components/ViewSettingsGear';
 
 const ViewLayout = ({ children }) => {
   const { theme, setTheme } = useTheme();
-  const { isEmbed, queryTheme, viewConfig, viewLinkMeta, sharedUrl } = useViewShell(theme);
+  const { isEmbed, queryTheme, viewConfig, viewId, viewLinkMeta, viewState, updateViewSetting, sharedUrl } =
+    useViewShell(theme);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -37,7 +38,15 @@ const ViewLayout = ({ children }) => {
       >
         {children}
       </main>
-      <ViewSettingsGear viewTitle={viewTitle} sharedUrl={sharedUrl} isHidden={isEmbed} />
+      <ViewSettingsGear
+        viewId={viewId}
+        viewTitle={viewTitle}
+        sharedUrl={sharedUrl}
+        isHidden={isEmbed}
+        controls={viewConfig?.controls ?? []}
+        viewState={viewState}
+        updateViewSetting={updateViewSetting}
+      />
     </div>
   );
 };
