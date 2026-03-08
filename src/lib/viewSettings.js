@@ -124,7 +124,70 @@ export const VIEW_SETTINGS_CONFIG = {
   pie: {
     id: 'pie',
     title: 'Pie',
-    controls: [],
+    controls: [
+      {
+        key: 'shape',
+        type: 'select',
+        label: 'Shape',
+        options: [
+          { label: 'Circle', value: 'circle' },
+          { label: 'Rectangle', value: 'rectangle' },
+        ],
+      },
+      {
+        key: 'style',
+        type: 'select',
+        label: 'Style',
+        options: [
+          { label: 'Filled', value: 'filled' },
+          { label: 'Outline', value: 'outline' },
+        ],
+      },
+      {
+        key: 'fullScreen',
+        type: 'boolean',
+        label: 'Display',
+        trueLabel: 'Full Screen',
+        falseLabel: 'Centered',
+      },
+      {
+        key: 'decimals',
+        type: 'number',
+        label: 'Decimals',
+        min: 0,
+        max: 10,
+        step: 1,
+      },
+      {
+        key: 'inset',
+        type: 'number',
+        label: 'Inset',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+      },
+      {
+        key: 'outerX',
+        type: 'number',
+        label: 'Outer X',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'pie-outer',
+      },
+      {
+        key: 'outerY',
+        type: 'number',
+        label: 'Outer Y',
+        min: 0,
+        max: 12,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'pie-outer',
+      },
+    ],
   },
   progress: {
     id: 'progress',
@@ -184,6 +247,16 @@ export const DOTS_DEFAULT_SETTINGS = {
   outerY: 0,
 };
 
+export const PIE_DEFAULT_SETTINGS = {
+  shape: 'circle',
+  style: 'filled',
+  fullScreen: false,
+  decimals: 2,
+  inset: 0,
+  outerX: 0,
+  outerY: 0,
+};
+
 const clampNumber = (value, min, max, fallback) => {
   const parsed = Number.parseFloat(value);
 
@@ -220,6 +293,27 @@ export const normalizeDotsSettingValue = (key, value) => {
   }
 };
 
+export const normalizePieSettingValue = (key, value) => {
+  switch (key) {
+    case 'shape':
+      return ['circle', 'rectangle'].includes(value) ? value : PIE_DEFAULT_SETTINGS.shape;
+    case 'style':
+      return ['filled', 'outline'].includes(value) ? value : PIE_DEFAULT_SETTINGS.style;
+    case 'fullScreen':
+      return value === true || value === 'true';
+    case 'decimals':
+      return clampNumber(value, 0, 10, PIE_DEFAULT_SETTINGS.decimals);
+    case 'inset':
+      return clampNumber(value, 0, 12, PIE_DEFAULT_SETTINGS.inset);
+    case 'outerX':
+      return clampNumber(value, 0, 12, PIE_DEFAULT_SETTINGS.outerX);
+    case 'outerY':
+      return clampNumber(value, 0, 12, PIE_DEFAULT_SETTINGS.outerY);
+    default:
+      return value;
+  }
+};
+
 export const getCountdownSettingsFromSearchParams = (searchParams) => {
   const mode = searchParams.get('mode');
   const frame = searchParams.get('frame');
@@ -250,6 +344,22 @@ export const getDotsSettingsFromSearchParams = (searchParams) => {
     inset: clampNumber(searchParams.get('inset'), 0, 12, DOTS_DEFAULT_SETTINGS.inset),
     outerX: clampNumber(searchParams.get('outerX'), 0, 12, DOTS_DEFAULT_SETTINGS.outerX),
     outerY: clampNumber(searchParams.get('outerY'), 0, 12, DOTS_DEFAULT_SETTINGS.outerY),
+  };
+};
+
+export const getPieSettingsFromSearchParams = (searchParams) => {
+  const shape = searchParams.get('shape');
+  const style = searchParams.get('style');
+  const fullScreen = searchParams.get('fullScreen');
+
+  return {
+    shape: ['circle', 'rectangle'].includes(shape) ? shape : PIE_DEFAULT_SETTINGS.shape,
+    style: ['filled', 'outline'].includes(style) ? style : PIE_DEFAULT_SETTINGS.style,
+    fullScreen: fullScreen === 'true' ? true : PIE_DEFAULT_SETTINGS.fullScreen,
+    decimals: clampNumber(searchParams.get('decimals'), 0, 10, PIE_DEFAULT_SETTINGS.decimals),
+    inset: clampNumber(searchParams.get('inset'), 0, 12, PIE_DEFAULT_SETTINGS.inset),
+    outerX: clampNumber(searchParams.get('outerX'), 0, 12, PIE_DEFAULT_SETTINGS.outerX),
+    outerY: clampNumber(searchParams.get('outerY'), 0, 12, PIE_DEFAULT_SETTINGS.outerY),
   };
 };
 

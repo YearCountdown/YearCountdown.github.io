@@ -5,7 +5,7 @@ import useViewShell from '../../hooks/useViewShell';
 import Header from '../GuestLayout/Header';
 import ViewSettingsGear from '../../components/ViewSettingsGear';
 
-const ViewLayout = ({ children, mainClassName = '' }) => {
+const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
   const { theme, setTheme } = useTheme();
   const { isEmbed, queryTheme, viewConfig, viewId, viewLinkMeta, viewState, updateViewSetting, sharedUrl } =
     useViewShell(theme);
@@ -32,7 +32,9 @@ const ViewLayout = ({ children, mainClassName = '' }) => {
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-stone-100 text-black dark:bg-zinc-950 dark:text-white">
       {!isEmbed ? <Header variant="view" /> : null}
       <main
-        className={`flex h-screen min-h-screen items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-10 ${mainClassName}`}
+        className={`flex h-screen min-h-screen items-center justify-center overflow-hidden ${
+          fullBleed ? '' : 'px-4 sm:px-6 lg:px-10'
+        } ${mainClassName}`}
       >
         {children}
       </main>

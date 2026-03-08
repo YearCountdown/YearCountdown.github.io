@@ -4,14 +4,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
+  PIE_DEFAULT_SETTINGS,
   getCountdownSettingsFromSearchParams,
   getDotsSettingsFromSearchParams,
+  getPieSettingsFromSearchParams,
   getSharedViewUrl,
   getViewConfigFromPathname,
   getViewIdFromPathname,
   getViewLinkMeta,
   isEmbedMode,
   normalizeDotsSettingValue,
+  normalizePieSettingValue,
 } from '../lib/viewSettings';
 
 const useViewShell = (theme) => {
@@ -23,6 +26,7 @@ const useViewShell = (theme) => {
     const viewConfig = getViewConfigFromPathname(location.pathname);
     const countdown = getCountdownSettingsFromSearchParams(searchParams);
     const dots = getDotsSettingsFromSearchParams(searchParams);
+    const pie = getPieSettingsFromSearchParams(searchParams);
 
     const updateSearchParam = (key, value, defaultValue) => {
       const nextParams = new URLSearchParams(location.search);
@@ -56,6 +60,7 @@ const useViewShell = (theme) => {
       viewState: {
         countdown,
         dots,
+        pie,
       },
       updateViewSetting: (viewId, key, value) => {
         if (viewId === 'countdown') {
@@ -65,6 +70,11 @@ const useViewShell = (theme) => {
 
         if (viewId === 'dots') {
           updateSearchParam(key, normalizeDotsSettingValue(key, value), DOTS_DEFAULT_SETTINGS[key]);
+          return;
+        }
+
+        if (viewId === 'pie') {
+          updateSearchParam(key, normalizePieSettingValue(key, value), PIE_DEFAULT_SETTINGS[key]);
         }
       },
       sharedUrl: getSharedViewUrl({
