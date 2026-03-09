@@ -122,7 +122,17 @@ const CircleFilled = ({ width, height, percentage, label, ids, showCenterLabel, 
   );
 };
 
-const CircleOutline = ({ width, height, percentage, label, showCenterLabel, fontSize, primaryColor, alternateColor }) => {
+const CircleOutline = ({
+  width,
+  height,
+  percentage,
+  label,
+  showCenterLabel,
+  fontSize,
+  primaryColor,
+  alternateColor,
+  textToneColor,
+}) => {
   const colors = getSurfaceColors(primaryColor, alternateColor);
   const centerX = width / 2;
   const centerY = height / 2;
@@ -151,7 +161,7 @@ const CircleOutline = ({ width, height, percentage, label, showCenterLabel, font
           y={centerY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill={alternateColor}
+          fill={textToneColor}
           style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
         >
           {label}
@@ -197,7 +207,17 @@ const RectFilled = ({ width, height, percentage, label, ids, showCenterLabel, fo
   );
 };
 
-const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSize, primaryColor, alternateColor }) => {
+const RectOutline = ({
+  width,
+  height,
+  percentage,
+  label,
+  showCenterLabel,
+  fontSize,
+  primaryColor,
+  alternateColor,
+  textToneColor,
+}) => {
   const colors = getSurfaceColors(primaryColor, alternateColor);
   const centerX = width / 2;
   const centerY = height / 2;
@@ -233,7 +253,7 @@ const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSi
           y={centerY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill={alternateColor}
+          fill={textToneColor}
           style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
         >
           {label}
@@ -321,6 +341,7 @@ const PieView = ({
                 fontSize={layout.fullScreenFontSize}
                 primaryColor={primaryColor}
                 alternateColor={alternateColor}
+                textToneColor={textToneColor}
               />
             )
           ) : isFilled ? (
@@ -345,6 +366,7 @@ const PieView = ({
               fontSize={layout.fullScreenFontSize}
               primaryColor={primaryColor}
               alternateColor={alternateColor}
+              textToneColor={textToneColor}
             />
           )}
         </div>
