@@ -288,10 +288,12 @@ const ViewSettingsGear = ({
       : VIEW_BRAND_TONE_MODES.DARK;
   const gearIconColor = resolvedGearIconTone === VIEW_BRAND_TONE_MODES.LIGHT ? 'rgba(255,255,255,0.88)' : 'rgba(17,17,17,0.88)';
   const resolvedTextToneMode = resolvedTextTone === VIEW_BRAND_TONE_MODES.LIGHT ? VIEW_BRAND_TONE_MODES.LIGHT : VIEW_BRAND_TONE_MODES.DARK;
-  const gearBackgroundColor = withAlpha(resolvedColors.alternate, 0.62);
+  const useThemeSurface = themeOnly || !appearanceColors;
+  const gearSurfaceBaseColor = useThemeSurface ? (theme === 'dark' ? '#000000' : '#ffffff') : resolvedColors.alternate;
+  const gearBackgroundColor = withAlpha(gearSurfaceBaseColor, useThemeSurface ? 0.76 : 0.62);
   const gearBorderColor = withAlpha(
     resolvedGearIconTone === VIEW_BRAND_TONE_MODES.LIGHT ? '#ffffff' : '#111111',
-    0.12,
+    useThemeSurface ? 0.1 : 0.12,
   );
 
   useEffect(() => {

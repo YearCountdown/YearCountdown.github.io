@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import CustomCursor from './components/CustomCursor';
 import { ThemeProvider } from './context/ThemeContext';
 import { FEATURE_NAV_LINKS } from './lib/navigation';
 import CountdownPage from './pages/views/CountdownPage';
@@ -25,6 +26,7 @@ const featureRoutes = FEATURE_NAV_LINKS.filter((link) => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ThemeProvider>
+    <CustomCursor />
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />

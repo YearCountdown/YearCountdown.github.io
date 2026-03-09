@@ -4,7 +4,7 @@ import BrandLockup from '../../components/BrandLockup';
 import CopyEmbedAction from '../../components/CopyEmbedAction';
 import { useTheme } from '../../context/ThemeContext';
 import useViewShell from '../../hooks/useViewShell';
-import { getToneColor, withAlpha } from '../../lib/viewColors';
+import { getThemeFromBackgroundColor, getToneColor, withAlpha } from '../../lib/viewColors';
 import Header from '../GuestLayout/Header';
 import ViewSettingsGear from '../../components/ViewSettingsGear';
 
@@ -48,10 +48,17 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
   }, []);
 
   useEffect(() => {
-    if (queryTheme === 'light' || queryTheme === 'dark') {
-      setTheme(queryTheme);
+    const activeAlternateColor =
+      viewState?.[viewId]?.alternate ?? viewColors.alternate;
+    const nextTheme =
+      queryTheme === 'light' || queryTheme === 'dark'
+        ? queryTheme
+        : getThemeFromBackgroundColor(activeAlternateColor);
+
+    if (theme !== nextTheme) {
+      setTheme(nextTheme);
     }
-  }, [queryTheme, setTheme]);
+  }, [queryTheme, setTheme, theme, viewColors.alternate, viewId, viewState]);
 
   useEffect(() => {
     if (!viewId || !viewState?.[viewId]) {

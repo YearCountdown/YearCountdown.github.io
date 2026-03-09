@@ -283,7 +283,9 @@ const Header = ({ variant = 'home' }) => {
               ))}
             </nav>
 
-            <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} className="hidden md:inline-flex" />
+            {!isViewLayout ? (
+              <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} className="hidden md:inline-flex" />
+            ) : null}
 
             <button
               type="button"
@@ -333,9 +335,11 @@ const Header = ({ variant = 'home' }) => {
               ))}
             </nav>
 
-            <div className="flex justify-center pb-6 pt-4">
-              <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
-            </div>
+            {!isViewLayout ? (
+              <div className="flex justify-center pb-6 pt-4">
+                <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}
