@@ -1,7 +1,7 @@
 import useDotsGrid from '../../hooks/useDotsGrid';
 import { withAlpha } from '../../lib/viewColors';
 
-const getTriangleRotation = ({ triangleMode, triangleAngle, index }) => {
+const getTriangleRotation = ({ triangleMode, triangleAngle, row, column }) => {
   if (triangleMode === 'angle') {
     return triangleAngle;
   }
@@ -11,7 +11,7 @@ const getTriangleRotation = ({ triangleMode, triangleAngle, index }) => {
   }
 
   if (triangleMode === 'alternating') {
-    return index % 2 === 0 ? 0 : 180;
+    return (row + column) % 2 === 0 ? 0 : 180;
   }
 
   return 0;
@@ -105,27 +105,33 @@ const DotsView = ({
           alignContent: 'space-between',
         }}
       >
-        {dots.map((dot, index) => (
-          <div
-            key={dot.key}
-            aria-hidden="true"
-            style={getDotStyle({
-              status: dot.status,
-              shape,
-              size: grid.dotSize,
-              rotation:
-                shape === 'triangle'
-                  ? getTriangleRotation({
-                      triangleMode,
-                      triangleAngle,
-                      index,
-                    })
-                  : 0,
-              primaryColor,
-              inactiveOpacity,
-            })}
-          />
-        ))}
+        {dots.map((dot, index) => {
+          const column = index % grid.columns;
+          const row = Math.floor(index / grid.columns);
+
+          return (
+            <div
+              key={dot.key}
+              aria-hidden="true"
+              style={getDotStyle({
+                status: dot.status,
+                shape,
+                size: grid.dotSize,
+                rotation:
+                  shape === 'triangle'
+                    ? getTriangleRotation({
+                        triangleMode,
+                        triangleAngle,
+                        row,
+                        column,
+                      })
+                    : 0,
+                primaryColor,
+                inactiveOpacity,
+              })}
+            />
+          );
+        })}
       </div>
     </section>
   );
