@@ -114,8 +114,8 @@ const HomeHero = () => {
         <div data-home-hero-shape className="absolute bottom-[12%] right-[12%] h-10 w-10 rounded-t-full border border-b-0 border-black/10 dark:border-white/10" />
       </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-14 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:items-center lg:gap-12">
-        <div className="max-w-2xl space-y-5 lg:space-y-6">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:items-center lg:gap-12">
+        <div className="mx-auto flex max-w-2xl flex-col items-center space-y-5 text-center lg:mx-0 lg:items-start lg:text-left lg:space-y-6">
           <p className="text-xs uppercase tracking-[0.36em] text-black/45 dark:text-white/45">Present Year</p>
           <h1 ref={headlineRef} className="text-[clamp(1.68rem,4.8vw,3.48rem)] font-light uppercase leading-[0.9] tracking-[0.08em] text-black dark:text-white">
             {headline}
@@ -123,7 +123,7 @@ const HomeHero = () => {
           <p className="text-lg font-light uppercase tracking-[0.24em] text-black/56 dark:text-white/56 sm:text-xl">
             See the year as one clear measure.
           </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-3 pt-3">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 pt-3 lg:justify-start">
             {heroLinks.map((link) => (
               <Link
                 key={link.to}
@@ -136,7 +136,7 @@ const HomeHero = () => {
           </div>
         </div>
 
-        <div className="w-full max-w-2xl justify-self-end">
+        <div className="mx-auto w-full max-w-2xl justify-self-center lg:mx-0 lg:justify-self-end">
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <CountdownCell value={countdown.days} label={UNIT_LABELS.days} />
             <CountdownCell value={countdown.hours} label={UNIT_LABELS.hours} />
