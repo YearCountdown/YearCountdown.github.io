@@ -44,28 +44,6 @@ const CATEGORY_LABELS = {
   all: 'All',
 };
 
-const ThemeToggleIcon = ({ theme }) => {
-  if (theme === 'dark') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current">
-        <path
-          d="M12 3v2.5M12 18.5V21M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M3 12h2.5M18.5 12H21M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8M15.5 12A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5Z"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-      <path d="M20.742 13.045a8.25 8.25 0 0 1-9.787-9.787 8.99 8.99 0 1 0 9.787 9.787Z" />
-    </svg>
-  );
-};
-
-
 const SearchClearButton = ({ onClick }) => {
   return (
     <button
@@ -77,21 +55,6 @@ const SearchClearButton = ({ onClick }) => {
       <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current">
         <path d="M6 6l12 12M18 6 6 18" strokeWidth="1.7" strokeLinecap="round" />
       </svg>
-    </button>
-  );
-};
-
-const ThemeToggleButton = ({ theme, onToggle }) => {
-  const nextTheme = theme === 'dark' ? 'light' : 'dark';
-
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-label={`Switch to ${nextTheme} theme`}
-      className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-black/82 transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:text-white/82 dark:focus-visible:ring-white/40"
-    >
-      <ThemeToggleIcon theme={theme} />
     </button>
   );
 };
@@ -299,11 +262,12 @@ const MIN_SIDEBAR_WIDTH = 280;
 const MAX_SIDEBAR_WIDTH = 520;
 
 const SamplesPage = () => {
-  const { theme, setTheme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState('');
   const searchInputRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isResizingSidebar, setIsResizingSidebar] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     if (typeof window === 'undefined') {
       return DEFAULT_SIDEBAR_WIDTH;
@@ -395,6 +359,7 @@ const SamplesPage = () => {
       }
 
       resizingRef.current = false;
+      setIsResizingSidebar(false);
       document.body.style.userSelect = '';
       document.body.style.cursor = '';
     };
@@ -404,6 +369,7 @@ const SamplesPage = () => {
 
     return () => {
       resizingRef.current = false;
+      setIsResizingSidebar(false);
       document.body.style.userSelect = '';
       document.body.style.cursor = '';
       window.removeEventListener('mousemove', handleMouseMove);
@@ -544,12 +510,6 @@ const SamplesPage = () => {
     });
   };
 
-  const handleThemeToggle = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    toggleTheme();
-    setPreviewTheme(nextTheme);
-  };
-
   const handleSelectSample = (sampleId) => {
     setSearchParams({ sample: sampleId });
     setIsSidebarOpen(false);
@@ -561,6 +521,7 @@ const SamplesPage = () => {
     }
 
     resizingRef.current = true;
+    setIsResizingSidebar(true);
     document.body.style.userSelect = 'none';
     document.body.style.cursor = 'col-resize';
   };
@@ -585,6 +546,13 @@ const SamplesPage = () => {
         />
       ) : null}
 
+      {isResizingSidebar ? (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[60] hidden cursor-col-resize lg:block"
+        />
+      ) : null}
+
       <aside
         className={`absolute inset-y-0 left-0 z-40 w-[min(22rem,calc(100vw-3rem))] border-r border-black/10 bg-stone-100 transition-transform duration-300 dark:border-white/10 dark:bg-zinc-950 lg:w-[var(--samples-sidebar-width)] ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -593,7 +561,6 @@ const SamplesPage = () => {
         <div className="flex h-full flex-col overflow-hidden px-4 py-4 sm:px-5 lg:px-6">
           <div className="flex items-center justify-between gap-4">
             <BrandLockup iconOnly compact className="shrink-0" />
-            <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
           </div>
 
           <div className="mt-6 shrink-0">
@@ -665,11 +632,12 @@ const SamplesPage = () => {
           <button
             type="button"
             aria-label="Resize samples sidebar"
+            data-cursor-mode="resize-x"
             onMouseDown={handleResizeStart}
-            className="absolute right-0 top-1/2 z-20 hidden h-28 w-8 translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center lg:flex"
+            className="absolute right-1 top-1/2 z-20 hidden h-44 w-6 -translate-y-1/2 cursor-col-resize items-center justify-center lg:flex"
           >
-            <span className="pointer-events-none absolute inset-y-0 left-1/2 w-[5px] -translate-x-1/2 rounded-full" style={{ backgroundColor: previewState.primary }} />
-            <span className="pointer-events-none relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-stone-100/92 text-black/70 shadow-sm backdrop-blur-sm transition-colors duration-200 dark:border-white/10 dark:bg-zinc-950/92 dark:text-white/70">
+            <span className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-[3px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-95 shadow-[0_0_16px_rgba(0,0,0,0.12)]" style={{ backgroundColor: theme === 'dark' ? '#ffffff' : '#000000' }} />
+            <span className="pointer-events-none absolute left-1/2 top-1/2 z-10 inline-flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-stone-100/92 text-black/70 shadow-sm backdrop-blur-sm transition-colors duration-200 dark:border-white/10 dark:bg-zinc-950/92 dark:text-white/70">
               <ResizeHandleIcon />
             </span>
           </button>
@@ -710,12 +678,11 @@ const SamplesPage = () => {
               }}
               brandToneMode={brandToneMode}
               textToneMode={textToneMode}
-              setBrandToneMode={setBrandToneMode}
-              setTextToneMode={setTextToneMode}
-              updateAppearanceColors={updateAppearanceColors}
-              iconTone={resolvedBrandIconTone}
-              backgroundColor={previewState.alternate}
-              toneColor={toneColor}
+              onBrandToneModeChange={setBrandToneMode}
+              onTextToneModeChange={setTextToneMode}
+              onColorsChange={updateAppearanceColors}
+              gearIconTone={resolvedBrandIconTone}
+              resolvedTextTone={resolvedTextTone}
             />
           </div>
         </div>

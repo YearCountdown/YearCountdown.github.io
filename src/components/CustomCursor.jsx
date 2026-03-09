@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const FINE_POINTER_QUERY = '(hover: hover) and (pointer: fine)';
 const CURSOR_MESSAGE_TYPE = 'yc-cursor-sync';
+const DEFAULT_CURSOR_MODE = 'default';
 
 const CustomCursor = () => {
   const cursorRef = useRef(null);
@@ -96,6 +97,14 @@ const CustomCursor = () => {
 
     let isVisible = false;
 
+    const setCursorMode = (mode = DEFAULT_CURSOR_MODE) => {
+      cursorElement.dataset.mode = mode;
+    };
+
+    const setNativeCursorVisibility = (showNativeCursor) => {
+      document.documentElement.classList.toggle('has-custom-cursor', !showNativeCursor);
+    };
+
     const setCursorPosition = (x, y) => {
       if (!isVisible) {
         cursorElement.style.opacity = '1';
@@ -107,11 +116,29 @@ const CustomCursor = () => {
     };
 
     const handlePointerMove = (event) => {
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = document.documentElement.clientHeight;
+      const isInScrollbarGutter = event.clientX >= viewportWidth || event.clientY >= viewportHeight;
+
+      if (isInScrollbarGutter) {
+        setNativeCursorVisibility(true);
+        handlePointerLeave();
+        return;
+      }
+
+      setNativeCursorVisibility(false);
+
+      const nextMode = event.target instanceof Element
+        ? event.target.closest('[data-cursor-mode]')?.getAttribute('data-cursor-mode') ?? DEFAULT_CURSOR_MODE
+        : DEFAULT_CURSOR_MODE;
+
+      setCursorMode(nextMode);
       setCursorPosition(event.clientX, event.clientY);
     };
 
     const handlePointerLeave = () => {
       cursorElement.style.opacity = '0';
+      cursorElement.dataset.mode = DEFAULT_CURSOR_MODE;
       isVisible = false;
     };
 
@@ -167,6 +194,7 @@ const CustomCursor = () => {
     document.addEventListener('mouseleave', handlePointerLeave);
 
     return () => {
+      setNativeCursorVisibility(false);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointerup', handlePointerUp);
@@ -185,10 +213,15 @@ const CustomCursor = () => {
       ref={cursorRef}
       aria-hidden="true"
       data-active="false"
+      data-mode="default"
       className="custom-cursor pointer-events-none fixed left-0 top-0 z-[100] opacity-0"
     >
       <span className="custom-cursor__ring" />
       <span className="custom-cursor__dot" />
+      <span className="custom-cursor__resize-line" />
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="custom-cursor__resize-icon">
+        <path d="M8 7 3 12l5 5M16 7l5 5-5 5M3 12h18" />
+      </svg>
     </div>
   );
 };
