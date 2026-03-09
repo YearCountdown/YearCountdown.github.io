@@ -258,8 +258,15 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
 };
 
 const DEFAULT_SIDEBAR_WIDTH = 352;
-const MIN_SIDEBAR_WIDTH = 280;
-const MAX_SIDEBAR_WIDTH = 520;
+const MIN_SIDEBAR_WIDTH = 100;
+const PREVIEW_MIN_WIDTH = 100;
+
+const clampSidebarWidth = (value, viewportWidth) => {
+  const safeViewportWidth = Number.isFinite(viewportWidth) ? viewportWidth : DEFAULT_SIDEBAR_WIDTH + PREVIEW_MIN_WIDTH;
+  const maxSidebarWidth = Math.max(MIN_SIDEBAR_WIDTH, safeViewportWidth - PREVIEW_MIN_WIDTH);
+
+  return Math.min(maxSidebarWidth, Math.max(MIN_SIDEBAR_WIDTH, value));
+};
 
 const SamplesPage = () => {
   const { theme, setTheme } = useTheme();
@@ -280,7 +287,7 @@ const SamplesPage = () => {
       return DEFAULT_SIDEBAR_WIDTH;
     }
 
-    return Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, parsedWidth));
+    return clampSidebarWidth(parsedWidth, window.innerWidth);
   });
   const resizingRef = useRef(false);
   const requestedSampleId = searchParams.get('sample');
@@ -344,12 +351,29 @@ const SamplesPage = () => {
   }, [sidebarWidth]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const handleResize = () => {
+      setSidebarWidth((current) => clampSidebarWidth(current, window.innerWidth));
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleMouseMove = (event) => {
       if (!resizingRef.current || window.innerWidth < 1024) {
         return;
       }
 
-      const nextWidth = Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, event.clientX));
+      const nextWidth = clampSidebarWidth(event.clientX, window.innerWidth);
       setSidebarWidth(nextWidth);
     };
 
