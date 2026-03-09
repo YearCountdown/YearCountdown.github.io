@@ -294,23 +294,10 @@ const HomepageSections = () => {
         body="The wallpaper URL copies a PageShot image of the active embed view. On iPhone, the app seeds exact wallpaper pixels and safer edge spacing first, then lets you override them before using that URL in Shortcuts."
         shapeVariant="signal"
       >
-        <div className="grid gap-px bg-black/8 dark:bg-white/8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-          <div className="grid gap-px bg-black/8 dark:bg-white/8">
+        <div className="space-y-px bg-black/8 dark:bg-white/8">
+          <div className="grid gap-px lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
             <IPhoneLockscreenVector />
 
-            <div data-home-card className="bg-stone-100 px-6 py-8 dark:bg-zinc-950 sm:px-8 sm:py-10">
-              <h3 className="text-2xl font-light uppercase tracking-[0.06em] text-black dark:text-white sm:text-[1.75rem]">
-                {WALLPAPER_NOTES[0].title}
-              </h3>
-              <ul className="mt-6 space-y-3 text-sm leading-7 text-black/58 dark:text-white/58 sm:text-base sm:leading-8">
-                {WALLPAPER_NOTES[0].items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="grid gap-px bg-black/8 dark:bg-white/8">
             <div className="bg-stone-100 px-6 py-8 dark:bg-zinc-950 sm:px-8 sm:py-10">
               <ol className="space-y-6">
                 {WALLPAPER_STEPS.map((step, index) => (
@@ -329,6 +316,19 @@ const HomepageSections = () => {
                   </li>
                 ))}
               </ol>
+            </div>
+          </div>
+
+          <div className="grid gap-px lg:grid-cols-2">
+            <div data-home-card className="bg-stone-100 px-6 py-8 dark:bg-zinc-950 sm:px-8 sm:py-10">
+              <h3 className="text-2xl font-light uppercase tracking-[0.06em] text-black dark:text-white sm:text-[1.75rem]">
+                {WALLPAPER_NOTES[0].title}
+              </h3>
+              <ul className="mt-6 space-y-3 text-sm leading-7 text-black/58 dark:text-white/58 sm:text-base sm:leading-8">
+                {WALLPAPER_NOTES[0].items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </div>
 
             <div data-home-card className="bg-stone-100 px-6 py-8 dark:bg-zinc-950 sm:px-8 sm:py-10">
