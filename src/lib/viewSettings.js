@@ -294,14 +294,100 @@ export const isEmbedMode = (searchParams) => {
   return searchParams.get('embed') === 'true';
 };
 
-export const getSharedViewUrl = ({ pathname, search, origin, theme }) => {
+export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState }) => {
   const currentTheme = resolveTheme(theme);
-  const params = new URLSearchParams(search);
-  const resolvedColors = resolveViewColors({
-    theme: currentTheme,
-    primary: params.get('primary'),
-    alternate: params.get('alternate'),
-  });
+  const params = new URLSearchParams();
+  const resolvedColors = resolveViewColors({ theme: currentTheme });
+
+  if (viewId === 'countdown' && viewState) {
+    if (viewState.mode !== COUNTDOWN_DEFAULT_SETTINGS.mode) {
+      params.set('mode', viewState.mode);
+    }
+    if (viewState.frame !== COUNTDOWN_DEFAULT_SETTINGS.frame) {
+      params.set('frame', String(viewState.frame));
+    }
+    if (viewState.labels !== COUNTDOWN_DEFAULT_SETTINGS.labels) {
+      params.set('labels', String(viewState.labels));
+    }
+  }
+
+  if (viewId === 'dots' && viewState) {
+    if (viewState.shape !== DOTS_DEFAULT_SETTINGS.shape) {
+      params.set('shape', viewState.shape);
+    }
+    if (viewState.triangleMode !== DOTS_DEFAULT_SETTINGS.triangleMode) {
+      params.set('triangleMode', viewState.triangleMode);
+    }
+    if (viewState.triangleAngle !== DOTS_DEFAULT_SETTINGS.triangleAngle) {
+      params.set('triangleAngle', String(viewState.triangleAngle));
+    }
+    if (viewState.gapX !== DOTS_DEFAULT_SETTINGS.gapX) {
+      params.set('gapX', String(viewState.gapX));
+    }
+    if (viewState.gapY !== DOTS_DEFAULT_SETTINGS.gapY) {
+      params.set('gapY', String(viewState.gapY));
+    }
+    if (viewState.inset !== DOTS_DEFAULT_SETTINGS.inset) {
+      params.set('inset', String(viewState.inset));
+    }
+    if (viewState.outerX !== DOTS_DEFAULT_SETTINGS.outerX) {
+      params.set('outerX', String(viewState.outerX));
+    }
+    if (viewState.outerY !== DOTS_DEFAULT_SETTINGS.outerY) {
+      params.set('outerY', String(viewState.outerY));
+    }
+  }
+
+  if (viewId === 'pie' && viewState) {
+    if (viewState.shape !== PIE_DEFAULT_SETTINGS.shape) {
+      params.set('shape', viewState.shape);
+    }
+    if (viewState.style !== PIE_DEFAULT_SETTINGS.style) {
+      params.set('style', viewState.style);
+    }
+    if (viewState.fullScreen !== PIE_DEFAULT_SETTINGS.fullScreen) {
+      params.set('fullScreen', String(viewState.fullScreen));
+    }
+    if (viewState.decimals !== PIE_DEFAULT_SETTINGS.decimals) {
+      params.set('decimals', String(viewState.decimals));
+    }
+    if (viewState.inset !== PIE_DEFAULT_SETTINGS.inset) {
+      params.set('inset', String(viewState.inset));
+    }
+    if (viewState.outerX !== PIE_DEFAULT_SETTINGS.outerX) {
+      params.set('outerX', String(viewState.outerX));
+    }
+    if (viewState.outerY !== PIE_DEFAULT_SETTINGS.outerY) {
+      params.set('outerY', String(viewState.outerY));
+    }
+  }
+
+  if (viewId === 'progress' && viewState) {
+    if (viewState.mode !== PROGRESS_DEFAULT_SETTINGS.mode) {
+      params.set('mode', viewState.mode);
+    }
+    if (viewState.fullScreen !== PROGRESS_DEFAULT_SETTINGS.fullScreen) {
+      params.set('fullScreen', String(viewState.fullScreen));
+    }
+    if (viewState.decimals !== PROGRESS_DEFAULT_SETTINGS.decimals) {
+      params.set('decimals', String(viewState.decimals));
+    }
+    if (viewState.fontSize !== PROGRESS_DEFAULT_SETTINGS.fontSize) {
+      params.set('fontSize', String(viewState.fontSize));
+    }
+    if (viewState.lineWidth !== PROGRESS_DEFAULT_SETTINGS.lineWidth) {
+      params.set('lineWidth', String(viewState.lineWidth));
+    }
+    if (viewState.inset !== PROGRESS_DEFAULT_SETTINGS.inset) {
+      params.set('inset', String(viewState.inset));
+    }
+    if (viewState.outerX !== PROGRESS_DEFAULT_SETTINGS.outerX) {
+      params.set('outerX', String(viewState.outerX));
+    }
+    if (viewState.outerY !== PROGRESS_DEFAULT_SETTINGS.outerY) {
+      params.set('outerY', String(viewState.outerY));
+    }
+  }
 
   params.set('embed', 'true');
   params.set('theme', currentTheme === THEMES.DARK ? THEMES.DARK : THEMES.LIGHT);
@@ -366,11 +452,9 @@ const clampNumber = (value, min, max, fallback) => {
   return Math.min(max, Math.max(min, parsed));
 };
 
-const getResolvedColorSettings = (searchParams, theme) => {
+const getResolvedColorSettings = (theme) => {
   return resolveViewColors({
     theme,
-    primary: searchParams.get(VIEW_COLOR_SETTINGS.primary),
-    alternate: searchParams.get(VIEW_COLOR_SETTINGS.alternate),
   });
 };
 
@@ -497,75 +581,130 @@ export const normalizeProgressSettingValueWithTheme = (key, value, theme) => {
   return normalizeProgressSettingValue(key, value);
 };
 
-export const getCountdownSettingsFromSearchParams = (searchParams, theme) => {
-  const mode = searchParams.get('mode');
-  const frame = searchParams.get('frame');
-  const labels = searchParams.get('labels');
-  const colors = getResolvedColorSettings(searchParams, theme);
+export const getCountdownSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+  const mode = searchParams.get('mode') ?? persistedSettings.mode;
+  const frame = searchParams.get('frame') ?? persistedSettings.frame;
+  const labels = searchParams.get('labels') ?? persistedSettings.labels;
+  const colors = getResolvedColorSettings(theme);
 
   return {
     mode: ['all', 'days', 'hours', 'minutes', 'seconds'].includes(mode)
       ? mode
       : COUNTDOWN_DEFAULT_SETTINGS.mode,
-    frame: frame === 'false' ? false : COUNTDOWN_DEFAULT_SETTINGS.frame,
-    labels: labels === 'false' ? false : COUNTDOWN_DEFAULT_SETTINGS.labels,
+    frame:
+      frame === 'true' || frame === true
+        ? true
+        : frame === 'false' || frame === false
+          ? false
+          : COUNTDOWN_DEFAULT_SETTINGS.frame,
+    labels:
+      labels === 'true' || labels === true
+        ? true
+        : labels === 'false' || labels === false
+          ? false
+          : COUNTDOWN_DEFAULT_SETTINGS.labels,
     ...colors,
   };
 };
 
-export const getDotsSettingsFromSearchParams = (searchParams, theme) => {
-  const shape = searchParams.get('shape');
-  const triangleMode = searchParams.get('triangleMode');
+export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+  const shape = searchParams.get('shape') ?? persistedSettings.shape;
+  const triangleMode = searchParams.get('triangleMode') ?? persistedSettings.triangleMode;
   const legacyGap = searchParams.get('gap');
-  const colors = getResolvedColorSettings(searchParams, theme);
+  const colors = getResolvedColorSettings(theme);
 
   return {
     shape: ['circle', 'square', 'triangle'].includes(shape) ? shape : DOTS_DEFAULT_SETTINGS.shape,
     triangleMode: ['upright', 'inverted', 'alternating', 'angle'].includes(triangleMode)
       ? triangleMode
       : DOTS_DEFAULT_SETTINGS.triangleMode,
-    triangleAngle: clampNumber(searchParams.get('triangleAngle'), 0, 360, DOTS_DEFAULT_SETTINGS.triangleAngle),
-    gapX: clampNumber(searchParams.get('gapX') ?? legacyGap, 0, 8, DOTS_DEFAULT_SETTINGS.gapX),
-    gapY: clampNumber(searchParams.get('gapY') ?? legacyGap, 0, 8, DOTS_DEFAULT_SETTINGS.gapY),
-    inset: clampNumber(searchParams.get('inset'), 0, 12, DOTS_DEFAULT_SETTINGS.inset),
-    outerX: clampNumber(searchParams.get('outerX'), 0, 12, DOTS_DEFAULT_SETTINGS.outerX),
-    outerY: clampNumber(searchParams.get('outerY'), 0, 12, DOTS_DEFAULT_SETTINGS.outerY),
+    triangleAngle: clampNumber(
+      searchParams.get('triangleAngle') ?? persistedSettings.triangleAngle,
+      0,
+      360,
+      DOTS_DEFAULT_SETTINGS.triangleAngle,
+    ),
+    gapX: clampNumber(
+      searchParams.get('gapX') ?? legacyGap ?? persistedSettings.gapX,
+      0,
+      8,
+      DOTS_DEFAULT_SETTINGS.gapX,
+    ),
+    gapY: clampNumber(
+      searchParams.get('gapY') ?? legacyGap ?? persistedSettings.gapY,
+      0,
+      8,
+      DOTS_DEFAULT_SETTINGS.gapY,
+    ),
+    inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, DOTS_DEFAULT_SETTINGS.inset),
+    outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, DOTS_DEFAULT_SETTINGS.outerX),
+    outerY: clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 12, DOTS_DEFAULT_SETTINGS.outerY),
     ...colors,
   };
 };
 
-export const getPieSettingsFromSearchParams = (searchParams, theme) => {
-  const shape = searchParams.get('shape');
-  const style = searchParams.get('style');
-  const fullScreen = searchParams.get('fullScreen');
-  const colors = getResolvedColorSettings(searchParams, theme);
+export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+  const shape = searchParams.get('shape') ?? persistedSettings.shape;
+  const style = searchParams.get('style') ?? persistedSettings.style;
+  const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
+  const colors = getResolvedColorSettings(theme);
 
   return {
     shape: ['circle', 'rectangle'].includes(shape) ? shape : PIE_DEFAULT_SETTINGS.shape,
     style: ['filled', 'outline'].includes(style) ? style : PIE_DEFAULT_SETTINGS.style,
-    fullScreen: fullScreen === 'true' ? true : PIE_DEFAULT_SETTINGS.fullScreen,
-    decimals: clampNumber(searchParams.get('decimals'), 0, 10, PIE_DEFAULT_SETTINGS.decimals),
-    inset: clampNumber(searchParams.get('inset'), 0, 12, PIE_DEFAULT_SETTINGS.inset),
-    outerX: clampNumber(searchParams.get('outerX'), 0, 12, PIE_DEFAULT_SETTINGS.outerX),
-    outerY: clampNumber(searchParams.get('outerY'), 0, 12, PIE_DEFAULT_SETTINGS.outerY),
+    fullScreen:
+      fullScreen === 'true' || fullScreen === true
+        ? true
+        : fullScreen === 'false' || fullScreen === false
+          ? false
+          : PIE_DEFAULT_SETTINGS.fullScreen,
+    decimals: clampNumber(
+      searchParams.get('decimals') ?? persistedSettings.decimals,
+      0,
+      10,
+      PIE_DEFAULT_SETTINGS.decimals,
+    ),
+    inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, PIE_DEFAULT_SETTINGS.inset),
+    outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, PIE_DEFAULT_SETTINGS.outerX),
+    outerY: clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 12, PIE_DEFAULT_SETTINGS.outerY),
     ...colors,
   };
 };
 
-export const getProgressSettingsFromSearchParams = (searchParams, theme) => {
-  const mode = searchParams.get('mode');
-  const fullScreen = searchParams.get('fullScreen');
-  const colors = getResolvedColorSettings(searchParams, theme);
+export const getProgressSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+  const mode = searchParams.get('mode') ?? persistedSettings.mode;
+  const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
+  const colors = getResolvedColorSettings(theme);
 
   return {
     mode: ['field', 'line'].includes(mode) ? mode : PROGRESS_DEFAULT_SETTINGS.mode,
-    fullScreen: fullScreen === 'false' ? false : PROGRESS_DEFAULT_SETTINGS.fullScreen,
-    decimals: clampNumber(searchParams.get('decimals'), 0, 10, PROGRESS_DEFAULT_SETTINGS.decimals),
-    fontSize: clampNumber(searchParams.get('fontSize'), 0.6, 2.5, PROGRESS_DEFAULT_SETTINGS.fontSize),
-    lineWidth: clampNumber(searchParams.get('lineWidth'), 2, 80, PROGRESS_DEFAULT_SETTINGS.lineWidth),
-    inset: clampNumber(searchParams.get('inset'), 0, 12, PROGRESS_DEFAULT_SETTINGS.inset),
-    outerX: clampNumber(searchParams.get('outerX'), 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX),
-    outerY: clampNumber(searchParams.get('outerY'), 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY),
+    fullScreen:
+      fullScreen === 'true' || fullScreen === true
+        ? true
+        : fullScreen === 'false' || fullScreen === false
+          ? false
+          : PROGRESS_DEFAULT_SETTINGS.fullScreen,
+    decimals: clampNumber(
+      searchParams.get('decimals') ?? persistedSettings.decimals,
+      0,
+      10,
+      PROGRESS_DEFAULT_SETTINGS.decimals,
+    ),
+    fontSize: clampNumber(
+      searchParams.get('fontSize') ?? persistedSettings.fontSize,
+      0.6,
+      2.5,
+      PROGRESS_DEFAULT_SETTINGS.fontSize,
+    ),
+    lineWidth: clampNumber(
+      searchParams.get('lineWidth') ?? persistedSettings.lineWidth,
+      2,
+      80,
+      PROGRESS_DEFAULT_SETTINGS.lineWidth,
+    ),
+    inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, PROGRESS_DEFAULT_SETTINGS.inset),
+    outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX),
+    outerY: clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY),
     ...colors,
   };
 };

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useTheme } from '../context/ThemeContext';
+import { readViewPreferencesCookie, writeViewPreferencesCookie } from '../lib/viewPreferences';
 import {
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
@@ -33,16 +34,22 @@ const useViewShell = (themeOverride) => {
   return useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
     const queryTheme = searchParams.get('theme');
-    const theme =
-      queryTheme === 'light' || queryTheme === 'dark'
-        ? queryTheme
-        : resolveTheme(themeOverride ?? contextTheme);
+    const theme = resolveTheme(themeOverride ?? contextTheme);
+    const persistedPreferences = readViewPreferencesCookie();
     const viewConfig = getViewConfigFromPathname(location.pathname);
     const themeDefaults = getDefaultViewColors(theme);
-    const countdown = getCountdownSettingsFromSearchParams(searchParams, theme);
-    const dots = getDotsSettingsFromSearchParams(searchParams, theme);
-    const pie = getPieSettingsFromSearchParams(searchParams, theme);
-    const progress = getProgressSettingsFromSearchParams(searchParams, theme);
+    const countdown = getCountdownSettingsFromSearchParams(
+      searchParams,
+      theme,
+      persistedPreferences.countdown,
+    );
+    const dots = getDotsSettingsFromSearchParams(searchParams, theme, persistedPreferences.dots);
+    const pie = getPieSettingsFromSearchParams(searchParams, theme, persistedPreferences.pie);
+    const progress = getProgressSettingsFromSearchParams(
+      searchParams,
+      theme,
+      persistedPreferences.progress,
+    );
 
     const updateSearchParam = (key, value, defaultValue) => {
       const nextParams = new URLSearchParams(location.search);
@@ -80,13 +87,23 @@ const useViewShell = (themeOverride) => {
         progress,
       },
       updateViewSetting: (viewId, key, value) => {
+        const nextPreferences = {
+          ...persistedPreferences,
+        };
+
         if (viewId === 'countdown') {
           const countdownDefaultValue =
             key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate
               ? themeDefaults[key]
               : COUNTDOWN_DEFAULT_SETTINGS[key];
 
-          updateSearchParam(key, normalizeCountdownSettingValue(key, value, theme), countdownDefaultValue);
+          const normalizedValue = normalizeCountdownSettingValue(key, value, theme);
+          nextPreferences.countdown = {
+            ...(persistedPreferences.countdown ?? {}),
+            [key]: normalizedValue,
+          };
+          writeViewPreferencesCookie(nextPreferences);
+          updateSearchParam(key, normalizedValue, countdownDefaultValue);
           return;
         }
 
@@ -96,7 +113,13 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : DOTS_DEFAULT_SETTINGS[key];
 
-          updateSearchParam(key, normalizeDotsSettingValueWithTheme(key, value, theme), dotsDefaultValue);
+          const normalizedValue = normalizeDotsSettingValueWithTheme(key, value, theme);
+          nextPreferences.dots = {
+            ...(persistedPreferences.dots ?? {}),
+            [key]: normalizedValue,
+          };
+          writeViewPreferencesCookie(nextPreferences);
+          updateSearchParam(key, normalizedValue, dotsDefaultValue);
           return;
         }
 
@@ -106,7 +129,13 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : PIE_DEFAULT_SETTINGS[key];
 
-          updateSearchParam(key, normalizePieSettingValueWithTheme(key, value, theme), pieDefaultValue);
+          const normalizedValue = normalizePieSettingValueWithTheme(key, value, theme);
+          nextPreferences.pie = {
+            ...(persistedPreferences.pie ?? {}),
+            [key]: normalizedValue,
+          };
+          writeViewPreferencesCookie(nextPreferences);
+          updateSearchParam(key, normalizedValue, pieDefaultValue);
           return;
         }
 
@@ -116,18 +145,26 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : PROGRESS_DEFAULT_SETTINGS[key];
 
-          updateSearchParam(
-            key,
-            normalizeProgressSettingValueWithTheme(key, value, theme),
-            progressDefaultValue,
-          );
+          const normalizedValue = normalizeProgressSettingValueWithTheme(key, value, theme);
+          nextPreferences.progress = {
+            ...(persistedPreferences.progress ?? {}),
+            [key]: normalizedValue,
+          };
+          writeViewPreferencesCookie(nextPreferences);
+          updateSearchParam(key, normalizedValue, progressDefaultValue);
         }
       },
       sharedUrl: getSharedViewUrl({
         pathname: location.pathname,
-        search: location.search,
         origin: window.location.origin,
         theme,
+        viewId: getViewIdFromPathname(location.pathname),
+        viewState: {
+          countdown,
+          dots,
+          pie,
+          progress,
+        }[getViewIdFromPathname(location.pathname)],
       }),
     };
   }, [contextTheme, location.pathname, location.search, navigate, themeOverride]);
