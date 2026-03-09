@@ -103,14 +103,28 @@ const MenuToggleButton = ({ open, onClick }) => {
       onClick={onClick}
       aria-label={open ? 'Close samples menu' : 'Open samples menu'}
       aria-expanded={open}
-      className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-black/82 backdrop-blur-xl transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:text-white/82 dark:focus-visible:ring-white/40 lg:hidden"
-      style={{ backgroundColor: 'rgba(255,255,255,0.72)' }}
+      className="inline-flex h-11 w-11 cursor-pointer items-center justify-center text-black/82 transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:text-white/82 dark:focus-visible:ring-white/40 lg:hidden"
     >
-      <span className="relative block h-4 w-5">
-        <span className={`absolute left-0 top-0 h-px w-5 bg-current transition-transform duration-200 ${open ? 'translate-y-[7px] rotate-45' : ''}`} />
-        <span className={`absolute left-0 top-[7px] h-px w-5 bg-current transition-opacity duration-200 ${open ? 'opacity-0' : 'opacity-100'}`} />
-        <span className={`absolute left-0 top-[14px] h-px w-5 bg-current transition-transform duration-200 ${open ? '-translate-y-[7px] -rotate-45' : ''}`} />
-      </span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 overflow-visible fill-none stroke-current">
+        <path
+          d="M4 7h16"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          className={`origin-center transition-transform duration-300 ease-out ${open ? 'translate-y-[5px] rotate-45' : ''}`}
+        />
+        <path
+          d="M4 12h16"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          className={`origin-center transition-all duration-300 ease-out ${open ? 'opacity-0' : 'opacity-100'}`}
+        />
+        <path
+          d="M4 17h16"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          className={`origin-center transition-transform duration-300 ease-out ${open ? '-translate-y-[5px] -rotate-45' : ''}`}
+        />
+      </svg>
     </button>
   );
 };
