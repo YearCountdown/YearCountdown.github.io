@@ -4,13 +4,13 @@ import HomeSectionBlock, { ModeGrid, TwoColumnList } from './HomeSectionBlock';
 import IPhoneLockscreenVector from './IPhoneLockscreenVector';
 import { FEATURE_NAV_LINKS } from '../../lib/navigation';
 import { THEMES } from '../../lib/theme';
-import { getWallpaperUrl } from '../../lib/wallpaper';
 import {
   ALL_DEFAULT_SETTINGS,
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
   PIE_DEFAULT_SETTINGS,
   PROGRESS_DEFAULT_SETTINGS,
+  getSharedViewUrl,
 } from '../../lib/viewSettings';
 import { VIEW_BRAND_TONE_MODES } from '../../lib/viewColors';
 
@@ -171,18 +171,19 @@ const GALLERY_ITEMS = [
   },
 ];
 
-const getGalleryWallpaper = ({ viewId, viewState, theme }) => {
-  return getWallpaperUrl({
-    viewId,
+const getGalleryPreviewUrl = ({ viewId, viewState, theme }) => {
+  return getSharedViewUrl({
+    pathname: `/view/${viewId}`,
+    origin: '',
     theme,
+    viewId,
     viewState,
     colors: {
       primary: viewState.primary,
       alternate: viewState.alternate,
+      brandToneMode: VIEW_BRAND_TONE_MODES.AUTO,
+      textToneMode: VIEW_BRAND_TONE_MODES.AUTO,
     },
-    textToneMode: VIEW_BRAND_TONE_MODES.AUTO,
-    width: 720,
-    height: 1280,
   });
 };
 
@@ -300,12 +301,11 @@ const HomepageSections = () => {
                 >
                   <Link to={`/view/${item.viewId}`} className="block">
                     <div className="aspect-[9/16] overflow-hidden bg-black/4 dark:bg-white/[0.04]">
-                      <img
-                        src={getGalleryWallpaper(item)}
-                        alt={`${item.label} gallery preview`}
+                      <iframe
+                        src={getGalleryPreviewUrl(item)}
+                        title={`${item.label} gallery preview`}
                         loading="lazy"
-                        referrerPolicy="no-referrer"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                        className="h-full w-full border-0 transition-transform duration-500 group-hover:scale-[1.02]"
                       />
                     </div>
                     <div className="flex items-center justify-between gap-4 px-5 py-4">
