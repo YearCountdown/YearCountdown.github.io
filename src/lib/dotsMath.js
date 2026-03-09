@@ -10,18 +10,18 @@ export const getBestDotsGrid = ({
   height,
   gapXPercent,
   gapYPercent,
-  insetPercent,
-  outerXPercent,
-  outerYPercent,
+  spaceTopPercent,
+  spaceRightPercent,
+  spaceBottomPercent,
+  spaceLeftPercent,
 }) => {
   const minDimension = Math.min(width, height);
-  const insetPx = clampPositiveNumber((minDimension * insetPercent) / 100);
-  const insetWidth = Math.max(0, width - insetPx * 2);
-  const insetHeight = Math.max(0, height - insetPx * 2);
-  const outerXPx = clampPositiveNumber((insetWidth * outerXPercent) / 100);
-  const outerYPx = clampPositiveNumber((insetHeight * outerYPercent) / 100);
-  const innerWidth = Math.max(0, insetWidth - outerXPx * 2);
-  const innerHeight = Math.max(0, insetHeight - outerYPx * 2);
+  const topPx = clampPositiveNumber((minDimension * spaceTopPercent) / 100);
+  const rightPx = clampPositiveNumber((minDimension * spaceRightPercent) / 100);
+  const bottomPx = clampPositiveNumber((minDimension * spaceBottomPercent) / 100);
+  const leftPx = clampPositiveNumber((minDimension * spaceLeftPercent) / 100);
+  const innerWidth = Math.max(0, width - leftPx - rightPx);
+  const innerHeight = Math.max(0, height - topPx - bottomPx);
   const spacingBase = Math.min(innerWidth, innerHeight);
   const gapXPx = clampPositiveNumber((spacingBase * gapXPercent) / 100);
   const gapYPx = clampPositiveNumber((spacingBase * gapYPercent) / 100);
@@ -32,9 +32,10 @@ export const getBestDotsGrid = ({
     dotSize: 0,
     gapXPx,
     gapYPx,
-    insetPx,
-    outerXPx,
-    outerYPx,
+    topPx,
+    rightPx,
+    bottomPx,
+    leftPx,
     innerWidth,
     innerHeight,
   };
@@ -56,9 +57,10 @@ export const getBestDotsGrid = ({
         dotSize,
         gapXPx,
         gapYPx,
-        insetPx,
-        outerXPx,
-        outerYPx,
+        topPx,
+        rightPx,
+        bottomPx,
+        leftPx,
         innerWidth,
         innerHeight,
       };
@@ -73,9 +75,10 @@ export const getDotsSnapshot = ({
   height,
   gapXPercent,
   gapYPercent,
-  insetPercent,
-  outerXPercent,
-  outerYPercent,
+  spaceTopPercent,
+  spaceRightPercent,
+  spaceBottomPercent,
+  spaceLeftPercent,
   nowTime = Date.now(),
 }) => {
   const { totalDays, currentDayIndex } = getYearMeta(nowTime);
@@ -85,9 +88,10 @@ export const getDotsSnapshot = ({
     height,
     gapXPercent,
     gapYPercent,
-    insetPercent,
-    outerXPercent,
-    outerYPercent,
+    spaceTopPercent,
+    spaceRightPercent,
+    spaceBottomPercent,
+    spaceLeftPercent,
   });
 
   const visibleDots = Array.from({ length: totalDays }, (_, index) => {

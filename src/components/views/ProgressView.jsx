@@ -147,9 +147,10 @@ const ProgressView = ({
   decimals = 2,
   fontSize = 1,
   lineWidth = 12,
-  inset = 0,
-  outerX = 0,
-  outerY = 0,
+  spaceTop = 0,
+  spaceRight = 0,
+  spaceBottom = 0,
+  spaceLeft = 0,
   primaryColor,
   alternateColor,
   textToneColor,
@@ -158,9 +159,10 @@ const ProgressView = ({
   const { containerRef, layout } = useProgressLayout({
     mode,
     fullScreen,
-    insetPercent: inset,
-    outerXPercent: outerX,
-    outerYPercent: outerY,
+    spaceTopPercent: spaceTop,
+    spaceRightPercent: spaceRight,
+    spaceBottomPercent: spaceBottom,
+    spaceLeftPercent: spaceLeft,
   });
   const textScale = fullScreen ? layout.fullScreenFontSize : layout.centeredFontSize;
   const baseFontSize = textScale * fontSize;

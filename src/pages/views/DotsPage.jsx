@@ -14,9 +14,10 @@ const DotsPage = () => {
         gapX={viewState.dots.gapX}
         gapY={viewState.dots.gapY}
         inactiveOpacity={viewState.dots.inactiveOpacity}
-        inset={viewState.dots.inset}
-        outerX={viewState.dots.outerX}
-        outerY={viewState.dots.outerY}
+        spaceTop={viewState.dots.spaceTop}
+        spaceRight={viewState.dots.spaceRight}
+        spaceBottom={viewState.dots.spaceBottom}
+        spaceLeft={viewState.dots.spaceLeft}
         primaryColor={viewState.dots.primary}
         alternateColor={viewState.dots.alternate}
       />

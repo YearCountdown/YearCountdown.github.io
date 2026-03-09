@@ -71,9 +71,10 @@ const DotsView = ({
   triangleAngle = 0,
   gapX = 0.5,
   gapY = 0.5,
-  inset = 0.5,
-  outerX = 0,
-  outerY = 0,
+  spaceTop = 0,
+  spaceRight = 0,
+  spaceBottom = 0,
+  spaceLeft = 0,
   inactiveOpacity = 5,
   primaryColor,
   alternateColor,
@@ -81,9 +82,10 @@ const DotsView = ({
   const { containerRef, dots, grid } = useDotsGrid({
     gapXPercent: gapX,
     gapYPercent: gapY,
-    insetPercent: inset,
-    outerXPercent: outerX,
-    outerYPercent: outerY,
+    spaceTopPercent: spaceTop,
+    spaceRightPercent: spaceRight,
+    spaceBottomPercent: spaceBottom,
+    spaceLeftPercent: spaceLeft,
   });
 
   return (

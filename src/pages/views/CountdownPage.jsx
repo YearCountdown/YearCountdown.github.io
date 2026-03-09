@@ -13,6 +13,10 @@ const CountdownPage = () => {
         frame={viewState.countdown.frame}
         labels={viewState.countdown.labels}
         fontSize={viewState.countdown.fontSize}
+        spaceTop={viewState.countdown.spaceTop}
+        spaceRight={viewState.countdown.spaceRight}
+        spaceBottom={viewState.countdown.spaceBottom}
+        spaceLeft={viewState.countdown.spaceLeft}
         primaryColor={viewState.countdown.primary}
         alternateColor={viewState.countdown.alternate}
         textToneColor={getToneColor(resolvedTextTone)}

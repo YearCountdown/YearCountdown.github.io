@@ -5,7 +5,7 @@ import { getToneColor } from '../../lib/viewColors';
 
 const PiePage = () => {
   const { isEmbed, resolvedTextTone, viewState } = useViewShell();
-  const { shape, style, fullScreen, decimals, inset, outerX, outerY } = viewState.pie;
+  const { shape, style, fullScreen, decimals, spaceTop, spaceRight, spaceBottom, spaceLeft } = viewState.pie;
 
   const mainClassName = isEmbed
     ? ''
@@ -20,9 +20,10 @@ const PiePage = () => {
         style={style}
         fullScreen={fullScreen}
         decimals={decimals}
-        inset={inset}
-        outerX={outerX}
-        outerY={outerY}
+        spaceTop={spaceTop}
+        spaceRight={spaceRight}
+        spaceBottom={spaceBottom}
+        spaceLeft={spaceLeft}
         primaryColor={viewState.pie.primary}
         alternateColor={viewState.pie.alternate}
         textToneColor={getToneColor(resolvedTextTone)}

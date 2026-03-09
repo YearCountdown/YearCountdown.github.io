@@ -47,6 +47,13 @@ export const VIEW_SETTINGS_CONFIG = {
         step: 0.1,
         suffix: 'x',
       },
+      { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
+      { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
+      { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   dots: {
@@ -114,35 +121,13 @@ export const VIEW_SETTINGS_CONFIG = {
         step: 1,
         suffix: '%',
       },
-      {
-        key: 'inset',
-        type: 'number',
-        label: 'Inset',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-      },
-      {
-        key: 'outerX',
-        type: 'number',
-        label: 'Outer X',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-        inlineGroup: 'dots-outer',
-      },
-      {
-        key: 'outerY',
-        type: 'number',
-        label: 'Outer Y',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-        inlineGroup: 'dots-outer',
-      },
+      { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
+      { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
+      { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   pie: {
@@ -182,35 +167,13 @@ export const VIEW_SETTINGS_CONFIG = {
         max: 10,
         step: 1,
       },
-      {
-        key: 'inset',
-        type: 'number',
-        label: 'Inset',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-      },
-      {
-        key: 'outerX',
-        type: 'number',
-        label: 'Outer X',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-        inlineGroup: 'pie-outer',
-      },
-      {
-        key: 'outerY',
-        type: 'number',
-        label: 'Outer Y',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-        inlineGroup: 'pie-outer',
-      },
+      { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
+      { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
+      { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   progress: {
@@ -260,35 +223,13 @@ export const VIEW_SETTINGS_CONFIG = {
         suffix: 'px',
         showWhen: (state) => state.mode === 'line',
       },
-      {
-        key: 'inset',
-        type: 'number',
-        label: 'Inset',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-      },
-      {
-        key: 'outerX',
-        type: 'number',
-        label: 'Outer X',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-        inlineGroup: 'progress-outer',
-      },
-      {
-        key: 'outerY',
-        type: 'number',
-        label: 'Outer Y',
-        min: 0,
-        max: 12,
-        step: 0.1,
-        suffix: '%',
-        inlineGroup: 'progress-outer',
-      },
+      { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
+      { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
+      { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
 };
@@ -339,6 +280,18 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.fontSize !== COUNTDOWN_DEFAULT_SETTINGS.fontSize) {
       params.set('fontSize', String(viewState.fontSize));
     }
+    if (viewState.spaceTop !== COUNTDOWN_DEFAULT_SETTINGS.spaceTop) {
+      params.set('spaceTop', String(viewState.spaceTop));
+    }
+    if (viewState.spaceRight !== COUNTDOWN_DEFAULT_SETTINGS.spaceRight) {
+      params.set('spaceRight', String(viewState.spaceRight));
+    }
+    if (viewState.spaceBottom !== COUNTDOWN_DEFAULT_SETTINGS.spaceBottom) {
+      params.set('spaceBottom', String(viewState.spaceBottom));
+    }
+    if (viewState.spaceLeft !== COUNTDOWN_DEFAULT_SETTINGS.spaceLeft) {
+      params.set('spaceLeft', String(viewState.spaceLeft));
+    }
   }
 
   if (viewId === 'dots' && viewState) {
@@ -360,14 +313,17 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.inactiveOpacity !== DOTS_DEFAULT_SETTINGS.inactiveOpacity) {
       params.set('inactiveOpacity', String(viewState.inactiveOpacity));
     }
-    if (viewState.inset !== DOTS_DEFAULT_SETTINGS.inset) {
-      params.set('inset', String(viewState.inset));
+    if (viewState.spaceTop !== DOTS_DEFAULT_SETTINGS.spaceTop) {
+      params.set('spaceTop', String(viewState.spaceTop));
     }
-    if (viewState.outerX !== DOTS_DEFAULT_SETTINGS.outerX) {
-      params.set('outerX', String(viewState.outerX));
+    if (viewState.spaceRight !== DOTS_DEFAULT_SETTINGS.spaceRight) {
+      params.set('spaceRight', String(viewState.spaceRight));
     }
-    if (viewState.outerY !== DOTS_DEFAULT_SETTINGS.outerY) {
-      params.set('outerY', String(viewState.outerY));
+    if (viewState.spaceBottom !== DOTS_DEFAULT_SETTINGS.spaceBottom) {
+      params.set('spaceBottom', String(viewState.spaceBottom));
+    }
+    if (viewState.spaceLeft !== DOTS_DEFAULT_SETTINGS.spaceLeft) {
+      params.set('spaceLeft', String(viewState.spaceLeft));
     }
   }
 
@@ -384,14 +340,17 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.decimals !== PIE_DEFAULT_SETTINGS.decimals) {
       params.set('decimals', String(viewState.decimals));
     }
-    if (viewState.inset !== PIE_DEFAULT_SETTINGS.inset) {
-      params.set('inset', String(viewState.inset));
+    if (viewState.spaceTop !== PIE_DEFAULT_SETTINGS.spaceTop) {
+      params.set('spaceTop', String(viewState.spaceTop));
     }
-    if (viewState.outerX !== PIE_DEFAULT_SETTINGS.outerX) {
-      params.set('outerX', String(viewState.outerX));
+    if (viewState.spaceRight !== PIE_DEFAULT_SETTINGS.spaceRight) {
+      params.set('spaceRight', String(viewState.spaceRight));
     }
-    if (viewState.outerY !== PIE_DEFAULT_SETTINGS.outerY) {
-      params.set('outerY', String(viewState.outerY));
+    if (viewState.spaceBottom !== PIE_DEFAULT_SETTINGS.spaceBottom) {
+      params.set('spaceBottom', String(viewState.spaceBottom));
+    }
+    if (viewState.spaceLeft !== PIE_DEFAULT_SETTINGS.spaceLeft) {
+      params.set('spaceLeft', String(viewState.spaceLeft));
     }
   }
 
@@ -411,14 +370,17 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.lineWidth !== PROGRESS_DEFAULT_SETTINGS.lineWidth) {
       params.set('lineWidth', String(viewState.lineWidth));
     }
-    if (viewState.inset !== PROGRESS_DEFAULT_SETTINGS.inset) {
-      params.set('inset', String(viewState.inset));
+    if (viewState.spaceTop !== PROGRESS_DEFAULT_SETTINGS.spaceTop) {
+      params.set('spaceTop', String(viewState.spaceTop));
     }
-    if (viewState.outerX !== PROGRESS_DEFAULT_SETTINGS.outerX) {
-      params.set('outerX', String(viewState.outerX));
+    if (viewState.spaceRight !== PROGRESS_DEFAULT_SETTINGS.spaceRight) {
+      params.set('spaceRight', String(viewState.spaceRight));
     }
-    if (viewState.outerY !== PROGRESS_DEFAULT_SETTINGS.outerY) {
-      params.set('outerY', String(viewState.outerY));
+    if (viewState.spaceBottom !== PROGRESS_DEFAULT_SETTINGS.spaceBottom) {
+      params.set('spaceBottom', String(viewState.spaceBottom));
+    }
+    if (viewState.spaceLeft !== PROGRESS_DEFAULT_SETTINGS.spaceLeft) {
+      params.set('spaceLeft', String(viewState.spaceLeft));
     }
   }
 
@@ -441,6 +403,10 @@ export const COUNTDOWN_DEFAULT_SETTINGS = {
   frame: false,
   labels: true,
   fontSize: 1,
+  spaceTop: 0,
+  spaceRight: 0,
+  spaceBottom: 0,
+  spaceLeft: 0,
 };
 
 export const DOTS_DEFAULT_SETTINGS = {
@@ -450,9 +416,10 @@ export const DOTS_DEFAULT_SETTINGS = {
   gapX: 0.5,
   gapY: 0.5,
   inactiveOpacity: 5,
-  inset: 0.5,
-  outerX: 0,
-  outerY: 0,
+  spaceTop: 0,
+  spaceRight: 0,
+  spaceBottom: 0,
+  spaceLeft: 0,
 };
 
 export const PIE_DEFAULT_SETTINGS = {
@@ -460,9 +427,10 @@ export const PIE_DEFAULT_SETTINGS = {
   style: 'filled',
   fullScreen: false,
   decimals: 2,
-  inset: 0,
-  outerX: 0,
-  outerY: 0,
+  spaceTop: 0,
+  spaceRight: 0,
+  spaceBottom: 0,
+  spaceLeft: 0,
 };
 
 export const PROGRESS_DEFAULT_SETTINGS = {
@@ -471,9 +439,10 @@ export const PROGRESS_DEFAULT_SETTINGS = {
   decimals: 2,
   fontSize: 1,
   lineWidth: 12,
-  inset: 0,
-  outerX: 0,
-  outerY: 0,
+  spaceTop: 0,
+  spaceRight: 0,
+  spaceBottom: 0,
+  spaceLeft: 0,
 };
 
 export const VIEW_COLOR_SETTINGS = {
@@ -482,6 +451,13 @@ export const VIEW_COLOR_SETTINGS = {
 };
 
 export { getDefaultViewColors };
+
+export const VIEW_SPACING_SETTINGS = {
+  top: 'spaceTop',
+  right: 'spaceRight',
+  bottom: 'spaceBottom',
+  left: 'spaceLeft',
+};
 
 const clampNumber = (value, min, max, fallback) => {
   const parsed = Number.parseFloat(value);
@@ -499,6 +475,19 @@ const getResolvedColorSettings = (searchParams, theme, fallbackColors) => {
     primary: searchParams.get(VIEW_COLOR_SETTINGS.primary) ?? fallbackColors?.primary,
     alternate: searchParams.get(VIEW_COLOR_SETTINGS.alternate) ?? fallbackColors?.alternate,
   });
+};
+
+const getLegacySideSpacing = (searchParams, persistedSettings, defaults) => {
+  const inset = clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 20, 0);
+  const outerX = clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 20, 0);
+  const outerY = clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 20, 0);
+
+  return {
+    spaceTop: clampNumber(searchParams.get('spaceTop') ?? persistedSettings.spaceTop, 0, 20, inset + outerY + (defaults?.spaceTop ?? 0)),
+    spaceRight: clampNumber(searchParams.get('spaceRight') ?? persistedSettings.spaceRight, 0, 20, inset + outerX + (defaults?.spaceRight ?? 0)),
+    spaceBottom: clampNumber(searchParams.get('spaceBottom') ?? persistedSettings.spaceBottom, 0, 20, inset + outerY + (defaults?.spaceBottom ?? 0)),
+    spaceLeft: clampNumber(searchParams.get('spaceLeft') ?? persistedSettings.spaceLeft, 0, 20, inset + outerX + (defaults?.spaceLeft ?? 0)),
+  };
 };
 
 export const normalizeColorSettingValue = (key, value, theme) => {
@@ -532,6 +521,11 @@ export const normalizeCountdownSettingValue = (key, value, theme) => {
       return value === true || value === 'true';
     case 'fontSize':
       return clampNumber(value, 0.1, 2.5, COUNTDOWN_DEFAULT_SETTINGS.fontSize);
+    case 'spaceTop':
+    case 'spaceRight':
+    case 'spaceBottom':
+    case 'spaceLeft':
+      return clampNumber(value, 0, 20, COUNTDOWN_DEFAULT_SETTINGS[key]);
     case VIEW_COLOR_SETTINGS.primary:
     case VIEW_COLOR_SETTINGS.alternate:
       return normalizeColorSettingValue(key, value, theme);
@@ -557,12 +551,11 @@ export const normalizeDotsSettingValue = (key, value) => {
       return clampNumber(value, 0, 8, DOTS_DEFAULT_SETTINGS.gapY);
     case 'inactiveOpacity':
       return clampNumber(value, 0, 100, DOTS_DEFAULT_SETTINGS.inactiveOpacity);
-    case 'inset':
-      return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.inset);
-    case 'outerX':
-      return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.outerX);
-    case 'outerY':
-      return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.outerY);
+    case 'spaceTop':
+    case 'spaceRight':
+    case 'spaceBottom':
+    case 'spaceLeft':
+      return clampNumber(value, 0, 20, DOTS_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -586,12 +579,11 @@ export const normalizePieSettingValue = (key, value) => {
       return value === true || value === 'true';
     case 'decimals':
       return clampNumber(value, 0, 10, PIE_DEFAULT_SETTINGS.decimals);
-    case 'inset':
-      return clampNumber(value, 0, 12, PIE_DEFAULT_SETTINGS.inset);
-    case 'outerX':
-      return clampNumber(value, 0, 12, PIE_DEFAULT_SETTINGS.outerX);
-    case 'outerY':
-      return clampNumber(value, 0, 12, PIE_DEFAULT_SETTINGS.outerY);
+    case 'spaceTop':
+    case 'spaceRight':
+    case 'spaceBottom':
+    case 'spaceLeft':
+      return clampNumber(value, 0, 20, PIE_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -617,12 +609,11 @@ export const normalizeProgressSettingValue = (key, value) => {
       return clampNumber(value, 0.6, 2.5, PROGRESS_DEFAULT_SETTINGS.fontSize);
     case 'lineWidth':
       return clampNumber(value, 2, 80, PROGRESS_DEFAULT_SETTINGS.lineWidth);
-    case 'inset':
-      return clampNumber(value, 0, 12, PROGRESS_DEFAULT_SETTINGS.inset);
-    case 'outerX':
-      return clampNumber(value, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX);
-    case 'outerY':
-      return clampNumber(value, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY);
+    case 'spaceTop':
+    case 'spaceRight':
+    case 'spaceBottom':
+    case 'spaceLeft':
+      return clampNumber(value, 0, 20, PROGRESS_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -641,6 +632,7 @@ export const getCountdownSettingsFromSearchParams = (searchParams, theme, persis
   const frame = searchParams.get('frame') ?? persistedSettings.frame;
   const labels = searchParams.get('labels') ?? persistedSettings.labels;
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
+  const spacing = getLegacySideSpacing(searchParams, persistedSettings, COUNTDOWN_DEFAULT_SETTINGS);
 
   return {
     mode: ['all', 'days', 'hours', 'minutes', 'seconds'].includes(mode)
@@ -664,6 +656,7 @@ export const getCountdownSettingsFromSearchParams = (searchParams, theme, persis
       2.5,
       COUNTDOWN_DEFAULT_SETTINGS.fontSize,
     ),
+    ...spacing,
     ...colors,
   };
 };
@@ -673,6 +666,7 @@ export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSe
   const triangleMode = searchParams.get('triangleMode') ?? persistedSettings.triangleMode;
   const legacyGap = searchParams.get('gap');
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
+  const spacing = getLegacySideSpacing(searchParams, persistedSettings, DOTS_DEFAULT_SETTINGS);
 
   return {
     shape: ['circle', 'square', 'triangle'].includes(shape) ? shape : DOTS_DEFAULT_SETTINGS.shape,
@@ -703,9 +697,7 @@ export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSe
       100,
       DOTS_DEFAULT_SETTINGS.inactiveOpacity,
     ),
-    inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, DOTS_DEFAULT_SETTINGS.inset),
-    outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, DOTS_DEFAULT_SETTINGS.outerX),
-    outerY: clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 12, DOTS_DEFAULT_SETTINGS.outerY),
+    ...spacing,
     ...colors,
   };
 };
@@ -715,6 +707,7 @@ export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSet
   const style = searchParams.get('style') ?? persistedSettings.style;
   const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
+  const spacing = getLegacySideSpacing(searchParams, persistedSettings, PIE_DEFAULT_SETTINGS);
 
   return {
     shape: ['circle', 'rectangle'].includes(shape) ? shape : PIE_DEFAULT_SETTINGS.shape,
@@ -731,9 +724,7 @@ export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSet
       10,
       PIE_DEFAULT_SETTINGS.decimals,
     ),
-    inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, PIE_DEFAULT_SETTINGS.inset),
-    outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, PIE_DEFAULT_SETTINGS.outerX),
-    outerY: clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 12, PIE_DEFAULT_SETTINGS.outerY),
+    ...spacing,
     ...colors,
   };
 };
@@ -742,6 +733,7 @@ export const getProgressSettingsFromSearchParams = (searchParams, theme, persist
   const mode = searchParams.get('mode') ?? persistedSettings.mode;
   const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
+  const spacing = getLegacySideSpacing(searchParams, persistedSettings, PROGRESS_DEFAULT_SETTINGS);
 
   return {
     mode: ['field', 'line'].includes(mode) ? mode : PROGRESS_DEFAULT_SETTINGS.mode,
@@ -769,9 +761,7 @@ export const getProgressSettingsFromSearchParams = (searchParams, theme, persist
       80,
       PROGRESS_DEFAULT_SETTINGS.lineWidth,
     ),
-    inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, PROGRESS_DEFAULT_SETTINGS.inset),
-    outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerX),
-    outerY: clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 12, PROGRESS_DEFAULT_SETTINGS.outerY),
+    ...spacing,
     ...colors,
   };
 };

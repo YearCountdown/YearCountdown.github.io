@@ -5,7 +5,7 @@ import { getToneColor } from '../../lib/viewColors';
 
 const ProgressPage = () => {
   const { isEmbed, resolvedTextTone, viewState } = useViewShell();
-  const { mode, fullScreen, decimals, fontSize, lineWidth, inset, outerX, outerY } = viewState.progress;
+  const { mode, fullScreen, decimals, fontSize, lineWidth, spaceTop, spaceRight, spaceBottom, spaceLeft } = viewState.progress;
 
   const mainClassName = isEmbed
     ? ''
@@ -21,9 +21,10 @@ const ProgressPage = () => {
         decimals={decimals}
         fontSize={fontSize}
         lineWidth={lineWidth}
-        inset={inset}
-        outerX={outerX}
-        outerY={outerY}
+        spaceTop={spaceTop}
+        spaceRight={spaceRight}
+        spaceBottom={spaceBottom}
+        spaceLeft={spaceLeft}
         primaryColor={viewState.progress.primary}
         alternateColor={viewState.progress.alternate}
         textToneColor={getToneColor(resolvedTextTone)}

@@ -56,6 +56,103 @@ const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
   );
 };
 
+const getSpacingHelperValue = (state, key) => {
+  if (!state) {
+    return '';
+  }
+
+  const top = state.spaceTop;
+  const right = state.spaceRight;
+  const bottom = state.spaceBottom;
+  const left = state.spaceLeft;
+
+  if ([top, right, bottom, left].some((item) => typeof item !== 'number')) {
+    return '';
+  }
+
+  if (key === 'spaceAll') {
+    return top === right && right === bottom && bottom === left ? String(top) : '--';
+  }
+
+  if (key === 'spaceX') {
+    return left === right ? String(left) : '--';
+  }
+
+  if (key === 'spaceY') {
+    return top === bottom ? String(top) : '--';
+  }
+
+  return '';
+};
+
+const SpacingHelperInput = ({ control, value, viewId, updateViewSetting }) => {
+  const [draftValue, setDraftValue] = useState(value);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setDraftValue(value);
+    }
+  }, [isEditing, value]);
+
+  const commitValue = () => {
+    const trimmed = typeof draftValue === 'string' ? draftValue.trim() : '';
+
+    setIsEditing(false);
+
+    if (!trimmed) {
+      setDraftValue(value);
+      return;
+    }
+
+    updateViewSetting(viewId, control.key, trimmed);
+  };
+
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      value={draftValue}
+      placeholder="--"
+      onFocus={() => {
+        setIsEditing(true);
+
+        if (value === '--') {
+          setDraftValue('');
+        }
+      }}
+      onChange={(event) => setDraftValue(event.target.value)}
+      onBlur={commitValue}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.currentTarget.blur();
+        }
+
+        if (event.key === 'Escape') {
+          setIsEditing(false);
+          setDraftValue(value);
+          event.currentTarget.blur();
+        }
+      }}
+      className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
+    />
+  );
+};
+
+const renderSpacingHelperControl = ({ control, value, viewId, updateViewSetting }) => {
+  return (
+    <div key={control.key} className="min-w-0 flex-1">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {control.label}
+        </p>
+        <span className="shrink-0 text-xs text-black/45 dark:text-white/45">%</span>
+      </div>
+      <SpacingHelperInput control={control} value={value} viewId={viewId} updateViewSetting={updateViewSetting} />
+    </div>
+  );
+};
+
 const renderRangeControl = ({ control, value, viewId, updateViewSetting }) => {
   return (
     <div key={control.key} className="min-w-0">
@@ -120,6 +217,35 @@ const renderControls = ({ controls, viewId, viewState, updateViewSetting }) => {
             renderNumberControl({
               control: groupControl,
               value: state?.[groupControl.key],
+              viewId,
+              updateViewSetting,
+            }),
+          )}
+        </div>,
+      );
+      continue;
+    }
+
+    if (control.type === 'spacing-helper' && control.inlineGroup) {
+      const groupControls = [control];
+
+      while (index + 1 < controls.length) {
+        const nextControl = controls[index + 1];
+
+        if (nextControl.type !== 'spacing-helper' || nextControl.inlineGroup !== control.inlineGroup) {
+          break;
+        }
+
+        groupControls.push(nextControl);
+        index += 1;
+      }
+
+      renderedControls.push(
+        <div key={control.inlineGroup} className="grid grid-cols-3 gap-3">
+          {groupControls.map((groupControl) =>
+            renderSpacingHelperControl({
+              control: groupControl,
+              value: getSpacingHelperValue(state, groupControl.key),
               viewId,
               updateViewSetting,
             }),
@@ -205,6 +331,15 @@ const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
 
   if (control.type === 'number') {
     return renderNumberControl({ control, value, viewId, updateViewSetting });
+  }
+
+  if (control.type === 'spacing-helper') {
+    return renderSpacingHelperControl({
+      control,
+      value: getSpacingHelperValue(state, control.key),
+      viewId,
+      updateViewSetting,
+    });
   }
 
   if (control.type === 'range') {

@@ -17,6 +17,7 @@ import {
   PIE_DEFAULT_SETTINGS,
   PROGRESS_DEFAULT_SETTINGS,
   VIEW_COLOR_SETTINGS,
+  VIEW_SPACING_SETTINGS,
   getDefaultViewColors,
   getCountdownSettingsFromSearchParams,
   getDotsSettingsFromSearchParams,
@@ -33,6 +34,26 @@ import {
   normalizeProgressSettingValueWithTheme,
 } from '../lib/viewSettings';
 import { resolveTheme } from '../lib/theme';
+
+const parseSpacingHelperInput = (value) => {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const trimmed = value.trim();
+
+  if (!trimmed || trimmed === '--') {
+    return null;
+  }
+
+  const parsed = Number.parseFloat(trimmed);
+
+  if (!Number.isFinite(parsed)) {
+    return null;
+  }
+
+  return parsed;
+};
 
 const useViewShell = (themeOverride) => {
   const {
@@ -121,6 +142,26 @@ const useViewShell = (themeOverride) => {
       updateSearchParams([{ key, value, defaultValue, alwaysSet }]);
     };
 
+    const updateSpacingSettings = ({ nextPreferences, preferenceKey, defaults, normalizeValue, changes }) => {
+      const currentSpacing = nextPreferences[preferenceKey] ?? {};
+      const normalizedChanges = Object.fromEntries(
+        Object.entries(changes).map(([key, value]) => [key, normalizeValue(key, value)]),
+      );
+
+      nextPreferences[preferenceKey] = {
+        ...currentSpacing,
+        ...normalizedChanges,
+      };
+      writeViewPreferencesCookie(nextPreferences);
+      updateSearchParams(
+        Object.entries(normalizedChanges).map(([key, value]) => ({
+          key,
+          value,
+          defaultValue: defaults[key],
+        })),
+      );
+    };
+
     const updateAppearanceColors = (nextColors) => {
       const resolvedColors = resolveViewColors({
         theme,
@@ -181,7 +222,45 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : COUNTDOWN_DEFAULT_SETTINGS[key];
 
-          const normalizedValue = normalizeCountdownSettingValue(key, value, theme);
+          const normalizeValue = (targetKey, targetValue) =>
+            normalizeCountdownSettingValue(targetKey, targetValue, theme);
+
+          if (key === 'spaceAll' || key === 'spaceX' || key === 'spaceY') {
+            const parsedValue = parseSpacingHelperInput(value);
+
+            if (parsedValue === null) {
+              return;
+            }
+
+            const changes =
+              key === 'spaceAll'
+                ? {
+                    [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                  }
+                : key === 'spaceX'
+                  ? {
+                      [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    }
+                  : {
+                      [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    };
+
+            updateSpacingSettings({
+              nextPreferences,
+              preferenceKey: 'countdown',
+              defaults: COUNTDOWN_DEFAULT_SETTINGS,
+              normalizeValue,
+              changes,
+            });
+            return;
+          }
+
+          const normalizedValue = normalizeValue(key, value);
           nextPreferences.countdown = {
             ...(persistedPreferences.countdown ?? {}),
             [key]: normalizedValue,
@@ -197,7 +276,45 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : DOTS_DEFAULT_SETTINGS[key];
 
-          const normalizedValue = normalizeDotsSettingValueWithTheme(key, value, theme);
+          const normalizeValue = (targetKey, targetValue) =>
+            normalizeDotsSettingValueWithTheme(targetKey, targetValue, theme);
+
+          if (key === 'spaceAll' || key === 'spaceX' || key === 'spaceY') {
+            const parsedValue = parseSpacingHelperInput(value);
+
+            if (parsedValue === null) {
+              return;
+            }
+
+            const changes =
+              key === 'spaceAll'
+                ? {
+                    [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                  }
+                : key === 'spaceX'
+                  ? {
+                      [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    }
+                  : {
+                      [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    };
+
+            updateSpacingSettings({
+              nextPreferences,
+              preferenceKey: 'dots',
+              defaults: DOTS_DEFAULT_SETTINGS,
+              normalizeValue,
+              changes,
+            });
+            return;
+          }
+
+          const normalizedValue = normalizeValue(key, value);
           nextPreferences.dots = {
             ...(persistedPreferences.dots ?? {}),
             [key]: normalizedValue,
@@ -213,7 +330,45 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : PIE_DEFAULT_SETTINGS[key];
 
-          const normalizedValue = normalizePieSettingValueWithTheme(key, value, theme);
+          const normalizeValue = (targetKey, targetValue) =>
+            normalizePieSettingValueWithTheme(targetKey, targetValue, theme);
+
+          if (key === 'spaceAll' || key === 'spaceX' || key === 'spaceY') {
+            const parsedValue = parseSpacingHelperInput(value);
+
+            if (parsedValue === null) {
+              return;
+            }
+
+            const changes =
+              key === 'spaceAll'
+                ? {
+                    [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                  }
+                : key === 'spaceX'
+                  ? {
+                      [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    }
+                  : {
+                      [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    };
+
+            updateSpacingSettings({
+              nextPreferences,
+              preferenceKey: 'pie',
+              defaults: PIE_DEFAULT_SETTINGS,
+              normalizeValue,
+              changes,
+            });
+            return;
+          }
+
+          const normalizedValue = normalizeValue(key, value);
           nextPreferences.pie = {
             ...(persistedPreferences.pie ?? {}),
             [key]: normalizedValue,
@@ -229,7 +384,45 @@ const useViewShell = (themeOverride) => {
               ? themeDefaults[key]
               : PROGRESS_DEFAULT_SETTINGS[key];
 
-          const normalizedValue = normalizeProgressSettingValueWithTheme(key, value, theme);
+          const normalizeValue = (targetKey, targetValue) =>
+            normalizeProgressSettingValueWithTheme(targetKey, targetValue, theme);
+
+          if (key === 'spaceAll' || key === 'spaceX' || key === 'spaceY') {
+            const parsedValue = parseSpacingHelperInput(value);
+
+            if (parsedValue === null) {
+              return;
+            }
+
+            const changes =
+              key === 'spaceAll'
+                ? {
+                    [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                  }
+                : key === 'spaceX'
+                  ? {
+                      [VIEW_SPACING_SETTINGS.left]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.right]: parsedValue,
+                    }
+                  : {
+                      [VIEW_SPACING_SETTINGS.top]: parsedValue,
+                      [VIEW_SPACING_SETTINGS.bottom]: parsedValue,
+                    };
+
+            updateSpacingSettings({
+              nextPreferences,
+              preferenceKey: 'progress',
+              defaults: PROGRESS_DEFAULT_SETTINGS,
+              normalizeValue,
+              changes,
+            });
+            return;
+          }
+
+          const normalizedValue = normalizeValue(key, value);
           nextPreferences.progress = {
             ...(persistedPreferences.progress ?? {}),
             [key]: normalizedValue,

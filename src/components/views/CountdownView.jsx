@@ -101,12 +101,23 @@ const CountdownView = ({
   frame = false,
   labels = true,
   fontSize = 1,
+  spaceTop = 0,
+  spaceRight = 0,
+  spaceBottom = 0,
+  spaceLeft = 0,
   primaryColor,
   alternateColor,
   textToneColor,
 }) => {
   const countdown = useCountdown();
   const { containerRef, tokens } = useResponsiveCountdown({ mode, labels });
+  const spacingBase = Math.min(tokens.width, tokens.height);
+  const contentPadding = {
+    paddingTop: `${(spacingBase * spaceTop) / 100}px`,
+    paddingRight: `${(spacingBase * spaceRight) / 100}px`,
+    paddingBottom: `${(spacingBase * spaceBottom) / 100}px`,
+    paddingLeft: `${(spacingBase * spaceLeft) / 100}px`,
+  };
   const scaledTokens = {
     ...tokens,
     subtitleSize: tokens.subtitleSize * fontSize,
@@ -128,7 +139,7 @@ const CountdownView = ({
           backgroundColor: alternateColor,
         }}
       >
-        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center">
+        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center" style={contentPadding}>
           <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens: scaledTokens })}>
             <p
               className="uppercase"
@@ -177,7 +188,7 @@ const CountdownView = ({
         backgroundColor: alternateColor,
       }}
     >
-      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center">
+      <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center" style={contentPadding}>
         <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens: scaledTokens })}>
           <p
             className="uppercase"

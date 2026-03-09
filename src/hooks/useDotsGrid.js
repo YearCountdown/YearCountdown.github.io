@@ -2,7 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { getDotsSnapshot } from '../lib/dotsMath';
 
-const useDotsGrid = ({ gapXPercent, gapYPercent, insetPercent, outerXPercent, outerYPercent }) => {
+const useDotsGrid = ({
+  gapXPercent,
+  gapYPercent,
+  spaceTopPercent,
+  spaceRightPercent,
+  spaceBottomPercent,
+  spaceLeftPercent,
+}) => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
@@ -45,9 +52,10 @@ const useDotsGrid = ({ gapXPercent, gapYPercent, insetPercent, outerXPercent, ou
       height: containerSize.height,
       gapXPercent,
       gapYPercent,
-      insetPercent,
-      outerXPercent,
-      outerYPercent,
+      spaceTopPercent,
+      spaceRightPercent,
+      spaceBottomPercent,
+      spaceLeftPercent,
     });
 
     return {
@@ -57,7 +65,16 @@ const useDotsGrid = ({ gapXPercent, gapYPercent, insetPercent, outerXPercent, ou
       grid,
       dots,
     };
-  }, [containerSize.height, containerSize.width, gapXPercent, gapYPercent, insetPercent, outerXPercent, outerYPercent]);
+  }, [
+    containerSize.height,
+    containerSize.width,
+    gapXPercent,
+    gapYPercent,
+    spaceBottomPercent,
+    spaceLeftPercent,
+    spaceRightPercent,
+    spaceTopPercent,
+  ]);
 };
 
 export default useDotsGrid;

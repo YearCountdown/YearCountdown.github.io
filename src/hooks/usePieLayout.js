@@ -2,7 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-const usePieLayout = ({ shape, fullScreen, insetPercent, outerXPercent, outerYPercent }) => {
+const usePieLayout = ({
+  shape,
+  fullScreen,
+  spaceTopPercent,
+  spaceRightPercent,
+  spaceBottomPercent,
+  spaceLeftPercent,
+}) => {
   const containerRef = useRef(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
 
@@ -43,13 +50,12 @@ const usePieLayout = ({ shape, fullScreen, insetPercent, outerXPercent, outerYPe
     const width = Math.max(size.width, 120);
     const height = Math.max(size.height, 120);
     const minDimension = Math.min(width, height);
-    const insetPx = (minDimension * insetPercent) / 100;
-    const insetWidth = Math.max(0, width - insetPx * 2);
-    const insetHeight = Math.max(0, height - insetPx * 2);
-    const outerXPx = (insetWidth * outerXPercent) / 100;
-    const outerYPx = (insetHeight * outerYPercent) / 100;
-    const drawWidth = Math.max(0, insetWidth - outerXPx * 2);
-    const drawHeight = Math.max(0, insetHeight - outerYPx * 2);
+    const topPx = (minDimension * spaceTopPercent) / 100;
+    const rightPx = (minDimension * spaceRightPercent) / 100;
+    const bottomPx = (minDimension * spaceBottomPercent) / 100;
+    const leftPx = (minDimension * spaceLeftPercent) / 100;
+    const drawWidth = Math.max(0, width - leftPx - rightPx);
+    const drawHeight = Math.max(0, height - topPx - bottomPx);
     const showBelowLabel = !fullScreen;
     const belowLabelGap = showBelowLabel ? clamp(minDimension * 0.02, 8, 14) : 0;
     const belowLabelHeight = showBelowLabel ? clamp(minDimension * 0.1, 20, 52) : 0;
@@ -64,8 +70,8 @@ const usePieLayout = ({ shape, fullScreen, insetPercent, outerXPercent, outerYPe
       boxHeight = squareSize;
     }
 
-    const boxLeft = insetPx + outerXPx + (drawWidth - boxWidth) / 2;
-    const boxTop = insetPx + outerYPx + (shapeAreaHeight - boxHeight) / 2;
+    const boxLeft = leftPx + (drawWidth - boxWidth) / 2;
+    const boxTop = topPx + (shapeAreaHeight - boxHeight) / 2;
     const shapeMin = Math.max(0, Math.min(boxWidth, boxHeight));
     const fullScreenFontSize = clamp(shapeMin * (shape === 'rectangle' && fullScreen ? 0.15 : 0.2), 60, 100);
     const belowFontSize = clamp(shapeMin * 0.095, 18, 42);
@@ -78,13 +84,22 @@ const usePieLayout = ({ shape, fullScreen, insetPercent, outerXPercent, outerYPe
       boxWidth,
       boxHeight,
       shapeMin,
-      labelY: insetPx + outerYPx + shapeAreaHeight + belowLabelGap,
+      labelY: topPx + shapeAreaHeight + belowLabelGap,
       labelHeight: belowLabelHeight,
       showBelowLabel,
       fullScreenFontSize,
       belowFontSize,
     };
-  }, [fullScreen, insetPercent, outerXPercent, outerYPercent, shape, size.height, size.width]);
+  }, [
+    fullScreen,
+    shape,
+    size.height,
+    size.width,
+    spaceBottomPercent,
+    spaceLeftPercent,
+    spaceRightPercent,
+    spaceTopPercent,
+  ]);
 
   return {
     containerRef,
