@@ -101,8 +101,9 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, prima
   const remaining = palette.outlineTrack;
   const elapsed = palette.primary;
   const lineThickness = clamp(lineWidth, 2, Math.max(2, height * 0.4));
-  const labelBand = clamp(height * 0.34, fontSize * 1.8, height * 0.48);
-  const lineY = clamp(labelBand + (height - labelBand) * 0.42 - lineThickness / 2, labelBand, height - lineThickness);
+  const labelGap = clamp(fontSize * 0.24, 4, 12);
+  const labelBand = clamp(fontSize * 1.05, 18, Math.max(18, height * 0.2));
+  const lineY = clamp(labelBand + labelGap, labelBand + labelGap, height - lineThickness);
 
   return (
     <div className="relative h-full w-full">

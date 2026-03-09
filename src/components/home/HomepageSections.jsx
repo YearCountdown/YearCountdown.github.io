@@ -134,7 +134,7 @@ const GALLERY_ITEMS = [
       mode: 'seconds',
       labels: false,
       frame: false,
-      fontSize: 0.6,
+      fontSize: 0.5,
       spaceTop: 14,
       spaceRight: 8,
       spaceBottom: 8,
@@ -230,7 +230,7 @@ const GALLERY_ITEMS = [
       ...PROGRESS_DEFAULT_SETTINGS,
       mode: 'line',
       fullScreen: true,
-      decimals: 2,
+      decimals: 6,
       fontSize: 0.85,
       lineWidth: 18,
       spaceTop: 10,
@@ -500,16 +500,16 @@ const GALLERY_ITEMS = [
 
 const GALLERY_FRAME_CLASSES = {
   portrait: {
-    card: 'w-[18rem] sm:w-[20rem] lg:w-[22rem]',
-    preview: 'aspect-[9/16]',
+    card: 'w-[12.5rem] sm:w-[14rem] lg:w-[15.5rem]',
+    preview: 'h-[22rem] sm:h-[24rem] lg:h-[26rem]',
   },
   square: {
-    card: 'w-[18rem] sm:w-[20rem] lg:w-[22rem]',
-    preview: 'aspect-square',
+    card: 'w-[22rem] sm:w-[24rem] lg:w-[26rem]',
+    preview: 'h-[22rem] sm:h-[24rem] lg:h-[26rem]',
   },
   landscape: {
-    card: 'w-[24rem] sm:w-[28rem] lg:w-[34rem]',
-    preview: 'aspect-[16/10]',
+    card: 'w-[28rem] sm:w-[32rem] lg:w-[38rem]',
+    preview: 'h-[22rem] sm:h-[24rem] lg:h-[26rem]',
   },
 };
 
