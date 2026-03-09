@@ -51,6 +51,7 @@ const GALLERY_ITEMS = [
   {
     id: 'all-mint-topfield',
     label: 'All / Mint Topfield',
+    frame: 'square',
     viewId: 'all',
     theme: THEMES.DARK,
     viewState: {
@@ -125,6 +126,7 @@ const GALLERY_ITEMS = [
   {
     id: 'countdown-seconds',
     label: 'Countdown / Seconds',
+    frame: 'square',
     viewId: 'countdown',
     theme: THEMES.DARK,
     viewState: {
@@ -163,6 +165,7 @@ const GALLERY_ITEMS = [
   {
     id: 'pie-circle-outline',
     label: 'Pie / Circle Outline',
+    frame: 'square',
     viewId: 'pie',
     theme: THEMES.DARK,
     viewState: {
@@ -220,6 +223,7 @@ const GALLERY_ITEMS = [
   {
     id: 'progress-line',
     label: 'Progress / Line',
+    frame: 'landscape',
     viewId: 'progress',
     theme: THEMES.LIGHT,
     viewState: {
@@ -235,6 +239,66 @@ const GALLERY_ITEMS = [
       spaceLeft: 6,
       primary: '#000000',
       alternate: '#ffffff',
+    },
+  },
+  {
+    id: 'pie-cobalt-square',
+    label: 'Pie / Cobalt Cream',
+    frame: 'square',
+    viewId: 'pie',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...PIE_DEFAULT_SETTINGS,
+      shape: 'circle',
+      style: 'filled',
+      fullScreen: true,
+      decimals: 1,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#1d4ed8',
+      alternate: '#fff7ed',
+    },
+  },
+  {
+    id: 'dots-coral-square',
+    label: 'Dots / Coral Grid',
+    frame: 'square',
+    viewId: 'dots',
+    theme: THEMES.DARK,
+    viewState: {
+      ...DOTS_DEFAULT_SETTINGS,
+      shape: 'square',
+      gapX: 0.5,
+      gapY: 0.5,
+      inactiveOpacity: 8,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#fb7185',
+      alternate: '#111827',
+    },
+  },
+  {
+    id: 'countdown-crimson-square',
+    label: 'Countdown / Crimson',
+    frame: 'square',
+    viewId: 'countdown',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...COUNTDOWN_DEFAULT_SETTINGS,
+      mode: 'hours',
+      labels: true,
+      frame: false,
+      fontSize: 0.65,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#b91c1c',
+      alternate: '#fffaf0',
     },
   },
   {
@@ -257,8 +321,29 @@ const GALLERY_ITEMS = [
     },
   },
   {
+    id: 'progress-cyan-landscape',
+    label: 'Progress / Cyan Field',
+    frame: 'landscape',
+    viewId: 'progress',
+    theme: THEMES.DARK,
+    viewState: {
+      ...PROGRESS_DEFAULT_SETTINGS,
+      mode: 'field',
+      fullScreen: true,
+      decimals: 0,
+      fontSize: 0.95,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#22d3ee',
+      alternate: '#0f172a',
+    },
+  },
+  {
     id: 'dots-squares',
     label: 'Dots / Squares',
+    frame: 'square',
     viewId: 'dots',
     theme: THEMES.LIGHT,
     viewState: {
@@ -276,8 +361,29 @@ const GALLERY_ITEMS = [
     },
   },
   {
+    id: 'pie-rect-coral-landscape',
+    label: 'Pie / Coral Rectangle',
+    frame: 'landscape',
+    viewId: 'pie',
+    theme: THEMES.DARK,
+    viewState: {
+      ...PIE_DEFAULT_SETTINGS,
+      shape: 'rectangle',
+      style: 'filled',
+      fullScreen: true,
+      decimals: 1,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#fb7185',
+      alternate: '#111827',
+    },
+  },
+  {
     id: 'all-minimal',
     label: 'All / Minimal',
+    frame: 'square',
     viewId: 'all',
     theme: THEMES.LIGHT,
     viewState: {
@@ -302,6 +408,7 @@ const GALLERY_ITEMS = [
   {
     id: 'all-composed',
     label: 'All / Composed',
+    frame: 'square',
     viewId: 'all',
     theme: THEMES.DARK,
     viewState: {
@@ -320,6 +427,52 @@ const GALLERY_ITEMS = [
       spaceBottom: 3,
       spaceLeft: 3,
       primary: '#ffffff',
+      alternate: '#000000',
+    },
+  },
+  {
+    id: 'all-violet-square',
+    label: 'All / Violet Sand',
+    frame: 'square',
+    viewId: 'all',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...ALL_DEFAULT_SETTINGS,
+      dotsMode: 'custom',
+      dotsCount: 144,
+      showDays: true,
+      showPercentBox: true,
+      showPerimeter: true,
+      shape: 'circle',
+      percentBoxSize: 'small',
+      perimeterThickness: 5,
+      gapX: 0.4,
+      gapY: 0.4,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#7c3aed',
+      alternate: '#f5f5dc',
+    },
+  },
+  {
+    id: 'dots-chartreuse-landscape',
+    label: 'Dots / Chartreuse Field',
+    frame: 'landscape',
+    viewId: 'dots',
+    theme: THEMES.DARK,
+    viewState: {
+      ...DOTS_DEFAULT_SETTINGS,
+      shape: 'circle',
+      gapX: 0.35,
+      gapY: 0.35,
+      inactiveOpacity: 6,
+      spaceTop: 0,
+      spaceRight: 0,
+      spaceBottom: 0,
+      spaceLeft: 0,
+      primary: '#bef264',
       alternate: '#000000',
     },
   },
@@ -344,6 +497,21 @@ const GALLERY_ITEMS = [
     },
   },
 ];
+
+const GALLERY_FRAME_CLASSES = {
+  portrait: {
+    card: 'w-[18rem] sm:w-[20rem] lg:w-[22rem]',
+    preview: 'aspect-[9/16]',
+  },
+  square: {
+    card: 'w-[18rem] sm:w-[20rem] lg:w-[22rem]',
+    preview: 'aspect-square',
+  },
+  landscape: {
+    card: 'w-[24rem] sm:w-[28rem] lg:w-[34rem]',
+    preview: 'aspect-[16/10]',
+  },
+};
 
 const getGalleryPreviewUrl = ({ id, viewId, viewState, theme }) => {
   const baseUrl = getSharedViewUrl({
@@ -487,13 +655,17 @@ const HomepageSections = () => {
           <div className="overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex w-max snap-x snap-mandatory gap-5 sm:gap-6">
               {GALLERY_ITEMS.map((item) => (
+                (() => {
+                  const frame = GALLERY_FRAME_CLASSES[item.frame ?? 'portrait'];
+
+                  return (
                 <article
                   key={item.id}
                   data-home-card
-                  className="group w-[18rem] shrink-0 snap-start overflow-hidden border border-black/8 bg-stone-100 transition-transform duration-300 hover:-translate-y-1 dark:border-white/8 dark:bg-zinc-950 sm:w-[20rem] lg:w-[22rem]"
+                  className={`group ${frame.card} shrink-0 snap-start overflow-hidden border border-black/8 bg-stone-100 transition-transform duration-300 hover:-translate-y-1 dark:border-white/8 dark:bg-zinc-950`}
                 >
                   <Link to={`/view/${item.viewId}`} className="block">
-                    <div className="aspect-[9/16] overflow-hidden bg-black/4 dark:bg-white/[0.04]">
+                    <div className={`${frame.preview} overflow-hidden bg-black/4 dark:bg-white/[0.04]`}>
                       <iframe
                         src={getGalleryPreviewUrl(item)}
                         title={`${item.label} gallery preview`}
@@ -512,6 +684,8 @@ const HomepageSections = () => {
                     </div>
                   </Link>
                 </article>
+                  );
+                })()
               ))}
             </div>
           </div>
