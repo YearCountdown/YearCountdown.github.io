@@ -18,13 +18,24 @@ const getRandomIndex = (length) => {
   return Math.floor(Math.random() * length);
 };
 
+const buildHeadlineBag = (excludeIndex = null) => {
+  const bag = heroMessages
+    .map((_, index) => index)
+    .filter((index) => index !== excludeIndex);
+
+  for (let index = bag.length - 1; index > 0; index -= 1) {
+    const randomIndex = getRandomIndex(index + 1);
+    [bag[index], bag[randomIndex]] = [bag[randomIndex], bag[index]];
+  }
+
+  return bag;
+};
+
 const getInitialHeadlineState = () => {
   const currentIndex = getRandomIndex(heroMessages.length);
-  const remainingIndices = heroMessages.map((_, index) => index).filter((index) => index !== currentIndex);
-
   return {
     currentIndex,
-    remainingIndices,
+    bag: buildHeadlineBag(currentIndex),
   };
 };
 
@@ -49,19 +60,17 @@ const HomeHero = () => {
   useEffect(() => {
     const intervalId = window.setInterval(() => {
       setHeadlineState((current) => {
-        let available = current.remainingIndices;
+        let bag = current.bag;
 
-        if (!available.length) {
-          available = heroMessages.map((_, index) => index).filter((index) => index !== current.currentIndex);
+        if (!bag.length) {
+          bag = buildHeadlineBag(current.currentIndex);
         }
 
-        const nextPoolIndex = getRandomIndex(available.length);
-        const nextIndex = available[nextPoolIndex];
-        const nextRemaining = available.filter((_, index) => index !== nextPoolIndex);
+        const [nextIndex, ...nextBag] = bag;
 
         return {
           currentIndex: nextIndex,
-          remainingIndices: nextRemaining,
+          bag: nextBag,
         };
       });
     }, 4200);
