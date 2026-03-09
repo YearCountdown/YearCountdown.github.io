@@ -42,7 +42,7 @@ export const VIEW_SETTINGS_CONFIG = {
         key: 'fontSize',
         type: 'range',
         label: 'Font Size',
-        min: 0.6,
+        min: 0.1,
         max: 2.5,
         step: 0.1,
         suffix: 'x',
@@ -531,7 +531,7 @@ export const normalizeCountdownSettingValue = (key, value, theme) => {
     case 'labels':
       return value === true || value === 'true';
     case 'fontSize':
-      return clampNumber(value, 0.6, 2.5, COUNTDOWN_DEFAULT_SETTINGS.fontSize);
+      return clampNumber(value, 0.1, 2.5, COUNTDOWN_DEFAULT_SETTINGS.fontSize);
     case VIEW_COLOR_SETTINGS.primary:
     case VIEW_COLOR_SETTINGS.alternate:
       return normalizeColorSettingValue(key, value, theme);
@@ -660,7 +660,7 @@ export const getCountdownSettingsFromSearchParams = (searchParams, theme, persis
           : COUNTDOWN_DEFAULT_SETTINGS.labels,
     fontSize: clampNumber(
       searchParams.get('fontSize') ?? persistedSettings.fontSize,
-      0.6,
+      0.1,
       2.5,
       COUNTDOWN_DEFAULT_SETTINGS.fontSize,
     ),
