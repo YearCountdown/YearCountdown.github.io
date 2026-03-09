@@ -1,13 +1,9 @@
-import {
-  COUNTDOWN_DEFAULT_SETTINGS,
-  DOTS_DEFAULT_SETTINGS,
-  PIE_DEFAULT_SETTINGS,
-  PROGRESS_DEFAULT_SETTINGS,
-} from './viewSettings';
-import { THEMES, resolveTheme } from './theme';
+import { getSharedViewUrl } from './viewSettings';
+import { resolveTheme } from './theme';
 import { VIEW_BRAND_TONE_MODES, normalizeViewBrandToneMode, resolveViewColors } from './viewColors';
 
-export const WALLPAPER_BASE_URL = 'https://theyearcountdown.vercel.app';
+export const WALLPAPER_BASE_URL = 'https://pageshot.site/v1/screenshot';
+export const WALLPAPER_SOURCE_ORIGIN = 'https://yearcountdown.github.io';
 export const WALLPAPER_DIMENSION_MIN = 128;
 export const WALLPAPER_DIMENSION_MAX = 4096;
 export const WALLPAPER_DEFAULT_SIZE = {
@@ -58,113 +54,25 @@ export const getWallpaperUrl = ({
     primary: colors?.primary ?? viewState.primary,
     alternate: colors?.alternate ?? viewState.alternate,
   });
+  const embedUrl = getSharedViewUrl({
+    pathname: `/view/${viewId}`,
+    origin: WALLPAPER_SOURCE_ORIGIN,
+    theme: currentTheme,
+    viewId,
+    viewState,
+    colors: {
+      primary: resolvedColors.primary,
+      alternate: resolvedColors.alternate,
+      brandToneMode: VIEW_BRAND_TONE_MODES.AUTO,
+      textToneMode: normalizeViewBrandToneMode(textToneMode),
+    },
+  });
   const params = new URLSearchParams();
 
-  if (viewId === 'countdown') {
-    if (viewState.mode !== COUNTDOWN_DEFAULT_SETTINGS.mode) {
-      params.set('mode', viewState.mode);
-    }
-    if (viewState.frame !== COUNTDOWN_DEFAULT_SETTINGS.frame) {
-      params.set('frame', String(viewState.frame));
-    }
-    if (viewState.labels !== COUNTDOWN_DEFAULT_SETTINGS.labels) {
-      params.set('labels', String(viewState.labels));
-    }
-    if (viewState.fontSize !== COUNTDOWN_DEFAULT_SETTINGS.fontSize) {
-      params.set('fontSize', String(viewState.fontSize));
-    }
-  }
-
-  if (viewId === 'dots') {
-    if (viewState.shape !== DOTS_DEFAULT_SETTINGS.shape) {
-      params.set('shape', viewState.shape);
-    }
-    if (viewState.triangleMode !== DOTS_DEFAULT_SETTINGS.triangleMode) {
-      params.set('triangleMode', viewState.triangleMode);
-    }
-    if (viewState.triangleAngle !== DOTS_DEFAULT_SETTINGS.triangleAngle) {
-      params.set('triangleAngle', String(viewState.triangleAngle));
-    }
-    if (viewState.gapX !== DOTS_DEFAULT_SETTINGS.gapX) {
-      params.set('gapX', String(viewState.gapX));
-    }
-    if (viewState.gapY !== DOTS_DEFAULT_SETTINGS.gapY) {
-      params.set('gapY', String(viewState.gapY));
-    }
-    if (viewState.inactiveOpacity !== DOTS_DEFAULT_SETTINGS.inactiveOpacity) {
-      params.set('inactiveOpacity', String(viewState.inactiveOpacity));
-    }
-    if (viewState.inset !== DOTS_DEFAULT_SETTINGS.inset) {
-      params.set('inset', String(viewState.inset));
-    }
-    if (viewState.outerX !== DOTS_DEFAULT_SETTINGS.outerX) {
-      params.set('outerX', String(viewState.outerX));
-    }
-    if (viewState.outerY !== DOTS_DEFAULT_SETTINGS.outerY) {
-      params.set('outerY', String(viewState.outerY));
-    }
-  }
-
-  if (viewId === 'pie') {
-    if (viewState.shape !== PIE_DEFAULT_SETTINGS.shape) {
-      params.set('shape', viewState.shape);
-    }
-    if (viewState.style !== PIE_DEFAULT_SETTINGS.style) {
-      params.set('style', viewState.style);
-    }
-    if (viewState.fullScreen !== PIE_DEFAULT_SETTINGS.fullScreen) {
-      params.set('fullScreen', String(viewState.fullScreen));
-    }
-    if (viewState.decimals !== PIE_DEFAULT_SETTINGS.decimals) {
-      params.set('decimals', String(viewState.decimals));
-    }
-    if (viewState.inset !== PIE_DEFAULT_SETTINGS.inset) {
-      params.set('inset', String(viewState.inset));
-    }
-    if (viewState.outerX !== PIE_DEFAULT_SETTINGS.outerX) {
-      params.set('outerX', String(viewState.outerX));
-    }
-    if (viewState.outerY !== PIE_DEFAULT_SETTINGS.outerY) {
-      params.set('outerY', String(viewState.outerY));
-    }
-  }
-
-  if (viewId === 'progress') {
-    if (viewState.mode !== PROGRESS_DEFAULT_SETTINGS.mode) {
-      params.set('mode', viewState.mode);
-    }
-    if (viewState.fullScreen !== PROGRESS_DEFAULT_SETTINGS.fullScreen) {
-      params.set('fullScreen', String(viewState.fullScreen));
-    }
-    if (viewState.decimals !== PROGRESS_DEFAULT_SETTINGS.decimals) {
-      params.set('decimals', String(viewState.decimals));
-    }
-    if (viewState.fontSize !== PROGRESS_DEFAULT_SETTINGS.fontSize) {
-      params.set('fontSize', String(viewState.fontSize));
-    }
-    if (viewState.lineWidth !== PROGRESS_DEFAULT_SETTINGS.lineWidth) {
-      params.set('lineWidth', String(viewState.lineWidth));
-    }
-    if (viewState.inset !== PROGRESS_DEFAULT_SETTINGS.inset) {
-      params.set('inset', String(viewState.inset));
-    }
-    if (viewState.outerX !== PROGRESS_DEFAULT_SETTINGS.outerX) {
-      params.set('outerX', String(viewState.outerX));
-    }
-    if (viewState.outerY !== PROGRESS_DEFAULT_SETTINGS.outerY) {
-      params.set('outerY', String(viewState.outerY));
-    }
-  }
-
-  params.set('theme', currentTheme === THEMES.DARK ? THEMES.DARK : THEMES.LIGHT);
-  params.set('primary', resolvedColors.primary);
-  params.set('alternate', resolvedColors.alternate);
+  params.set('url', embedUrl);
   params.set('width', String(clampWallpaperDimension(width, WALLPAPER_DEFAULT_SIZE.width)));
   params.set('height', String(clampWallpaperDimension(height, WALLPAPER_DEFAULT_SIZE.height)));
+  params.set('format', 'png');
 
-  if (normalizeViewBrandToneMode(textToneMode) !== VIEW_BRAND_TONE_MODES.AUTO) {
-    params.set('textTone', normalizeViewBrandToneMode(textToneMode));
-  }
-
-  return `${WALLPAPER_BASE_URL}/api/wallpaper/${viewId}.png?${params.toString()}`;
+  return `${WALLPAPER_BASE_URL}?${params.toString()}`;
 };

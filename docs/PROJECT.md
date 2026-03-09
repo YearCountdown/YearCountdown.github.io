@@ -42,7 +42,7 @@ Examples:
   - Pie
   - Progress
 - Shareable embed links from every view
-- Direct wallpaper PNG URLs from every view
+- Direct PageShot wallpaper URLs from every view
 - Per-view settings persisted in cookies
 - Homepage theme controls
 - View-specific appearance and display controls
@@ -96,8 +96,8 @@ Examples:
 
 ## Wallpaper URLs
 
-- Every view gear can copy a direct wallpaper PNG URL
-- Wallpaper URLs point to the Vercel deployment, not GitHub Pages
+- Every view gear can copy a direct wallpaper image URL
+- Wallpaper URLs are generated through PageShot from the GitHub Pages embed URL
 - Wallpaper URLs preserve:
   - active view settings
   - theme

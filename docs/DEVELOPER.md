@@ -81,7 +81,6 @@ npm install
   - `npm run build`
   - output directory `dist`
   - SPA rewrites to `index.html` for app routes
-  - `api/wallpaper/*.png` functions for direct wallpaper image generation
 
 ## Project Structure
 

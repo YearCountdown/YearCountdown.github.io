@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vercel/og": "^0.8.5",
     "@gsap/react": "^2.1.2",
     "@tailwindcss/vite": "^4.1.18",
     "gsap": "^3.14.2",

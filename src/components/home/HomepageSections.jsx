@@ -98,7 +98,7 @@ const WALLPAPER_NOTES = [
     title: 'Practical Notes',
     items: [
       'Apple Shortcuts can run Time of Day automations automatically without asking.',
-      'The wallpaper URL is a direct PNG endpoint, not an HTML page route.',
+      'The wallpaper URL is a PageShot image of the embed view, not the raw HTML route itself.',
       'The copied wallpaper URL preserves the active theme, colors, and view-specific settings.',
     ],
   },
@@ -141,7 +141,7 @@ const HomepageSections = () => {
         id="setup"
         eyebrow="Wallpaper And Setup"
         title="Use YearCountdown on an iPhone lock screen."
-        body="The wallpaper URL copies a direct PNG image for the active view. Use that URL in Shortcuts so iPhone can fetch the image and set it as wallpaper on a daily schedule."
+        body="The wallpaper URL copies a PageShot image of the active embed view. Use that URL in Shortcuts so iPhone can fetch the image and set it as wallpaper on a daily schedule."
         shapeVariant="signal"
       >
         <div className="grid gap-px bg-black/8 dark:bg-white/8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
