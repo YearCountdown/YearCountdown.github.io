@@ -106,7 +106,7 @@ const CopyEmbedAction = ({
           }`}
           style={{
             backgroundColor: withAlpha(backgroundColor, 0.78),
-            border: `1px solid ${withAlpha(toneColor, 0.1)}`,
+            border: `1px solid ${isCopied ? withAlpha(toneColor, 0.1) : 'transparent'}`,
             color: withAlpha(toneColor, 0.8),
           }}
         >
