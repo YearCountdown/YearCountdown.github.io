@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 import { useTheme } from '../../context/ThemeContext';
-import { getBrandAsset } from '../../lib/brand';
+import { getBrandAssetForTheme } from '../../lib/brand';
 
 const HOME_LOADER_SESSION_KEY = 'yc_home_loader_seen';
 
@@ -54,7 +54,7 @@ const HomeIntroLoader = () => {
       ref={overlayRef}
       className="fixed inset-0 z-[70] flex items-center justify-center bg-stone-100 dark:bg-zinc-950"
     >
-      <img ref={logoRef} src={getBrandAsset(theme, 'logo')} alt="" className="h-auto w-32 sm:w-40" />
+      <img ref={logoRef} src={getBrandAssetForTheme(theme, 'logo')} alt="" className="h-auto w-32 sm:w-40" />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useTheme } from '../../context/ThemeContext';
-import { BRAND_TEXT, getBrandAsset } from '../../lib/brand';
+import { BRAND_TEXT, getBrandAssetForTheme } from '../../lib/brand';
 
 const footerGroups = [
   {
@@ -54,7 +54,7 @@ const FooterLink = ({ href, label, external }) => {
 
 const Footer = () => {
   const { theme } = useTheme();
-  const logoSrc = getBrandAsset(theme, 'logo');
+  const logoSrc = getBrandAssetForTheme(theme, 'logo');
 
   return (
     <footer className="w-full border-t border-black/10 px-4 py-10 dark:border-white/10 sm:px-6 sm:py-12 lg:px-10 lg:py-14">

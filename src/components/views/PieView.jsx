@@ -151,7 +151,7 @@ const CircleOutline = ({ width, height, percentage, label, showCenterLabel, font
           y={centerY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill={primaryColor}
+          fill={alternateColor}
           style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
         >
           {label}
@@ -233,7 +233,7 @@ const RectOutline = ({ width, height, percentage, label, showCenterLabel, fontSi
           y={centerY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fill={primaryColor}
+          fill={alternateColor}
           style={{ fontSize: `${fontSize}px`, fontWeight: 300, letterSpacing: '-0.04em' }}
         >
           {label}
@@ -253,6 +253,7 @@ const PieView = ({
   outerY = 0,
   primaryColor,
   alternateColor,
+  textToneColor,
 }) => {
   const { percentage, percentageLabel } = useYearProgress(decimals);
   const { containerRef, layout } = usePieLayout({
@@ -275,7 +276,7 @@ const PieView = ({
     <section
       ref={containerRef}
       className="relative h-full w-full overflow-hidden"
-      style={{ color: primaryColor }}
+      style={{ color: textToneColor, backgroundColor: alternateColor }}
     >
       <div
         className="absolute"
@@ -349,7 +350,7 @@ const PieView = ({
             fontWeight: 300,
             letterSpacing: '-0.04em',
             lineHeight: 1,
-            color: primaryColor,
+            color: textToneColor,
           }}
         >
           {percentageLabel}

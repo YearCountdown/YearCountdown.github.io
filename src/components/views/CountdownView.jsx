@@ -1,6 +1,6 @@
 import useCountdown from '../../hooks/useCountdown';
 import useResponsiveCountdown from '../../hooks/useResponsiveCountdown';
-import { getViewSurfacePalette } from '../../lib/viewColors';
+import { withAlpha } from '../../lib/viewColors';
 
 const MODE_LABELS = {
   all: 'Year ends in',
@@ -96,11 +96,17 @@ const getShellStyle = ({ frame, tokens }) => {
   };
 };
 
-const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColor, alternateColor }) => {
+const CountdownView = ({
+  mode = 'all',
+  frame = false,
+  labels = true,
+  primaryColor,
+  alternateColor,
+  textToneColor,
+}) => {
   const countdown = useCountdown();
   const { containerRef, tokens } = useResponsiveCountdown({ mode, labels });
   const modeLabel = tokens.tier === 'micro' ? SHORT_MODE_LABELS[mode] : MODE_LABELS[mode];
-  const palette = getViewSurfacePalette(primaryColor, alternateColor);
 
   if (mode !== 'all') {
     const singleValue = getSingleModeValue(countdown, mode);
@@ -110,7 +116,10 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
       <section
         ref={containerRef}
         className="flex h-full w-full items-center justify-center overflow-hidden"
-        style={{ '--countdown-frame-color': palette.outlineTrack }}
+        style={{
+          '--countdown-frame-color': withAlpha(textToneColor, 0.22),
+          backgroundColor: alternateColor,
+        }}
       >
         <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center">
           <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
@@ -119,7 +128,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
               style={{
                 fontSize: `${tokens.subtitleSize}px`,
                 letterSpacing: `${tokens.subtitleTracking}em`,
-                color: palette.secondaryText,
+                color: withAlpha(textToneColor, 0.68),
               }}
             >
               {modeLabel}
@@ -140,7 +149,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
                 style={{
                   fontSize: `${tokens.labelSize}px`,
                   letterSpacing: `${tokens.labelTracking}em`,
-                  color: palette.secondaryText,
+                  color: withAlpha(textToneColor, 0.82),
                 }}
               >
                 {unitLabel}
@@ -156,7 +165,10 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
     <section
       ref={containerRef}
       className="flex h-full w-full items-center justify-center overflow-hidden"
-      style={{ '--countdown-frame-color': palette.outlineTrack }}
+      style={{
+        '--countdown-frame-color': withAlpha(textToneColor, 0.22),
+        backgroundColor: alternateColor,
+      }}
     >
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
@@ -165,7 +177,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
             style={{
               fontSize: `${tokens.subtitleSize}px`,
               letterSpacing: `${tokens.subtitleTracking}em`,
-              color: palette.secondaryText,
+              color: withAlpha(textToneColor, 0.68),
             }}
           >
             {tokens.tier === 'micro' ? SHORT_MODE_LABELS.all : MODE_LABELS.all}
@@ -184,7 +196,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
               showLabels={labels}
               tokens={tokens}
               primaryColor={primaryColor}
-              alternateColor={palette.secondaryText}
+              alternateColor={withAlpha(textToneColor, 0.82)}
             />
             <CountdownUnit
               value={countdown.hours}
@@ -192,7 +204,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
               showLabels={labels}
               tokens={tokens}
               primaryColor={primaryColor}
-              alternateColor={palette.secondaryText}
+              alternateColor={withAlpha(textToneColor, 0.82)}
             />
             <CountdownUnit
               value={countdown.minutes}
@@ -200,7 +212,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
               showLabels={labels}
               tokens={tokens}
               primaryColor={primaryColor}
-              alternateColor={palette.secondaryText}
+              alternateColor={withAlpha(textToneColor, 0.82)}
             />
             <CountdownUnit
               value={countdown.seconds}
@@ -208,7 +220,7 @@ const CountdownView = ({ mode = 'all', frame = false, labels = true, primaryColo
               showLabels={labels}
               tokens={tokens}
               primaryColor={primaryColor}
-              alternateColor={palette.secondaryText}
+              alternateColor={withAlpha(textToneColor, 0.82)}
             />
           </div>
         </div>

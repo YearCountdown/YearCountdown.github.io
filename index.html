@@ -40,6 +40,12 @@
           }
         }
 
+        function getQueryTheme() {
+          var params = new URLSearchParams(window.location.search);
+          var value = params.get('theme');
+          return value === LIGHT || value === DARK ? value : null;
+        }
+
         function setThemeOnDocument(theme) {
           var root = document.documentElement;
           root.dataset.theme = theme;
@@ -69,7 +75,7 @@
           }
         }
 
-        var resolvedTheme = resolveTheme(getCookieTheme());
+        var resolvedTheme = resolveTheme(getQueryTheme() || getCookieTheme());
         setThemeOnDocument(resolvedTheme);
         applyFavicon(resolvedTheme);
       })();

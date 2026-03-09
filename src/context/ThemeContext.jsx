@@ -4,41 +4,68 @@ import {
   THEMES,
   applyFaviconForTheme,
   applyThemeToDocument,
+  readThemeCookie,
   resolveTheme,
   writeThemeCookie,
 } from '../lib/theme';
 import {
-  getViewColorsFromMode,
-  readViewColorModeCookie,
-  writeViewColorModeCookie,
+  readViewBrandToneCookie,
+  readViewColorsCookie,
+  readViewTextToneCookie,
+  resolveViewColors,
+  normalizeViewBrandToneMode,
+  writeViewBrandToneCookie,
+  writeViewColorsCookie,
+  writeViewTextToneCookie,
 } from '../lib/viewColors';
 
 const ThemeContext = createContext(null);
 
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    const initialTheme = document.documentElement.dataset.theme;
-    return resolveTheme(initialTheme);
+    return readThemeCookie();
   });
-  const [colorMode, setColorMode] = useState(() => {
-    const initialTheme = resolveTheme(document.documentElement.dataset.theme);
-    return readViewColorModeCookie(initialTheme);
+  const [viewColors, setViewColors] = useState(() => {
+    const initialTheme = readThemeCookie();
+    return readViewColorsCookie(initialTheme);
+  });
+  const [viewBrandToneMode, setViewBrandToneMode] = useState(() => {
+    return readViewBrandToneCookie();
+  });
+  const [viewTextToneMode, setViewTextToneMode] = useState(() => {
+    return readViewTextToneCookie();
   });
 
   useEffect(() => {
     applyThemeToDocument(theme);
     applyFaviconForTheme(theme);
     writeThemeCookie(theme);
-    writeViewColorModeCookie(colorMode, theme);
-  }, [colorMode, theme]);
+    writeViewColorsCookie(viewColors, theme);
+    writeViewBrandToneCookie(viewBrandToneMode);
+    writeViewTextToneCookie(viewTextToneMode);
+  }, [theme, viewBrandToneMode, viewColors, viewTextToneMode]);
 
   const value = useMemo(() => {
     const setThemeValue = (nextTheme) => {
       setTheme(resolveTheme(nextTheme));
     };
 
-    const setColorModeValue = (nextMode) => {
-      setColorMode(nextMode);
+    const setViewColorsValue = (nextColors) => {
+      setViewColors((currentColors) => {
+        return resolveViewColors({
+          theme,
+          primary: nextColors?.primary ?? currentColors.primary,
+          alternate: nextColors?.alternate ?? currentColors.alternate,
+        });
+      });
+    };
+
+    const setViewBrandToneModeValue = (nextMode) => {
+      setViewBrandToneMode(normalizeViewBrandToneMode(nextMode));
+    };
+
+    const setViewTextToneModeValue = (nextMode) => {
+      setViewTextToneMode(normalizeViewBrandToneMode(nextMode));
     };
 
     const toggleTheme = () => {
@@ -51,11 +78,14 @@ const ThemeProvider = ({ children }) => {
       theme,
       setTheme: setThemeValue,
       toggleTheme,
-      colorMode,
-      setColorMode: setColorModeValue,
-      viewColors: getViewColorsFromMode(colorMode, theme),
+      viewColors,
+      setViewColors: setViewColorsValue,
+      viewBrandToneMode,
+      setViewBrandToneMode: setViewBrandToneModeValue,
+      viewTextToneMode,
+      setViewTextToneMode: setViewTextToneModeValue,
     };
-  }, [colorMode, theme]);
+  }, [theme, viewBrandToneMode, viewColors, viewTextToneMode]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

@@ -1,18 +1,34 @@
 import { THEMES } from './theme';
+import { resolveViewBrandIconTone } from './viewColors';
 
 export const BRAND_TEXT = 'Year Countdown';
 
-export const BRAND_ASSETS = {
+const BRAND_ASSETS = {
   icon: {
-    [THEMES.DARK]: '/logo/icon-light.svg',
-    [THEMES.LIGHT]: '/logo/icon-dark.svg',
+    light: '/logo/icon-light.svg',
+    dark: '/logo/icon-dark.svg',
   },
   logo: {
-    [THEMES.DARK]: '/logo/logo-light.svg',
-    [THEMES.LIGHT]: '/logo/logo-dark.svg',
+    light: '/logo/logo-light.svg',
+    dark: '/logo/logo-dark.svg',
   },
 };
 
-export const getBrandAsset = (theme, type = 'icon') => {
-  return BRAND_ASSETS[type]?.[theme] ?? BRAND_ASSETS.icon[THEMES.LIGHT];
+export const getBrandAssetForIconTone = (iconTone = 'dark', type = 'icon') => {
+  const normalizedTone = iconTone === 'light' ? 'light' : 'dark';
+  return BRAND_ASSETS[type]?.[normalizedTone] ?? BRAND_ASSETS.icon.dark;
+};
+
+export const getBrandAssetForTheme = (theme, type = 'icon') => {
+  return getBrandAssetForIconTone(theme === THEMES.DARK ? 'light' : 'dark', type);
+};
+
+export const getBrandAssetForBackgroundColor = (backgroundColor, iconToneMode = 'auto', type = 'icon') => {
+  return getBrandAssetForIconTone(
+    resolveViewBrandIconTone({
+      mode: iconToneMode,
+      backgroundColor,
+    }),
+    type,
+  );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useTheme } from '../context/ThemeContext';
-import { VIEW_COLOR_MODES } from '../lib/viewColors';
+import { VIEW_BRAND_TONE_MODES, VIEW_COLOR_PRESETS } from '../lib/viewColors';
 
 const GearIcon = () => {
   return (
@@ -83,6 +83,35 @@ const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
         onChange={(event) => updateViewSetting(viewId, control.key, event.target.value)}
         className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
       />
+    </div>
+  );
+};
+
+const renderRangeControl = ({ control, value, viewId, updateViewSetting }) => {
+  return (
+    <div key={control.key} className="min-w-0">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {control.label}
+        </p>
+        <span className="shrink-0 text-xs text-black/45 dark:text-white/45">
+          {value}
+          {control.suffix ? ` ${control.suffix}` : ''}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={control.min}
+        max={control.max}
+        step={control.step}
+        value={value}
+        onChange={(event) => updateViewSetting(viewId, control.key, event.target.value)}
+        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-black/10 accent-black outline-none dark:bg-white/10 dark:accent-white"
+      />
+      <div className="mt-2 flex items-center justify-between text-[0.65rem] uppercase tracking-[0.18em] text-black/30 dark:text-white/30">
+        <span>{control.min}</span>
+        <span>{control.max}</span>
+      </div>
     </div>
   );
 };
@@ -209,10 +238,14 @@ const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
     return renderNumberControl({ control, value, viewId, updateViewSetting });
   }
 
+  if (control.type === 'range') {
+    return renderRangeControl({ control, value, viewId, updateViewSetting });
+  }
+
   return null;
 };
 
-const ColorModeButton = ({ active, label, primary, alternate, onClick }) => {
+const ColorPresetButton = ({ active, label, primary, alternate, onClick }) => {
   return (
     <button
       type="button"
@@ -238,6 +271,23 @@ const ColorModeButton = ({ active, label, primary, alternate, onClick }) => {
   );
 };
 
+const ColorInput = ({ label, value, onChange }) => {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-2xl border border-black/10 px-4 py-3 dark:border-white/10">
+      <span className="text-sm text-black/70 dark:text-white/70">{label}</span>
+      <span className="flex items-center gap-3">
+        <span className="font-mono text-xs text-black/45 dark:text-white/45">{value}</span>
+        <input
+          type="color"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="h-8 w-8 cursor-pointer rounded-full border-0 bg-transparent p-0"
+        />
+      </span>
+    </label>
+  );
+};
+
 const ViewSettingsGear = ({
   viewId,
   viewTitle,
@@ -247,14 +297,36 @@ const ViewSettingsGear = ({
   viewState,
   updateViewSetting,
   appearanceOnly = false,
+  themeOnly = false,
+  appearanceColors,
+  onThemeChange,
+  onColorsChange,
+  brandToneMode = VIEW_BRAND_TONE_MODES.AUTO,
+  textToneMode = VIEW_BRAND_TONE_MODES.AUTO,
+  gearIconTone,
+  resolvedTextTone,
+  onBrandToneModeChange,
+  onTextToneModeChange,
 }) => {
-  const { theme, setTheme, colorMode, setColorMode } = useTheme();
+  const { theme, setTheme, viewColors, setViewColors } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [activeTab, setActiveTab] = useState(appearanceOnly ? 'appearance' : 'view');
   const containerRef = useRef(null);
   const copiedTimeoutRef = useRef(null);
   const hasViewTab = !appearanceOnly;
+  const resolvedColors = appearanceColors ?? viewColors;
+  const handleThemeChange = onThemeChange ?? setTheme;
+  const handleColorsChange = onColorsChange ?? setViewColors;
+  const resolvedGearIconTone = gearIconTone
+    ? gearIconTone === VIEW_BRAND_TONE_MODES.LIGHT
+      ? VIEW_BRAND_TONE_MODES.LIGHT
+      : VIEW_BRAND_TONE_MODES.DARK
+    : theme === 'dark'
+      ? VIEW_BRAND_TONE_MODES.LIGHT
+      : VIEW_BRAND_TONE_MODES.DARK;
+  const gearIconColor = resolvedGearIconTone === VIEW_BRAND_TONE_MODES.LIGHT ? 'rgba(255,255,255,0.88)' : 'rgba(17,17,17,0.88)';
+  const resolvedTextToneMode = resolvedTextTone === VIEW_BRAND_TONE_MODES.LIGHT ? VIEW_BRAND_TONE_MODES.LIGHT : VIEW_BRAND_TONE_MODES.DARK;
 
   useEffect(() => {
     if (!isOpen) {
@@ -326,7 +398,7 @@ const ViewSettingsGear = ({
   return (
     <div ref={containerRef} className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
       {isOpen ? (
-        <div className="absolute bottom-14 right-0 w-[min(22rem,calc(100vw-2rem))] rounded-[1.6rem] border border-black/10 bg-white/78 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-950/76 dark:shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
+        <div className="absolute bottom-14 right-0 flex max-h-[min(42rem,calc(100vh-7rem))] w-[min(22rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-[1.6rem] border border-black/10 bg-white/78 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.08)] backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-950/76 dark:shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
           <div className="mb-4">
             <p className="text-[0.65rem] uppercase tracking-[0.28em] text-black/40 dark:text-white/40">
               Settings
@@ -363,60 +435,164 @@ const ViewSettingsGear = ({
             </div>
           ) : null}
 
-          <div className="space-y-4">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
             {activeTab === 'appearance' ? (
               <>
-                <div>
-                  <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-                    Theme
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setTheme('light')}
-                      className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
-                        theme === 'light'
-                          ? 'bg-black text-white dark:bg-white dark:text-black'
-                          : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
-                      }`}
-                    >
-                      Light
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTheme('dark')}
-                      className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
-                        theme === 'dark'
-                          ? 'bg-black text-white dark:bg-white dark:text-black'
-                          : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
-                      }`}
-                    >
-                      Dark
-                    </button>
+                {themeOnly ? (
+                  <div>
+                    <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                      Theme
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleThemeChange('light')}
+                        className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                          theme === 'light'
+                            ? 'bg-black text-white dark:bg-white dark:text-black'
+                            : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                        }`}
+                      >
+                        Light
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleThemeChange('dark')}
+                        className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                          theme === 'dark'
+                            ? 'bg-black text-white dark:bg-white dark:text-black'
+                            : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                        }`}
+                      >
+                        Dark
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div>
-                  <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-                    Colors
-                  </p>
-                  <div className="grid grid-cols-1 gap-2">
-                    <ColorModeButton
-                      active={colorMode === VIEW_COLOR_MODES.BLACK_PRIMARY}
-                      label="Black Primary"
-                      primary="#000000"
-                      alternate="#ffffff"
-                      onClick={() => setColorMode(VIEW_COLOR_MODES.BLACK_PRIMARY)}
-                    />
-                    <ColorModeButton
-                      active={colorMode === VIEW_COLOR_MODES.WHITE_PRIMARY}
-                      label="White Primary"
-                      primary="#ffffff"
-                      alternate="#000000"
-                      onClick={() => setColorMode(VIEW_COLOR_MODES.WHITE_PRIMARY)}
-                    />
+                ) : (
+                  <div>
+                    <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                      Colors
+                    </p>
+                    <p className="mb-3 text-xs leading-5 text-black/50 dark:text-white/50">
+                      Theme follows the selected secondary color. Use the header toggle if you want to override it manually.
+                    </p>
+                    <div className="grid grid-cols-1 gap-2">
+                      {VIEW_COLOR_PRESETS.map((preset) => (
+                        <ColorPresetButton
+                          key={preset.id}
+                          active={
+                            resolvedColors.primary === preset.primary &&
+                            resolvedColors.alternate === preset.alternate
+                          }
+                          label={preset.label}
+                          primary={preset.primary}
+                          alternate={preset.alternate}
+                          onClick={() =>
+                            handleColorsChange({
+                              primary: preset.primary,
+                              alternate: preset.alternate,
+                            })
+                          }
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 gap-2">
+                      <ColorInput
+                        label="Primary"
+                        value={resolvedColors.primary}
+                        onChange={(value) => handleColorsChange({ primary: value })}
+                      />
+                      <ColorInput
+                        label="Secondary"
+                        value={resolvedColors.alternate}
+                        onChange={(value) => handleColorsChange({ alternate: value })}
+                      />
+                    </div>
+                    <div className="mt-4">
+                      <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                        Text Tone
+                      </p>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onTextToneModeChange?.(VIEW_BRAND_TONE_MODES.AUTO)}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                            textToneMode === VIEW_BRAND_TONE_MODES.AUTO
+                              ? 'bg-black text-white dark:bg-white dark:text-black'
+                              : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                          }`}
+                        >
+                          Auto
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onTextToneModeChange?.(VIEW_BRAND_TONE_MODES.LIGHT)}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                            textToneMode === VIEW_BRAND_TONE_MODES.LIGHT
+                              ? 'bg-black text-white dark:bg-white dark:text-black'
+                              : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onTextToneModeChange?.(VIEW_BRAND_TONE_MODES.DARK)}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                            textToneMode === VIEW_BRAND_TONE_MODES.DARK
+                              ? 'bg-black text-white dark:bg-white dark:text-black'
+                              : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                          }`}
+                        >
+                          Dark
+                        </button>
+                      </div>
+                      <p className="mt-2 text-xs leading-5 text-black/45 dark:text-white/45">
+                        Active: {resolvedTextToneMode === VIEW_BRAND_TONE_MODES.LIGHT ? 'Light' : 'Dark'}
+                      </p>
+                    </div>
+                    <div className="mt-4">
+                      <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                        Icon Tone
+                      </p>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onBrandToneModeChange?.(VIEW_BRAND_TONE_MODES.AUTO)}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                            brandToneMode === VIEW_BRAND_TONE_MODES.AUTO
+                              ? 'bg-black text-white dark:bg-white dark:text-black'
+                              : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                          }`}
+                        >
+                          Auto
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onBrandToneModeChange?.(VIEW_BRAND_TONE_MODES.LIGHT)}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                            brandToneMode === VIEW_BRAND_TONE_MODES.LIGHT
+                              ? 'bg-black text-white dark:bg-white dark:text-black'
+                              : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onBrandToneModeChange?.(VIEW_BRAND_TONE_MODES.DARK)}
+                          className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                            brandToneMode === VIEW_BRAND_TONE_MODES.DARK
+                              ? 'bg-black text-white dark:bg-white dark:text-black'
+                              : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                          }`}
+                        >
+                          Dark
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
               </>
             ) : (
               <>
@@ -448,7 +624,8 @@ const ViewSettingsGear = ({
         onClick={() => setIsOpen((current) => !current)}
         aria-label={isOpen ? 'Close settings panel' : 'Open settings panel'}
         aria-expanded={isOpen}
-        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center text-black/82 transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:text-white/82 dark:focus-visible:ring-white/40"
+        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40"
+        style={{ color: gearIconColor }}
       >
         <GearIcon />
       </button>

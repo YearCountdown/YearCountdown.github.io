@@ -70,7 +70,7 @@ const FieldMode = ({ width, height, percentage, label, fontSize, primaryColor, a
   );
 };
 
-const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, primaryColor, alternateColor }) => {
+const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, primaryColor, alternateColor, textToneColor }) => {
   const palette = getViewSurfacePalette(primaryColor, alternateColor);
   const remaining = palette.outlineTrack;
   const elapsed = palette.primary;
@@ -105,7 +105,7 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, prima
             fontWeight: 300,
             letterSpacing: '-0.04em',
             lineHeight: 1,
-            color: primaryColor,
+            color: textToneColor,
           }}
         >
           {label}
@@ -126,6 +126,7 @@ const ProgressView = ({
   outerY = 0,
   primaryColor,
   alternateColor,
+  textToneColor,
 }) => {
   const { percentage, percentageLabel } = useYearProgress(decimals);
   const { containerRef, layout } = useProgressLayout({
@@ -139,7 +140,7 @@ const ProgressView = ({
   const computedFontSize = textScale * fontSize;
 
   return (
-    <section ref={containerRef} className="relative h-full w-full overflow-hidden">
+    <section ref={containerRef} className="relative h-full w-full overflow-hidden" style={{ backgroundColor: alternateColor }}>
       <div
         className="absolute"
         style={{
@@ -159,6 +160,7 @@ const ProgressView = ({
             lineWidth={lineWidth}
             primaryColor={primaryColor}
             alternateColor={alternateColor}
+            textToneColor={textToneColor}
           />
         ) : (
           <FieldMode

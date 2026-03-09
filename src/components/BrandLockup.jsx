@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 
 import { useTheme } from '../context/ThemeContext';
-import { BRAND_TEXT, getBrandAsset } from '../lib/brand';
+import { BRAND_TEXT, getBrandAssetForBackgroundColor, getBrandAssetForTheme } from '../lib/brand';
+import { getContrastingTextColor } from '../lib/viewColors';
+import { THEMES } from '../lib/theme';
 
 const BrandLockup = ({
   to = '/',
@@ -9,11 +11,21 @@ const BrandLockup = ({
   textClassName = '',
   compact = false,
   iconOnly = false,
+  colorMode = 'theme',
+  iconToneMode = 'auto',
   ariaLabel = 'Go to home page',
   onClick,
 }) => {
-  const { theme } = useTheme();
-  const iconSrc = getBrandAsset(theme, 'icon');
+  const { theme, viewColors } = useTheme();
+  const usesThemeColors = colorMode === 'theme';
+  const iconSrc = usesThemeColors
+    ? getBrandAssetForTheme(theme, 'icon')
+    : getBrandAssetForBackgroundColor(viewColors.alternate, iconToneMode, 'icon');
+  const textColor = usesThemeColors
+    ? theme === THEMES.DARK
+      ? '#ffffff'
+      : '#111111'
+    : getContrastingTextColor(viewColors.alternate);
   const markWrapperClassName = compact ? 'h-8 w-8' : 'h-11 w-11';
 
   return (
@@ -33,7 +45,8 @@ const BrandLockup = ({
 
       {iconOnly ? null : (
         <span
-          className={`min-w-0 text-[0.62rem] font-medium uppercase tracking-[0.28em] text-black/72 dark:text-white/72 sm:text-[0.68rem] ${textClassName}`}
+          className={`min-w-0 text-[0.62rem] font-medium uppercase tracking-[0.28em] sm:text-[0.68rem] ${textClassName}`}
+          style={{ color: textColor }}
         >
           {BRAND_TEXT}
         </span>

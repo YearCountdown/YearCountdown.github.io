@@ -4,6 +4,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { readViewPreferencesCookie, writeViewPreferencesCookie } from '../lib/viewPreferences';
 import {
+  VIEW_BRAND_TONE_MODES,
+  normalizeViewBrandToneMode,
+  resolveViewBrandIconTone,
+  resolveViewTextTone,
+  resolveViewColors,
+} from '../lib/viewColors';
+import {
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
   PIE_DEFAULT_SETTINGS,
@@ -27,14 +34,26 @@ import {
 import { resolveTheme } from '../lib/theme';
 
 const useViewShell = (themeOverride) => {
-  const { theme: contextTheme, viewColors, colorMode } = useTheme();
+  const {
+    theme: contextTheme,
+    viewColors,
+    setViewColors,
+    viewBrandToneMode,
+    setViewBrandToneMode,
+    viewTextToneMode,
+    setViewTextToneMode,
+  } =
+    useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
   return useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
     const queryTheme = searchParams.get('theme');
-    const theme = resolveTheme(themeOverride ?? contextTheme);
+    const theme =
+      queryTheme === 'light' || queryTheme === 'dark'
+        ? queryTheme
+        : resolveTheme(themeOverride ?? contextTheme);
     const persistedPreferences = readViewPreferencesCookie();
     const viewConfig = getViewConfigFromPathname(location.pathname);
     const themeDefaults = viewColors ?? getDefaultViewColors(theme);
@@ -52,15 +71,38 @@ const useViewShell = (themeOverride) => {
       persistedPreferences.progress,
       themeDefaults,
     );
+    const activeViewId = getViewIdFromPathname(location.pathname);
+    const activeViewState = {
+      countdown,
+      dots,
+      pie,
+      progress,
+    }[activeViewId];
+    const appearanceBrandToneMode = normalizeViewBrandToneMode(
+      searchParams.get('iconTone') ?? viewBrandToneMode,
+    );
+    const appearanceTextToneMode = normalizeViewBrandToneMode(
+      searchParams.get('textTone') ?? viewTextToneMode,
+    );
+    const resolvedBrandIconTone = resolveViewBrandIconTone({
+      mode: appearanceBrandToneMode,
+      backgroundColor: activeViewState?.alternate ?? themeDefaults.alternate,
+    });
+    const resolvedTextTone = resolveViewTextTone({
+      mode: appearanceTextToneMode,
+      backgroundColor: activeViewState?.alternate ?? themeDefaults.alternate,
+    });
 
-    const updateSearchParam = (key, value, defaultValue) => {
+    const updateSearchParams = (entries) => {
       const nextParams = new URLSearchParams(location.search);
 
-      if (value === defaultValue) {
-        nextParams.delete(key);
-      } else {
-        nextParams.set(key, String(value));
-      }
+      entries.forEach(({ key, value, defaultValue, alwaysSet = false }) => {
+        if (!alwaysSet && value === defaultValue) {
+          nextParams.delete(key);
+        } else {
+          nextParams.set(key, String(value));
+        }
+      });
 
       const nextSearch = nextParams.toString();
 
@@ -73,21 +115,59 @@ const useViewShell = (themeOverride) => {
       );
     };
 
+    const updateSearchParam = (key, value, defaultValue, alwaysSet = false) => {
+      updateSearchParams([{ key, value, defaultValue, alwaysSet }]);
+    };
+
+    const updateAppearanceColors = (nextColors) => {
+      const resolvedColors = resolveViewColors({
+        theme,
+        primary: nextColors?.primary ?? activeViewState?.primary ?? themeDefaults.primary,
+        alternate: nextColors?.alternate ?? activeViewState?.alternate ?? themeDefaults.alternate,
+      });
+
+      setViewColors(resolvedColors);
+      updateSearchParams([
+        { key: 'primary', value: resolvedColors.primary, defaultValue: '', alwaysSet: true },
+        { key: 'alternate', value: resolvedColors.alternate, defaultValue: '', alwaysSet: true },
+      ]);
+    };
+
+    const updateAppearanceBrandToneMode = (nextMode) => {
+      const normalizedMode = normalizeViewBrandToneMode(nextMode);
+      setViewBrandToneMode(normalizedMode);
+      updateSearchParam('iconTone', normalizedMode, VIEW_BRAND_TONE_MODES.AUTO);
+    };
+
+    const updateAppearanceTextToneMode = (nextMode) => {
+      const normalizedMode = normalizeViewBrandToneMode(nextMode);
+      setViewTextToneMode(normalizedMode);
+      updateSearchParam('textTone', normalizedMode, VIEW_BRAND_TONE_MODES.AUTO);
+    };
+
     return {
       pathname: location.pathname,
       search: location.search,
       searchParams,
       queryTheme,
+      theme,
       isEmbed: isEmbedMode(searchParams),
-      viewId: getViewIdFromPathname(location.pathname),
+      viewId: activeViewId,
       viewConfig,
       viewLinkMeta: getViewLinkMeta(location.pathname),
+      appearanceBrandToneMode,
+      appearanceTextToneMode,
+      resolvedBrandIconTone,
+      resolvedTextTone,
       viewState: {
         countdown,
         dots,
         pie,
         progress,
       },
+      updateAppearanceColors,
+      updateAppearanceBrandToneMode,
+      updateAppearanceTextToneMode,
       updateViewSetting: (viewId, key, value) => {
         const nextPreferences = {
           ...persistedPreferences,
@@ -160,23 +240,28 @@ const useViewShell = (themeOverride) => {
         pathname: location.pathname,
         origin: window.location.origin,
         theme,
-        colorMode,
-        viewId: getViewIdFromPathname(location.pathname),
-        viewState: {
-          countdown,
-          dots,
-          pie,
-          progress,
-        }[getViewIdFromPathname(location.pathname)],
+        viewId: activeViewId,
+        viewState: activeViewState,
         colors: {
-          countdown,
-          dots,
-          pie,
-          progress,
-        }[getViewIdFromPathname(location.pathname)],
+          ...activeViewState,
+          brandToneMode: appearanceBrandToneMode,
+          textToneMode: appearanceTextToneMode,
+        },
       }),
     };
-  }, [colorMode, contextTheme, location.pathname, location.search, navigate, themeOverride, viewColors]);
+  }, [
+    contextTheme,
+    location.pathname,
+    location.search,
+    navigate,
+    setViewBrandToneMode,
+    setViewTextToneMode,
+    setViewColors,
+    themeOverride,
+    viewBrandToneMode,
+    viewTextToneMode,
+    viewColors,
+  ]);
 };
 
 export default useViewShell;

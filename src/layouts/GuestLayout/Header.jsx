@@ -272,7 +272,7 @@ const Header = ({ variant = 'home' }) => {
     <>
       <header className="absolute inset-x-0 top-0 z-40">
         <div className={`flex w-full items-center justify-between px-4 py-4 sm:px-6 ${isViewLayout ? 'sm:py-4' : 'sm:py-5'} lg:px-10`}>
-          <BrandLockup className="max-w-[12rem]" textClassName="inline" />
+          <BrandLockup className="max-w-[12rem]" textClassName="inline" colorMode="theme" />
 
           <div className="flex items-center justify-end gap-2 sm:gap-3">
             <nav aria-label="Primary" className="hidden items-center gap-6 md:flex lg:gap-8">
@@ -307,7 +307,7 @@ const Header = ({ variant = 'home' }) => {
         >
           <div ref={menuContentRef} className="flex min-h-screen flex-col px-4 py-4 opacity-0 sm:px-6">
             <div className="flex items-center justify-between">
-              <BrandLockup compact className="max-w-[12rem]" textClassName="inline" onClick={() => closeMobileMenu(true)} />
+              <BrandLockup compact className="max-w-[12rem]" textClassName="inline" colorMode="theme" onClick={() => closeMobileMenu(true)} />
 
               <button
                 type="button"

@@ -1,11 +1,13 @@
 import { useLocation } from 'react-router-dom';
 
 import ViewSettingsGear from '../../components/ViewSettingsGear';
+import { useTheme } from '../../context/ThemeContext';
 import Header from './Header';
 import Footer from './Footer';
 
 const GuestLayout = ({ children }) => {
   const { pathname } = useLocation();
+  const { setTheme } = useTheme();
   const isHomePage = pathname === '/';
 
   return (
@@ -23,6 +25,8 @@ const GuestLayout = ({ children }) => {
           viewState={{}}
           updateViewSetting={() => {}}
           appearanceOnly
+          themeOnly
+          onThemeChange={setTheme}
         />
       ) : null}
     </div>

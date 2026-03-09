@@ -2,22 +2,35 @@ import { THEMES } from './theme';
 
 const WHITE = '#ffffff';
 const BLACK = '#000000';
-const VIEW_COLOR_MODE_COOKIE_KEY = 'yc_view_color_mode';
-const VIEW_COLOR_MODE_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+const VIEW_PRIMARY_COOKIE_KEY = 'yc_view_primary';
+const VIEW_ALTERNATE_COOKIE_KEY = 'yc_view_alternate';
+const VIEW_BRAND_TONE_COOKIE_KEY = 'yc_view_brand_tone';
+const VIEW_TEXT_TONE_COOKIE_KEY = 'yc_view_text_tone';
+const VIEW_COLORS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
-export const VIEW_COLOR_MODES = {
-  BLACK_PRIMARY: 'black-primary',
-  WHITE_PRIMARY: 'white-primary',
+export const VIEW_BRAND_TONE_MODES = {
+  AUTO: 'auto',
+  LIGHT: 'light',
+  DARK: 'dark',
 };
+
+export const VIEW_COLOR_PRESETS = [
+  { id: 'black-white', label: 'Black / White', primary: '#000000', alternate: '#ffffff' },
+  { id: 'white-black', label: 'White / Black', primary: '#ffffff', alternate: '#000000' },
+  { id: 'blue-white', label: 'Blue / White', primary: '#2563eb', alternate: '#ffffff' },
+  { id: 'orange-white', label: 'Orange / White', primary: '#ea580c', alternate: '#ffffff' },
+  { id: 'gold-black', label: 'Gold / Black', primary: '#d4a017', alternate: '#000000' },
+  { id: 'mint-black', label: 'Mint / Black', primary: '#34d399', alternate: '#000000' },
+];
 
 export const DEFAULT_VIEW_COLORS = {
   [THEMES.DARK]: {
-    primary: WHITE,
-    alternate: BLACK,
+    primary: '#ffffff',
+    alternate: '#000000',
   },
   [THEMES.LIGHT]: {
-    primary: BLACK,
-    alternate: WHITE,
+    primary: '#000000',
+    alternate: '#ffffff',
   },
 };
 
@@ -46,80 +59,41 @@ export const getDefaultViewColors = (theme) => {
   return DEFAULT_VIEW_COLORS[theme] ?? DEFAULT_VIEW_COLORS[THEMES.LIGHT];
 };
 
-export const getViewColorsFromMode = (mode, theme) => {
-  const resolvedMode =
-    mode === VIEW_COLOR_MODES.BLACK_PRIMARY || mode === VIEW_COLOR_MODES.WHITE_PRIMARY
-      ? mode
-      : theme === THEMES.DARK
-        ? VIEW_COLOR_MODES.WHITE_PRIMARY
-        : VIEW_COLOR_MODES.BLACK_PRIMARY;
-
-  return resolvedMode === VIEW_COLOR_MODES.WHITE_PRIMARY
-    ? { primary: WHITE, alternate: BLACK }
-    : { primary: BLACK, alternate: WHITE };
-};
-
-export const readViewColorModeCookie = (theme) => {
+export const readViewColorsCookie = (theme) => {
   if (typeof document === 'undefined') {
-    return theme === THEMES.DARK ? VIEW_COLOR_MODES.WHITE_PRIMARY : VIEW_COLOR_MODES.BLACK_PRIMARY;
+    return getDefaultViewColors(theme);
   }
 
-  const match = document.cookie.match(
-    new RegExp(`(?:^|; )${VIEW_COLOR_MODE_COOKIE_KEY}=([^;]*)`),
-  );
-  const fallback = theme === THEMES.DARK ? VIEW_COLOR_MODES.WHITE_PRIMARY : VIEW_COLOR_MODES.BLACK_PRIMARY;
+  const defaults = getDefaultViewColors(theme);
+  const primaryMatch = document.cookie.match(new RegExp(`(?:^|; )${VIEW_PRIMARY_COOKIE_KEY}=([^;]*)`));
+  const alternateMatch = document.cookie.match(new RegExp(`(?:^|; )${VIEW_ALTERNATE_COOKIE_KEY}=([^;]*)`));
 
-  if (!match) {
-    return fallback;
-  }
-
-  try {
-    const value = decodeURIComponent(match[1]);
-    return value === VIEW_COLOR_MODES.BLACK_PRIMARY || value === VIEW_COLOR_MODES.WHITE_PRIMARY
-      ? value
-      : fallback;
-  } catch {
-    return fallback;
-  }
+  return {
+    primary: normalizeHexColor(primaryMatch ? decodeURIComponent(primaryMatch[1]) : '', defaults.primary),
+    alternate: normalizeHexColor(alternateMatch ? decodeURIComponent(alternateMatch[1]) : '', defaults.alternate),
+  };
 };
 
-export const writeViewColorModeCookie = (mode, theme) => {
+export const writeViewColorsCookie = ({ primary, alternate }, theme) => {
   if (typeof document === 'undefined') {
     return;
   }
 
-  const resolvedMode =
-    mode === VIEW_COLOR_MODES.BLACK_PRIMARY || mode === VIEW_COLOR_MODES.WHITE_PRIMARY
-      ? mode
-      : theme === THEMES.DARK
-        ? VIEW_COLOR_MODES.WHITE_PRIMARY
-        : VIEW_COLOR_MODES.BLACK_PRIMARY;
+  const defaults = getDefaultViewColors(theme);
+  const normalizedPrimary = normalizeHexColor(primary, defaults.primary);
+  const normalizedAlternate = normalizeHexColor(alternate, defaults.alternate);
 
-  document.cookie = `${VIEW_COLOR_MODE_COOKIE_KEY}=${encodeURIComponent(resolvedMode)}; Max-Age=${VIEW_COLOR_MODE_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+  document.cookie = `${VIEW_PRIMARY_COOKIE_KEY}=${encodeURIComponent(normalizedPrimary)}; Max-Age=${VIEW_COLORS_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+  document.cookie = `${VIEW_ALTERNATE_COOKIE_KEY}=${encodeURIComponent(normalizedAlternate)}; Max-Age=${VIEW_COLORS_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
 };
 
-export const resolveViewColors = ({ theme, colorMode, primary, alternate }) => {
-  const normalizedPrimary = normalizeHexColor(primary, '');
-  const normalizedAlternate = normalizeHexColor(alternate, '');
+export const resolveViewColors = ({ theme, primary, alternate }) => {
+  const defaults = getDefaultViewColors(theme);
 
-  if (isBlackWhitePair(normalizedPrimary, normalizedAlternate)) {
-    return {
-      primary: normalizedPrimary,
-      alternate: normalizedAlternate,
-    };
-  }
-
-  return getViewColorsFromMode(colorMode, theme);
-};
-
-export const isBlackWhitePair = (primary, alternate) => {
-  const normalizedPrimary = normalizeHexColor(primary, '');
-  const normalizedAlternate = normalizeHexColor(alternate, '');
-
-  return (
-    (normalizedPrimary === BLACK && normalizedAlternate === WHITE) ||
-    (normalizedPrimary === WHITE && normalizedAlternate === BLACK)
-  );
+  return {
+    primary: normalizeHexColor(primary, defaults.primary),
+    alternate: normalizeHexColor(alternate, defaults.alternate),
+  };
 };
 
 export const withAlpha = (color, alpha) => {
@@ -131,27 +105,117 @@ export const withAlpha = (color, alpha) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-export const getViewSurfacePalette = (primary, alternate) => {
-  const monochrome = isBlackWhitePair(primary, alternate);
+export const getColorLuminance = (color) => {
+  const normalized = normalizeHexColor(color, BLACK).slice(1);
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
 
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+};
+
+export const getColorTone = (color) => {
+  return getColorLuminance(color) > 0.52 ? THEMES.DARK : THEMES.LIGHT;
+};
+
+export const getThemeFromBackgroundColor = (color) => {
+  return getColorLuminance(color) > 0.52 ? THEMES.LIGHT : THEMES.DARK;
+};
+
+export const normalizeViewBrandToneMode = (value) => {
+  return Object.values(VIEW_BRAND_TONE_MODES).includes(value) ? value : VIEW_BRAND_TONE_MODES.AUTO;
+};
+
+export const readViewBrandToneCookie = () => {
+  if (typeof document === 'undefined') {
+    return VIEW_BRAND_TONE_MODES.AUTO;
+  }
+
+  const match = document.cookie.match(new RegExp(`(?:^|; )${VIEW_BRAND_TONE_COOKIE_KEY}=([^;]*)`));
+
+  if (!match) {
+    return VIEW_BRAND_TONE_MODES.AUTO;
+  }
+
+  try {
+    return normalizeViewBrandToneMode(decodeURIComponent(match[1]));
+  } catch {
+    return VIEW_BRAND_TONE_MODES.AUTO;
+  }
+};
+
+export const writeViewBrandToneCookie = (value) => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const normalizedValue = normalizeViewBrandToneMode(value);
+  document.cookie = `${VIEW_BRAND_TONE_COOKIE_KEY}=${encodeURIComponent(normalizedValue)}; Max-Age=${VIEW_COLORS_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+};
+
+export const readViewTextToneCookie = () => {
+  if (typeof document === 'undefined') {
+    return VIEW_BRAND_TONE_MODES.AUTO;
+  }
+
+  const match = document.cookie.match(new RegExp(`(?:^|; )${VIEW_TEXT_TONE_COOKIE_KEY}=([^;]*)`));
+
+  if (!match) {
+    return VIEW_BRAND_TONE_MODES.AUTO;
+  }
+
+  try {
+    return normalizeViewBrandToneMode(decodeURIComponent(match[1]));
+  } catch {
+    return VIEW_BRAND_TONE_MODES.AUTO;
+  }
+};
+
+export const writeViewTextToneCookie = (value) => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
+  const normalizedValue = normalizeViewBrandToneMode(value);
+  document.cookie = `${VIEW_TEXT_TONE_COOKIE_KEY}=${encodeURIComponent(normalizedValue)}; Max-Age=${VIEW_COLORS_COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+};
+
+export const resolveViewBrandIconTone = ({ mode, backgroundColor }) => {
+  const normalizedMode = normalizeViewBrandToneMode(mode);
+
+  if (normalizedMode === VIEW_BRAND_TONE_MODES.LIGHT || normalizedMode === VIEW_BRAND_TONE_MODES.DARK) {
+    return normalizedMode;
+  }
+
+  return getColorLuminance(backgroundColor) > 0.52 ? VIEW_BRAND_TONE_MODES.DARK : VIEW_BRAND_TONE_MODES.LIGHT;
+};
+
+export const resolveViewTextTone = ({ mode, backgroundColor }) => {
+  const normalizedMode = normalizeViewBrandToneMode(mode);
+
+  if (normalizedMode === VIEW_BRAND_TONE_MODES.LIGHT || normalizedMode === VIEW_BRAND_TONE_MODES.DARK) {
+    return normalizedMode;
+  }
+
+  return getColorLuminance(backgroundColor) > 0.52 ? VIEW_BRAND_TONE_MODES.DARK : VIEW_BRAND_TONE_MODES.LIGHT;
+};
+
+export const getToneColor = (tone) => {
+  return tone === VIEW_BRAND_TONE_MODES.LIGHT ? '#ffffff' : '#111111';
+};
+
+export const getViewSurfacePalette = (primary, alternate) => {
   return {
-    monochrome,
     primary,
-    secondaryText: monochrome ? withAlpha(primary, 0.62) : alternate,
-    mutedSurface: monochrome ? withAlpha(primary, 0.05) : alternate,
-    subtleSurface: monochrome ? withAlpha(primary, 0.03) : alternate,
-    outlineTrack: monochrome ? withAlpha(primary, 0.05) : `color-mix(in srgb, ${alternate} 28%, transparent)`,
+    secondaryText: alternate,
+    mutedSurface: alternate,
+    subtleSurface: alternate,
+    outlineTrack: `color-mix(in srgb, ${alternate} 34%, transparent)`,
     textOnElapsed: getContrastingTextColor(primary),
-    textOnRemaining: monochrome ? primary : getContrastingTextColor(alternate),
+    textOnRemaining: getContrastingTextColor(alternate),
   };
 };
 
 export const getContrastingTextColor = (color) => {
-  const normalized = normalizeHexColor(color, '#111111').slice(1);
-  const r = Number.parseInt(normalized.slice(0, 2), 16);
-  const g = Number.parseInt(normalized.slice(2, 4), 16);
-  const b = Number.parseInt(normalized.slice(4, 6), 16);
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-
-  return luminance > 0.52 ? '#111111' : '#ffffff';
+  return getColorLuminance(color) > 0.52 ? '#111111' : '#ffffff';
 };

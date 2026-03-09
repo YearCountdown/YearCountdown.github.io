@@ -1,6 +1,11 @@
 import { NAV_LINKS } from './navigation';
 import { THEMES, resolveTheme } from './theme';
-import { getDefaultViewColors, resolveViewColors } from './viewColors';
+import {
+  VIEW_BRAND_TONE_MODES,
+  getDefaultViewColors,
+  normalizeViewBrandToneMode,
+  resolveViewColors,
+} from './viewColors';
 
 export const VIEW_SETTINGS_CONFIG = {
   countdown: {
@@ -90,6 +95,15 @@ export const VIEW_SETTINGS_CONFIG = {
         step: 0.1,
         suffix: '%',
         inlineGroup: 'dots-gap',
+      },
+      {
+        key: 'inactiveOpacity',
+        type: 'range',
+        label: 'Inactive Opacity',
+        min: 0,
+        max: 100,
+        step: 1,
+        suffix: '%',
       },
       {
         key: 'inset',
@@ -331,6 +345,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.gapY !== DOTS_DEFAULT_SETTINGS.gapY) {
       params.set('gapY', String(viewState.gapY));
     }
+    if (viewState.inactiveOpacity !== DOTS_DEFAULT_SETTINGS.inactiveOpacity) {
+      params.set('inactiveOpacity', String(viewState.inactiveOpacity));
+    }
     if (viewState.inset !== DOTS_DEFAULT_SETTINGS.inset) {
       params.set('inset', String(viewState.inset));
     }
@@ -397,6 +414,12 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
   params.set('theme', currentTheme === THEMES.DARK ? THEMES.DARK : THEMES.LIGHT);
   params.set('primary', resolvedColors.primary);
   params.set('alternate', resolvedColors.alternate);
+  if (normalizeViewBrandToneMode(colors?.brandToneMode) !== VIEW_BRAND_TONE_MODES.AUTO) {
+    params.set('iconTone', normalizeViewBrandToneMode(colors?.brandToneMode));
+  }
+  if (normalizeViewBrandToneMode(colors?.textToneMode) !== VIEW_BRAND_TONE_MODES.AUTO) {
+    params.set('textTone', normalizeViewBrandToneMode(colors?.textToneMode));
+  }
 
   return `${origin}${pathname}?${params.toString()}`;
 };
@@ -413,6 +436,7 @@ export const DOTS_DEFAULT_SETTINGS = {
   triangleAngle: 0,
   gapX: 0.5,
   gapY: 0.5,
+  inactiveOpacity: 5,
   inset: 0.5,
   outerX: 0,
   outerY: 0,
@@ -459,7 +483,6 @@ const clampNumber = (value, min, max, fallback) => {
 const getResolvedColorSettings = (searchParams, theme, fallbackColors) => {
   return resolveViewColors({
     theme,
-    colorMode: null,
     primary: searchParams.get(VIEW_COLOR_SETTINGS.primary) ?? fallbackColors?.primary,
     alternate: searchParams.get(VIEW_COLOR_SETTINGS.alternate) ?? fallbackColors?.alternate,
   });
@@ -469,11 +492,19 @@ export const normalizeColorSettingValue = (key, value, theme) => {
   const defaults = getDefaultViewColors(theme);
 
   if (key === VIEW_COLOR_SETTINGS.primary) {
-    return defaults.primary;
+    return resolveViewColors({
+      theme,
+      primary: value,
+      alternate: defaults.alternate,
+    }).primary;
   }
 
   if (key === VIEW_COLOR_SETTINGS.alternate) {
-    return defaults.alternate;
+    return resolveViewColors({
+      theme,
+      primary: defaults.primary,
+      alternate: value,
+    }).alternate;
   }
 
   return value;
@@ -509,6 +540,8 @@ export const normalizeDotsSettingValue = (key, value) => {
       return clampNumber(value, 0, 8, DOTS_DEFAULT_SETTINGS.gapX);
     case 'gapY':
       return clampNumber(value, 0, 8, DOTS_DEFAULT_SETTINGS.gapY);
+    case 'inactiveOpacity':
+      return clampNumber(value, 0, 100, DOTS_DEFAULT_SETTINGS.inactiveOpacity);
     case 'inset':
       return clampNumber(value, 0, 12, DOTS_DEFAULT_SETTINGS.inset);
     case 'outerX':
@@ -642,6 +675,12 @@ export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSe
       0,
       8,
       DOTS_DEFAULT_SETTINGS.gapY,
+    ),
+    inactiveOpacity: clampNumber(
+      searchParams.get('inactiveOpacity') ?? persistedSettings.inactiveOpacity,
+      0,
+      100,
+      DOTS_DEFAULT_SETTINGS.inactiveOpacity,
     ),
     inset: clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 12, DOTS_DEFAULT_SETTINGS.inset),
     outerX: clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 12, DOTS_DEFAULT_SETTINGS.outerX),

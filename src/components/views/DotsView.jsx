@@ -1,5 +1,5 @@
 import useDotsGrid from '../../hooks/useDotsGrid';
-import { getViewSurfacePalette } from '../../lib/viewColors';
+import { withAlpha } from '../../lib/viewColors';
 
 const getTriangleRotation = ({ triangleMode, triangleAngle, index }) => {
   if (triangleMode === 'angle') {
@@ -17,7 +17,14 @@ const getTriangleRotation = ({ triangleMode, triangleAngle, index }) => {
   return 0;
 };
 
-const getDotStyle = ({ status, shape, size, rotation, primaryColor, alternateColor }) => {
+const getDotStyle = ({
+  status,
+  shape,
+  size,
+  rotation,
+  primaryColor,
+  inactiveOpacity,
+}) => {
   if (status === 'filler') {
     return {
       visibility: 'hidden',
@@ -26,11 +33,10 @@ const getDotStyle = ({ status, shape, size, rotation, primaryColor, alternateCol
     };
   }
 
-  const palette = getViewSurfacePalette(primaryColor, alternateColor);
   const baseStyle = {
     width: `${size}px`,
     height: `${size}px`,
-    backgroundColor: status === 'future' ? palette.subtleSurface : palette.primary,
+    backgroundColor: status === 'future' ? withAlpha(primaryColor, inactiveOpacity / 100) : primaryColor,
     opacity: 1,
     transform: `rotate(${rotation}deg) scale(1)`,
     transition: 'transform 200ms ease, opacity 200ms ease',
@@ -68,6 +74,7 @@ const DotsView = ({
   inset = 0.5,
   outerX = 0,
   outerY = 0,
+  inactiveOpacity = 5,
   primaryColor,
   alternateColor,
 }) => {
@@ -80,7 +87,11 @@ const DotsView = ({
   });
 
   return (
-    <section ref={containerRef} className="flex h-full w-full items-center justify-center">
+    <section
+      ref={containerRef}
+      className="flex h-full w-full items-center justify-center"
+      style={{ backgroundColor: alternateColor }}
+    >
       <div
         className="grid"
         style={{
@@ -111,7 +122,7 @@ const DotsView = ({
                     })
                   : 0,
               primaryColor,
-              alternateColor,
+              inactiveOpacity,
             })}
           />
         ))}
