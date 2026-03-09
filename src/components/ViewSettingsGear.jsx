@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useTheme } from '../context/ThemeContext';
+import { VIEW_COLOR_MODES } from '../lib/viewColors';
 
 const GearIcon = () => {
   return (
@@ -211,6 +212,32 @@ const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
   return null;
 };
 
+const ColorModeButton = ({ active, label, primary, alternate, onClick }) => {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex cursor-pointer items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left text-sm transition-colors ${
+        active
+          ? 'bg-black text-white dark:bg-white dark:text-black'
+          : 'bg-black/6 text-black/70 hover:bg-black/10 dark:bg-white/6 dark:text-white/70 dark:hover:bg-white/10'
+      }`}
+    >
+      <span>{label}</span>
+      <span className="flex items-center gap-1.5">
+        <span
+          className={`h-4 w-4 rounded-full border ${active ? 'border-current/20' : 'border-black/10 dark:border-white/10'}`}
+          style={{ backgroundColor: primary }}
+        />
+        <span
+          className={`h-4 w-4 rounded-full border ${active ? 'border-current/20' : 'border-black/10 dark:border-white/10'}`}
+          style={{ backgroundColor: alternate }}
+        />
+      </span>
+    </button>
+  );
+};
+
 const ViewSettingsGear = ({
   viewId,
   viewTitle,
@@ -219,12 +246,15 @@ const ViewSettingsGear = ({
   controls = [],
   viewState,
   updateViewSetting,
+  appearanceOnly = false,
 }) => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, colorMode, setColorMode } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState(appearanceOnly ? 'appearance' : 'view');
   const containerRef = useRef(null);
   const copiedTimeoutRef = useRef(null);
+  const hasViewTab = !appearanceOnly;
 
   useEffect(() => {
     if (!isOpen) {
@@ -266,6 +296,12 @@ const ViewSettingsGear = ({
     }
   }, [isHidden]);
 
+  useEffect(() => {
+    if (!hasViewTab) {
+      setActiveTab('appearance');
+    }
+  }, [hasViewTab]);
+
   if (isHidden) {
     return null;
   }
@@ -300,52 +336,109 @@ const ViewSettingsGear = ({
             </h2>
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-                Theme
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setTheme('light')}
-                  className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
-                    theme === 'light'
-                      ? 'bg-black text-white dark:bg-white dark:text-black'
-                      : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
-                  }`}
-                >
-                  Light
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTheme('dark')}
-                  className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
-                    theme === 'dark'
-                      ? 'bg-black text-white dark:bg-white dark:text-black'
-                      : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
-                  }`}
-                >
-                  Dark
-                </button>
-              </div>
-            </div>
-
-            {renderControls({ controls, viewId, viewState, updateViewSetting })}
-
-            <div>
-              <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-                Share
-              </p>
+          {hasViewTab ? (
+            <div className="mb-4 grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={handleCopyLink}
-                className="flex w-full cursor-pointer items-center justify-between rounded-2xl bg-black/6 px-4 py-3 text-left text-sm text-black transition-colors hover:bg-black/10 dark:bg-white/6 dark:text-white dark:hover:bg-white/10"
+                onClick={() => setActiveTab('view')}
+                className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                  activeTab === 'view'
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
+                    : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                }`}
               >
-                <span>{isCopied ? 'Copied embed link' : 'Copy embed link'}</span>
-                <CopyIcon copied={isCopied} />
+                View
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('appearance')}
+                className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                  activeTab === 'appearance'
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
+                    : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                }`}
+              >
+                Appearance
               </button>
             </div>
+          ) : null}
+
+          <div className="space-y-4">
+            {activeTab === 'appearance' ? (
+              <>
+                <div>
+                  <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                    Theme
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTheme('light')}
+                      className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                        theme === 'light'
+                          ? 'bg-black text-white dark:bg-white dark:text-black'
+                          : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                      }`}
+                    >
+                      Light
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTheme('dark')}
+                      className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-colors ${
+                        theme === 'dark'
+                          ? 'bg-black text-white dark:bg-white dark:text-black'
+                          : 'bg-black/6 text-black/65 hover:bg-black/10 dark:bg-white/6 dark:text-white/65 dark:hover:bg-white/10'
+                      }`}
+                    >
+                      Dark
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                    Colors
+                  </p>
+                  <div className="grid grid-cols-1 gap-2">
+                    <ColorModeButton
+                      active={colorMode === VIEW_COLOR_MODES.BLACK_PRIMARY}
+                      label="Black Primary"
+                      primary="#000000"
+                      alternate="#ffffff"
+                      onClick={() => setColorMode(VIEW_COLOR_MODES.BLACK_PRIMARY)}
+                    />
+                    <ColorModeButton
+                      active={colorMode === VIEW_COLOR_MODES.WHITE_PRIMARY}
+                      label="White Primary"
+                      primary="#ffffff"
+                      alternate="#000000"
+                      onClick={() => setColorMode(VIEW_COLOR_MODES.WHITE_PRIMARY)}
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {renderControls({ controls, viewId, viewState, updateViewSetting })}
+
+                {sharedUrl ? (
+                  <div>
+                    <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                      Share
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleCopyLink}
+                      className="flex w-full cursor-pointer items-center justify-between rounded-2xl bg-black/6 px-4 py-3 text-left text-sm text-black transition-colors hover:bg-black/10 dark:bg-white/6 dark:text-white dark:hover:bg-white/10"
+                    >
+                      <span>{isCopied ? 'Copied embed link' : 'Copy embed link'}</span>
+                      <CopyIcon copied={isCopied} />
+                    </button>
+                  </div>
+                ) : null}
+              </>
+            )}
           </div>
         </div>
       ) : null}

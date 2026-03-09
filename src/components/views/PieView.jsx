@@ -2,7 +2,7 @@ import { useId } from 'react';
 
 import usePieLayout from '../../hooks/usePieLayout';
 import useYearProgress from '../../hooks/useYearProgress';
-import { getContrastingTextColor } from '../../lib/viewColors';
+import { getViewSurfacePalette } from '../../lib/viewColors';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -38,13 +38,15 @@ const getSectorPath = ({ centerX, centerY, radius, percentage }) => {
 };
 
 const getSurfaceColors = (primaryColor, alternateColor) => {
+  const palette = getViewSurfacePalette(primaryColor, alternateColor);
+
   return {
-    elapsed: primaryColor,
-    remaining: alternateColor,
-    outlineTrack: `color-mix(in srgb, ${alternateColor} 28%, transparent)`,
-    outlineFill: primaryColor,
-    textOnElapsed: getContrastingTextColor(primaryColor),
-    textOnRemaining: getContrastingTextColor(alternateColor),
+    elapsed: palette.primary,
+    remaining: palette.mutedSurface,
+    outlineTrack: palette.outlineTrack,
+    outlineFill: palette.primary,
+    textOnElapsed: palette.textOnElapsed,
+    textOnRemaining: palette.textOnRemaining,
   };
 };
 

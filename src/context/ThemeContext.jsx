@@ -7,6 +7,11 @@ import {
   resolveTheme,
   writeThemeCookie,
 } from '../lib/theme';
+import {
+  getViewColorsFromMode,
+  readViewColorModeCookie,
+  writeViewColorModeCookie,
+} from '../lib/viewColors';
 
 const ThemeContext = createContext(null);
 
@@ -15,16 +20,25 @@ const ThemeProvider = ({ children }) => {
     const initialTheme = document.documentElement.dataset.theme;
     return resolveTheme(initialTheme);
   });
+  const [colorMode, setColorMode] = useState(() => {
+    const initialTheme = resolveTheme(document.documentElement.dataset.theme);
+    return readViewColorModeCookie(initialTheme);
+  });
 
   useEffect(() => {
     applyThemeToDocument(theme);
     applyFaviconForTheme(theme);
     writeThemeCookie(theme);
-  }, [theme]);
+    writeViewColorModeCookie(colorMode, theme);
+  }, [colorMode, theme]);
 
   const value = useMemo(() => {
     const setThemeValue = (nextTheme) => {
       setTheme(resolveTheme(nextTheme));
+    };
+
+    const setColorModeValue = (nextMode) => {
+      setColorMode(nextMode);
     };
 
     const toggleTheme = () => {
@@ -37,8 +51,11 @@ const ThemeProvider = ({ children }) => {
       theme,
       setTheme: setThemeValue,
       toggleTheme,
+      colorMode,
+      setColorMode: setColorModeValue,
+      viewColors: getViewColorsFromMode(colorMode, theme),
     };
-  }, [theme]);
+  }, [colorMode, theme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

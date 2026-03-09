@@ -27,7 +27,7 @@ import {
 import { resolveTheme } from '../lib/theme';
 
 const useViewShell = (themeOverride) => {
-  const { theme: contextTheme } = useTheme();
+  const { theme: contextTheme, viewColors, colorMode } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -37,18 +37,20 @@ const useViewShell = (themeOverride) => {
     const theme = resolveTheme(themeOverride ?? contextTheme);
     const persistedPreferences = readViewPreferencesCookie();
     const viewConfig = getViewConfigFromPathname(location.pathname);
-    const themeDefaults = getDefaultViewColors(theme);
+    const themeDefaults = viewColors ?? getDefaultViewColors(theme);
     const countdown = getCountdownSettingsFromSearchParams(
       searchParams,
       theme,
       persistedPreferences.countdown,
+      themeDefaults,
     );
-    const dots = getDotsSettingsFromSearchParams(searchParams, theme, persistedPreferences.dots);
-    const pie = getPieSettingsFromSearchParams(searchParams, theme, persistedPreferences.pie);
+    const dots = getDotsSettingsFromSearchParams(searchParams, theme, persistedPreferences.dots, themeDefaults);
+    const pie = getPieSettingsFromSearchParams(searchParams, theme, persistedPreferences.pie, themeDefaults);
     const progress = getProgressSettingsFromSearchParams(
       searchParams,
       theme,
       persistedPreferences.progress,
+      themeDefaults,
     );
 
     const updateSearchParam = (key, value, defaultValue) => {
@@ -158,6 +160,7 @@ const useViewShell = (themeOverride) => {
         pathname: location.pathname,
         origin: window.location.origin,
         theme,
+        colorMode,
         viewId: getViewIdFromPathname(location.pathname),
         viewState: {
           countdown,
@@ -165,9 +168,15 @@ const useViewShell = (themeOverride) => {
           pie,
           progress,
         }[getViewIdFromPathname(location.pathname)],
+        colors: {
+          countdown,
+          dots,
+          pie,
+          progress,
+        }[getViewIdFromPathname(location.pathname)],
       }),
     };
-  }, [contextTheme, location.pathname, location.search, navigate, themeOverride]);
+  }, [colorMode, contextTheme, location.pathname, location.search, navigate, themeOverride, viewColors]);
 };
 
 export default useViewShell;

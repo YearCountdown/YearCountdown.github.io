@@ -2,13 +2,14 @@ import { useId } from 'react';
 
 import useProgressLayout from '../../hooks/useProgressLayout';
 import useYearProgress from '../../hooks/useYearProgress';
-import { getContrastingTextColor } from '../../lib/viewColors';
+import { getViewSurfacePalette } from '../../lib/viewColors';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, primaryColor, alternateColor, clipId }) => {
-  const onRemaining = getContrastingTextColor(alternateColor);
-  const onElapsed = getContrastingTextColor(primaryColor);
+  const palette = getViewSurfacePalette(primaryColor, alternateColor);
+  const onRemaining = palette.textOnRemaining;
+  const onElapsed = palette.textOnElapsed;
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
@@ -39,7 +40,7 @@ const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, primar
           {label}
         </text>
       </g>
-      <rect x="0" y="0" width={width} height={height} fill={alternateColor} opacity="0" />
+      <rect x="0" y="0" width={width} height={height} fill={palette.mutedSurface} opacity="0" />
     </svg>
   );
 };
@@ -47,8 +48,9 @@ const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, primar
 const FieldMode = ({ width, height, percentage, label, fontSize, primaryColor, alternateColor }) => {
   const clipId = useId().replace(/:/g, '');
   const progressWidth = Math.max(0, Math.min(width, (width * percentage) / 100));
-  const remaining = alternateColor;
-  const elapsed = primaryColor;
+  const palette = getViewSurfacePalette(primaryColor, alternateColor);
+  const remaining = palette.mutedSurface;
+  const elapsed = palette.primary;
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -69,8 +71,9 @@ const FieldMode = ({ width, height, percentage, label, fontSize, primaryColor, a
 };
 
 const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, primaryColor, alternateColor }) => {
-  const remaining = alternateColor;
-  const elapsed = primaryColor;
+  const palette = getViewSurfacePalette(primaryColor, alternateColor);
+  const remaining = palette.outlineTrack;
+  const elapsed = palette.primary;
   const lineThickness = clamp(lineWidth, 2, Math.max(2, height * 0.4));
   const lineY = height / 2 - lineThickness / 2;
 

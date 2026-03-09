@@ -294,10 +294,14 @@ export const isEmbedMode = (searchParams) => {
   return searchParams.get('embed') === 'true';
 };
 
-export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState }) => {
+export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, colors }) => {
   const currentTheme = resolveTheme(theme);
   const params = new URLSearchParams();
-  const resolvedColors = resolveViewColors({ theme: currentTheme });
+  const resolvedColors = resolveViewColors({
+    theme: currentTheme,
+    primary: colors?.primary,
+    alternate: colors?.alternate,
+  });
 
   if (viewId === 'countdown' && viewState) {
     if (viewState.mode !== COUNTDOWN_DEFAULT_SETTINGS.mode) {
@@ -452,9 +456,12 @@ const clampNumber = (value, min, max, fallback) => {
   return Math.min(max, Math.max(min, parsed));
 };
 
-const getResolvedColorSettings = (theme) => {
+const getResolvedColorSettings = (searchParams, theme, fallbackColors) => {
   return resolveViewColors({
     theme,
+    colorMode: null,
+    primary: searchParams.get(VIEW_COLOR_SETTINGS.primary) ?? fallbackColors?.primary,
+    alternate: searchParams.get(VIEW_COLOR_SETTINGS.alternate) ?? fallbackColors?.alternate,
   });
 };
 
@@ -581,11 +588,11 @@ export const normalizeProgressSettingValueWithTheme = (key, value, theme) => {
   return normalizeProgressSettingValue(key, value);
 };
 
-export const getCountdownSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+export const getCountdownSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}, fallbackColors) => {
   const mode = searchParams.get('mode') ?? persistedSettings.mode;
   const frame = searchParams.get('frame') ?? persistedSettings.frame;
   const labels = searchParams.get('labels') ?? persistedSettings.labels;
-  const colors = getResolvedColorSettings(theme);
+  const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
 
   return {
     mode: ['all', 'days', 'hours', 'minutes', 'seconds'].includes(mode)
@@ -607,11 +614,11 @@ export const getCountdownSettingsFromSearchParams = (searchParams, theme, persis
   };
 };
 
-export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}, fallbackColors) => {
   const shape = searchParams.get('shape') ?? persistedSettings.shape;
   const triangleMode = searchParams.get('triangleMode') ?? persistedSettings.triangleMode;
   const legacyGap = searchParams.get('gap');
-  const colors = getResolvedColorSettings(theme);
+  const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
 
   return {
     shape: ['circle', 'square', 'triangle'].includes(shape) ? shape : DOTS_DEFAULT_SETTINGS.shape,
@@ -643,11 +650,11 @@ export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSe
   };
 };
 
-export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}, fallbackColors) => {
   const shape = searchParams.get('shape') ?? persistedSettings.shape;
   const style = searchParams.get('style') ?? persistedSettings.style;
   const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
-  const colors = getResolvedColorSettings(theme);
+  const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
 
   return {
     shape: ['circle', 'rectangle'].includes(shape) ? shape : PIE_DEFAULT_SETTINGS.shape,
@@ -671,10 +678,10 @@ export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSet
   };
 };
 
-export const getProgressSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}) => {
+export const getProgressSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}, fallbackColors) => {
   const mode = searchParams.get('mode') ?? persistedSettings.mode;
   const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
-  const colors = getResolvedColorSettings(theme);
+  const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
 
   return {
     mode: ['field', 'line'].includes(mode) ? mode : PROGRESS_DEFAULT_SETTINGS.mode,

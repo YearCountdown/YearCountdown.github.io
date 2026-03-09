@@ -1,4 +1,5 @@
 import useDotsGrid from '../../hooks/useDotsGrid';
+import { getViewSurfacePalette } from '../../lib/viewColors';
 
 const getTriangleRotation = ({ triangleMode, triangleAngle, index }) => {
   if (triangleMode === 'angle') {
@@ -25,11 +26,12 @@ const getDotStyle = ({ status, shape, size, rotation, primaryColor, alternateCol
     };
   }
 
+  const palette = getViewSurfacePalette(primaryColor, alternateColor);
   const baseStyle = {
     width: `${size}px`,
     height: `${size}px`,
-    backgroundColor: status === 'future' ? alternateColor : primaryColor,
-    opacity: status === 'future' ? 0.3 : 1,
+    backgroundColor: status === 'future' ? palette.subtleSurface : palette.primary,
+    opacity: 1,
     transform: `rotate(${rotation}deg) scale(1)`,
     transition: 'transform 200ms ease, opacity 200ms ease',
   };
