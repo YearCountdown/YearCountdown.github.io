@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import BrandLockup from '../../components/BrandLockup';
 import CopyEmbedAction from '../../components/CopyEmbedAction';
 import { useTheme } from '../../context/ThemeContext';
+import useDeviceProfile from '../../hooks/useDeviceProfile';
 import useViewShell from '../../hooks/useViewShell';
 import { getThemeFromBackgroundColor, getToneColor, withAlpha } from '../../lib/viewColors';
 import Header from '../GuestLayout/Header';
@@ -38,6 +39,7 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
     wallpaperUrl,
     buildWallpaperUrl,
   } = useViewShell(theme);
+  const deviceProfile = useDeviceProfile();
 
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow;
@@ -95,6 +97,16 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
   const viewTitle = viewConfig?.title ?? viewLinkMeta?.title ?? 'View';
   const activeAlternateColor = viewState?.[viewId]?.alternate ?? viewColors.alternate;
   const activeTextToneColor = getToneColor(resolvedTextTone);
+  const activeSpacing = viewState?.[viewId] ?? {};
+  const minViewportDimension = deviceProfile.viewport.minDimension || 0;
+  const embedLogoOffsetLeft =
+    8 +
+    deviceProfile.safeAreaInsets.left +
+    (minViewportDimension * (activeSpacing.spaceLeft ?? 0)) / 100;
+  const embedLogoOffsetTop =
+    8 +
+    deviceProfile.safeAreaInsets.top +
+    (minViewportDimension * (activeSpacing.spaceTop ?? 0)) / 100;
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-stone-100 text-black dark:bg-zinc-950 dark:text-white">
@@ -105,7 +117,13 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
         {children}
       </main>
       {isEmbed ? (
-        <div className="pointer-events-none fixed left-2 top-2 z-30 sm:left-3 sm:top-3">
+        <div
+          className="pointer-events-none fixed z-30"
+          style={{
+            left: `${embedLogoOffsetLeft}px`,
+            top: `${embedLogoOffsetTop}px`,
+          }}
+        >
           <BrandLockup
             iconOnly
             compact

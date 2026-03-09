@@ -21,9 +21,20 @@ export const clampWallpaperDimension = (value, fallback) => {
   return Math.min(WALLPAPER_DIMENSION_MAX, Math.max(WALLPAPER_DIMENSION_MIN, parsed));
 };
 
-export const getViewportWallpaperSize = () => {
+export const getViewportWallpaperSize = (deviceProfile = null) => {
+  return getPreferredWallpaperSize(deviceProfile);
+};
+
+export const getPreferredWallpaperSize = (deviceProfile = null) => {
   if (typeof window === 'undefined') {
     return WALLPAPER_DEFAULT_SIZE;
+  }
+
+  if (deviceProfile?.wallpaperSize) {
+    return {
+      width: clampWallpaperDimension(deviceProfile.wallpaperSize.width, WALLPAPER_DEFAULT_SIZE.width),
+      height: clampWallpaperDimension(deviceProfile.wallpaperSize.height, WALLPAPER_DEFAULT_SIZE.height),
+    };
   }
 
   const width = window.visualViewport?.width ?? window.innerWidth;

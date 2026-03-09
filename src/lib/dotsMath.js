@@ -79,11 +79,16 @@ export const getDotsSnapshot = ({
   spaceRightPercent,
   spaceBottomPercent,
   spaceLeftPercent,
+  totalDotsOverride,
+  completedCountOverride,
   nowTime = Date.now(),
 }) => {
   const { totalDays, currentDayIndex } = getYearMeta(nowTime);
+  const totalDots = Number.isFinite(totalDotsOverride)
+    ? Math.max(1, Math.round(totalDotsOverride))
+    : totalDays;
   const grid = getBestDotsGrid({
-    totalDots: totalDays,
+    totalDots,
     width,
     height,
     gapXPercent,
@@ -94,7 +99,18 @@ export const getDotsSnapshot = ({
     spaceLeftPercent,
   });
 
-  const visibleDots = Array.from({ length: totalDays }, (_, index) => {
+  const completedCount = Number.isFinite(completedCountOverride)
+    ? Math.max(0, Math.min(totalDots, Math.round(completedCountOverride)))
+    : Math.max(0, Math.min(totalDots, currentDayIndex + 1));
+
+  const visibleDots = Array.from({ length: totalDots }, (_, index) => {
+    if (Number.isFinite(totalDotsOverride)) {
+      return {
+        key: `${index < completedCount ? 'past' : 'future'}-${index}`,
+        status: index < completedCount ? 'past' : 'future',
+      };
+    }
+
     if (index < currentDayIndex) {
       return { key: `past-${index}`, status: 'past' };
     }
@@ -113,8 +129,9 @@ export const getDotsSnapshot = ({
   }));
 
   return {
-    totalDays,
+    totalDays: totalDots,
     currentDayIndex,
+    completedCount,
     grid,
     dots: [...visibleDots, ...fillerDots],
   };

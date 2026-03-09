@@ -9,6 +9,8 @@ const useDotsGrid = ({
   spaceRightPercent,
   spaceBottomPercent,
   spaceLeftPercent,
+  totalDots,
+  completedCount,
 }) => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
@@ -56,10 +58,14 @@ const useDotsGrid = ({
       spaceRightPercent,
       spaceBottomPercent,
       spaceLeftPercent,
+      totalDotsOverride: totalDots,
+      completedCountOverride: completedCount,
     });
 
     return {
       containerRef,
+      width: containerSize.width,
+      height: containerSize.height,
       totalDays,
       currentDayIndex,
       grid,
@@ -71,9 +77,11 @@ const useDotsGrid = ({
     gapXPercent,
     gapYPercent,
     spaceBottomPercent,
+    completedCount,
     spaceLeftPercent,
     spaceRightPercent,
     spaceTopPercent,
+    totalDots,
   ]);
 };
 

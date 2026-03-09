@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import CopyEmbedAction from './CopyEmbedAction';
 import { useTheme } from '../context/ThemeContext';
+import useDeviceProfile from '../hooks/useDeviceProfile';
 import { VIEW_BRAND_TONE_MODES, VIEW_COLOR_PRESETS, withAlpha } from '../lib/viewColors';
 import {
   WALLPAPER_DIMENSION_MAX,
   WALLPAPER_DIMENSION_MIN,
   clampWallpaperDimension,
-  getViewportWallpaperSize,
+  getPreferredWallpaperSize,
 } from '../lib/wallpaper';
 
 const GearIcon = () => {
@@ -47,7 +48,7 @@ const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
         type="number"
         min={control.min}
         max={control.max}
-        step={control.step}
+        step={control.step ?? 'any'}
         value={value}
         onChange={(event) => updateViewSetting(viewId, control.key, event.target.value)}
         className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
@@ -86,12 +87,13 @@ const getSpacingHelperValue = (state, key) => {
 };
 
 const SpacingHelperInput = ({ control, value, viewId, updateViewSetting }) => {
-  const [draftValue, setDraftValue] = useState(value);
+  const isMixed = value === '--';
+  const [draftValue, setDraftValue] = useState(isMixed ? '' : value);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (!isEditing) {
-      setDraftValue(value);
+      setDraftValue(value === '--' ? '' : value);
     }
   }, [isEditing, value]);
 
@@ -110,16 +112,13 @@ const SpacingHelperInput = ({ control, value, viewId, updateViewSetting }) => {
 
   return (
     <input
-      type="text"
+      type="number"
       inputMode="decimal"
+      step="any"
       value={draftValue}
-      placeholder="--"
+      placeholder={isMixed ? '--' : ''}
       onFocus={() => {
         setIsEditing(true);
-
-        if (value === '--') {
-          setDraftValue('');
-        }
       }}
       onChange={(event) => setDraftValue(event.target.value)}
       onBlur={commitValue}
@@ -437,10 +436,11 @@ const ViewSettingsGear = ({
   onTextToneModeChange,
 }) => {
   const { theme, setTheme, viewColors, setViewColors } = useTheme();
+  const deviceProfile = useDeviceProfile();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(appearanceOnly ? 'appearance' : 'view');
   const [wallpaperSize, setWallpaperSize] = useState(() => {
-    const viewport = getViewportWallpaperSize();
+    const viewport = getPreferredWallpaperSize(deviceProfile);
 
     return {
       width: String(viewport.width),
@@ -508,20 +508,21 @@ const ViewSettingsGear = ({
   }, [hasViewTab]);
 
   useEffect(() => {
-    const viewport = getViewportWallpaperSize();
+    const viewport = getPreferredWallpaperSize(deviceProfile);
 
     setWallpaperSize({
       width: String(viewport.width),
       height: String(viewport.height),
     });
-  }, [viewId]);
+  }, [deviceProfile, viewId]);
 
   if (isHidden) {
     return null;
   }
 
-  const resolvedWallpaperWidth = clampWallpaperDimension(wallpaperSize.width, getViewportWallpaperSize().width);
-  const resolvedWallpaperHeight = clampWallpaperDimension(wallpaperSize.height, getViewportWallpaperSize().height);
+  const preferredWallpaperSize = getPreferredWallpaperSize(deviceProfile);
+  const resolvedWallpaperWidth = clampWallpaperDimension(wallpaperSize.width, preferredWallpaperSize.width);
+  const resolvedWallpaperHeight = clampWallpaperDimension(wallpaperSize.height, preferredWallpaperSize.height);
   const resolvedWallpaperUrl = buildWallpaperUrl
     ? buildWallpaperUrl({
         width: resolvedWallpaperWidth,
@@ -530,7 +531,7 @@ const ViewSettingsGear = ({
     : wallpaperUrl;
 
   const resetWallpaperSizeToViewport = () => {
-    const viewport = getViewportWallpaperSize();
+    const viewport = getPreferredWallpaperSize(deviceProfile);
 
     setWallpaperSize({
       width: String(viewport.width),

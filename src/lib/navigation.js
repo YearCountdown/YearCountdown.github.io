@@ -24,6 +24,12 @@ export const NAV_LINKS = [
     title: 'Progress',
     description: 'An immersive linear reading of the year where the screen itself becomes the indicator.',
   },
+  {
+    label: 'All',
+    to: '/view/all',
+    title: 'All',
+    description: 'A composed reading that brings dots, days remaining, percentage, and perimeter progress into one shared layout.',
+  },
 ];
 
 export const FEATURE_NAV_LINKS = NAV_LINKS.filter((link) => link.to !== '/');

@@ -69,7 +69,7 @@ const USE_CASE_COLUMNS = [
 const WALLPAPER_STEPS = [
   {
     title: 'Choose Your View',
-    body: 'Open the YearCountdown view you want, adjust its settings, then use the gear panel to copy the wallpaper URL for that exact configuration.',
+    body: 'Open the YearCountdown view you want, adjust its settings, then use the gear panel to copy the wallpaper URL for that exact configuration. On iPhone, the app now seeds the wallpaper size from the detected device class.',
   },
   {
     title: 'Build A Daily Wallpaper Shortcut',
@@ -99,7 +99,7 @@ const WALLPAPER_NOTES = [
     items: [
       'Apple Shortcuts can run Time of Day automations automatically without asking.',
       'The wallpaper URL is a PageShot image of the embed view, not the raw HTML route itself.',
-      'The copied wallpaper URL preserves the active theme, colors, and view-specific settings.',
+      'The copied wallpaper URL preserves the active theme, colors, view-specific settings, and iPhone-safe spacing unless you override them manually.',
     ],
   },
 ];
@@ -141,7 +141,7 @@ const HomepageSections = () => {
         id="setup"
         eyebrow="Wallpaper And Setup"
         title="Use YearCountdown on an iPhone lock screen."
-        body="The wallpaper URL copies a PageShot image of the active embed view. Use that URL in Shortcuts so iPhone can fetch the image and set it as wallpaper on a daily schedule."
+        body="The wallpaper URL copies a PageShot image of the active embed view. On iPhone, the app seeds exact wallpaper pixels and safer edge spacing first, then lets you override them before using that URL in Shortcuts."
         shapeVariant="signal"
       >
         <div className="grid gap-px bg-black/8 dark:bg-white/8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">

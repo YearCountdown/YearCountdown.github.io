@@ -1,5 +1,6 @@
 import { NAV_LINKS } from './navigation';
 import { THEMES, resolveTheme } from './theme';
+import { getYearMeta } from './timeMath';
 import {
   VIEW_BRAND_TONE_MODES,
   getDefaultViewColors,
@@ -50,10 +51,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   dots: {
@@ -124,10 +125,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   pie: {
@@ -170,10 +171,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   progress: {
@@ -226,10 +227,171 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, max: 20, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+    ],
+  },
+  all: {
+    id: 'all',
+    title: 'All',
+    controls: [
+      {
+        key: 'dotsMode',
+        type: 'select',
+        label: 'Dots',
+        options: [
+          { label: 'Days', value: 'days' },
+          { label: 'Custom', value: 'custom' },
+        ],
+      },
+      {
+        key: 'dotsCount',
+        type: 'number',
+        label: 'Dots Count',
+        min: 1,
+        max: 2000,
+        step: 1,
+        showWhen: (state) => state.dotsMode === 'custom',
+      },
+      {
+        key: 'showDays',
+        type: 'boolean',
+        label: 'Days Read',
+        trueLabel: 'Show',
+        falseLabel: 'Hide',
+      },
+      {
+        key: 'showPercentBox',
+        type: 'boolean',
+        label: 'Percent Box',
+        trueLabel: 'Show',
+        falseLabel: 'Hide',
+      },
+      {
+        key: 'showPerimeter',
+        type: 'boolean',
+        label: 'Perimeter',
+        trueLabel: 'Show',
+        falseLabel: 'Hide',
+      },
+      {
+        key: 'shape',
+        type: 'select',
+        label: 'Shape',
+        options: [
+          { label: 'Circle', value: 'circle' },
+          { label: 'Square', value: 'square' },
+          { label: 'Triangle', value: 'triangle' },
+        ],
+      },
+      {
+        key: 'triangleMode',
+        type: 'select',
+        label: 'Triangle',
+        showWhen: (state) => state.shape === 'triangle',
+        options: [
+          { label: 'Up', value: 'upright' },
+          { label: 'Down', value: 'inverted' },
+          { label: 'Alt', value: 'alternating' },
+          { label: 'Angle', value: 'angle' },
+        ],
+      },
+      {
+        key: 'triangleAngle',
+        type: 'number',
+        label: 'Angle',
+        min: 0,
+        max: 360,
+        step: 1,
+        suffix: 'deg',
+        showWhen: (state) => state.shape === 'triangle' && state.triangleMode === 'angle',
+      },
+      {
+        key: 'gapX',
+        type: 'number',
+        label: 'H Gap',
+        min: 0,
+        max: 8,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'all-gap',
+      },
+      {
+        key: 'gapY',
+        type: 'number',
+        label: 'V Gap',
+        min: 0,
+        max: 8,
+        step: 0.1,
+        suffix: '%',
+        inlineGroup: 'all-gap',
+      },
+      {
+        key: 'inactiveOpacity',
+        type: 'range',
+        label: 'Inactive Opacity',
+        min: 0,
+        max: 100,
+        step: 1,
+        suffix: '%',
+      },
+      {
+        key: 'daysFontSize',
+        type: 'range',
+        label: 'Days Font',
+        min: 0.4,
+        max: 2.5,
+        step: 0.1,
+        suffix: 'x',
+        showWhen: (state) => state.showDays,
+      },
+      {
+        key: 'daysLabel',
+        type: 'boolean',
+        label: 'Days Label',
+        trueLabel: 'Show',
+        falseLabel: 'Hide',
+        showWhen: (state) => state.showDays,
+      },
+      {
+        key: 'decimals',
+        type: 'range',
+        label: 'Decimals',
+        min: 0,
+        max: 10,
+        step: 1,
+        showWhen: (state) => state.showPercentBox,
+      },
+      {
+        key: 'percentBoxSize',
+        type: 'select',
+        label: 'Box Size',
+        showWhen: (state) => state.showPercentBox,
+        options: [
+          { label: 'Small', value: 'small' },
+          { label: 'Medium', value: 'medium' },
+          { label: 'Large', value: 'large' },
+        ],
+      },
+      {
+        key: 'perimeterThickness',
+        type: 'range',
+        label: 'Perimeter Width',
+        min: 2,
+        max: 24,
+        step: 1,
+        suffix: 'px',
+        showWhen: (state) => state.showPerimeter,
+      },
+      { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
+      { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
+      { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
+      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
 };
@@ -384,6 +546,69 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     }
   }
 
+  if (viewId === 'all' && viewState) {
+    if (viewState.dotsMode !== ALL_DEFAULT_SETTINGS.dotsMode) {
+      params.set('dotsMode', viewState.dotsMode);
+    }
+    if (viewState.dotsMode === 'custom' && viewState.dotsCount !== ALL_DEFAULT_SETTINGS.dotsCount) {
+      params.set('dotsCount', String(viewState.dotsCount));
+    }
+    if (viewState.showDays !== ALL_DEFAULT_SETTINGS.showDays) {
+      params.set('showDays', String(viewState.showDays));
+    }
+    if (viewState.showPercentBox !== ALL_DEFAULT_SETTINGS.showPercentBox) {
+      params.set('showPercentBox', String(viewState.showPercentBox));
+    }
+    if (viewState.showPerimeter !== ALL_DEFAULT_SETTINGS.showPerimeter) {
+      params.set('showPerimeter', String(viewState.showPerimeter));
+    }
+    if (viewState.shape !== ALL_DEFAULT_SETTINGS.shape) {
+      params.set('shape', viewState.shape);
+    }
+    if (viewState.triangleMode !== ALL_DEFAULT_SETTINGS.triangleMode) {
+      params.set('triangleMode', viewState.triangleMode);
+    }
+    if (viewState.triangleAngle !== ALL_DEFAULT_SETTINGS.triangleAngle) {
+      params.set('triangleAngle', String(viewState.triangleAngle));
+    }
+    if (viewState.gapX !== ALL_DEFAULT_SETTINGS.gapX) {
+      params.set('gapX', String(viewState.gapX));
+    }
+    if (viewState.gapY !== ALL_DEFAULT_SETTINGS.gapY) {
+      params.set('gapY', String(viewState.gapY));
+    }
+    if (viewState.inactiveOpacity !== ALL_DEFAULT_SETTINGS.inactiveOpacity) {
+      params.set('inactiveOpacity', String(viewState.inactiveOpacity));
+    }
+    if (viewState.daysFontSize !== ALL_DEFAULT_SETTINGS.daysFontSize) {
+      params.set('daysFontSize', String(viewState.daysFontSize));
+    }
+    if (viewState.daysLabel !== ALL_DEFAULT_SETTINGS.daysLabel) {
+      params.set('daysLabel', String(viewState.daysLabel));
+    }
+    if (viewState.decimals !== ALL_DEFAULT_SETTINGS.decimals) {
+      params.set('decimals', String(viewState.decimals));
+    }
+    if (viewState.percentBoxSize !== ALL_DEFAULT_SETTINGS.percentBoxSize) {
+      params.set('percentBoxSize', viewState.percentBoxSize);
+    }
+    if (viewState.perimeterThickness !== ALL_DEFAULT_SETTINGS.perimeterThickness) {
+      params.set('perimeterThickness', String(viewState.perimeterThickness));
+    }
+    if (viewState.spaceTop !== ALL_DEFAULT_SETTINGS.spaceTop) {
+      params.set('spaceTop', String(viewState.spaceTop));
+    }
+    if (viewState.spaceRight !== ALL_DEFAULT_SETTINGS.spaceRight) {
+      params.set('spaceRight', String(viewState.spaceRight));
+    }
+    if (viewState.spaceBottom !== ALL_DEFAULT_SETTINGS.spaceBottom) {
+      params.set('spaceBottom', String(viewState.spaceBottom));
+    }
+    if (viewState.spaceLeft !== ALL_DEFAULT_SETTINGS.spaceLeft) {
+      params.set('spaceLeft', String(viewState.spaceLeft));
+    }
+  }
+
   params.set('embed', 'true');
   params.set('theme', currentTheme === THEMES.DARK ? THEMES.DARK : THEMES.LIGHT);
   params.set('primary', resolvedColors.primary);
@@ -445,6 +670,29 @@ export const PROGRESS_DEFAULT_SETTINGS = {
   spaceLeft: 0,
 };
 
+export const ALL_DEFAULT_SETTINGS = {
+  dotsMode: 'days',
+  dotsCount: 365,
+  showDays: true,
+  showPercentBox: true,
+  showPerimeter: true,
+  shape: 'circle',
+  triangleMode: 'alternating',
+  triangleAngle: 0,
+  gapX: 0.5,
+  gapY: 0.5,
+  inactiveOpacity: 5,
+  daysFontSize: 1,
+  daysLabel: true,
+  decimals: 2,
+  percentBoxSize: 'medium',
+  perimeterThickness: 6,
+  spaceTop: 0,
+  spaceRight: 0,
+  spaceBottom: 0,
+  spaceLeft: 0,
+};
+
 export const VIEW_COLOR_SETTINGS = {
   primary: 'primary',
   alternate: 'alternate',
@@ -478,15 +726,15 @@ const getResolvedColorSettings = (searchParams, theme, fallbackColors) => {
 };
 
 const getLegacySideSpacing = (searchParams, persistedSettings, defaults) => {
-  const inset = clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, 20, 0);
-  const outerX = clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, 20, 0);
-  const outerY = clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, 20, 0);
+  const inset = clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, Number.POSITIVE_INFINITY, 0);
+  const outerX = clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, Number.POSITIVE_INFINITY, 0);
+  const outerY = clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, Number.POSITIVE_INFINITY, 0);
 
   return {
-    spaceTop: clampNumber(searchParams.get('spaceTop') ?? persistedSettings.spaceTop, 0, 20, inset + outerY + (defaults?.spaceTop ?? 0)),
-    spaceRight: clampNumber(searchParams.get('spaceRight') ?? persistedSettings.spaceRight, 0, 20, inset + outerX + (defaults?.spaceRight ?? 0)),
-    spaceBottom: clampNumber(searchParams.get('spaceBottom') ?? persistedSettings.spaceBottom, 0, 20, inset + outerY + (defaults?.spaceBottom ?? 0)),
-    spaceLeft: clampNumber(searchParams.get('spaceLeft') ?? persistedSettings.spaceLeft, 0, 20, inset + outerX + (defaults?.spaceLeft ?? 0)),
+    spaceTop: clampNumber(searchParams.get('spaceTop') ?? persistedSettings.spaceTop, 0, Number.POSITIVE_INFINITY, inset + outerY + (defaults?.spaceTop ?? 0)),
+    spaceRight: clampNumber(searchParams.get('spaceRight') ?? persistedSettings.spaceRight, 0, Number.POSITIVE_INFINITY, inset + outerX + (defaults?.spaceRight ?? 0)),
+    spaceBottom: clampNumber(searchParams.get('spaceBottom') ?? persistedSettings.spaceBottom, 0, Number.POSITIVE_INFINITY, inset + outerY + (defaults?.spaceBottom ?? 0)),
+    spaceLeft: clampNumber(searchParams.get('spaceLeft') ?? persistedSettings.spaceLeft, 0, Number.POSITIVE_INFINITY, inset + outerX + (defaults?.spaceLeft ?? 0)),
   };
 };
 
@@ -525,7 +773,7 @@ export const normalizeCountdownSettingValue = (key, value, theme) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, 20, COUNTDOWN_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, 0, Number.POSITIVE_INFINITY, COUNTDOWN_DEFAULT_SETTINGS[key]);
     case VIEW_COLOR_SETTINGS.primary:
     case VIEW_COLOR_SETTINGS.alternate:
       return normalizeColorSettingValue(key, value, theme);
@@ -555,7 +803,7 @@ export const normalizeDotsSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, 20, DOTS_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, 0, Number.POSITIVE_INFINITY, DOTS_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -583,7 +831,7 @@ export const normalizePieSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, 20, PIE_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, 0, Number.POSITIVE_INFINITY, PIE_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -613,7 +861,7 @@ export const normalizeProgressSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, 20, PROGRESS_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, 0, Number.POSITIVE_INFINITY, PROGRESS_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -625,6 +873,58 @@ export const normalizeProgressSettingValueWithTheme = (key, value, theme) => {
   }
 
   return normalizeProgressSettingValue(key, value);
+};
+
+export const normalizeAllSettingValue = (key, value) => {
+  switch (key) {
+    case 'dotsMode':
+      return ['days', 'custom'].includes(value) ? value : ALL_DEFAULT_SETTINGS.dotsMode;
+    case 'dotsCount':
+      return clampNumber(value, 1, 2000, ALL_DEFAULT_SETTINGS.dotsCount);
+    case 'showDays':
+    case 'showPercentBox':
+    case 'showPerimeter':
+    case 'daysLabel':
+      return value === true || value === 'true';
+    case 'shape':
+      return ['circle', 'square', 'triangle'].includes(value) ? value : ALL_DEFAULT_SETTINGS.shape;
+    case 'triangleMode':
+      return ['upright', 'inverted', 'alternating', 'angle'].includes(value)
+        ? value
+        : ALL_DEFAULT_SETTINGS.triangleMode;
+    case 'triangleAngle':
+      return clampNumber(value, 0, 360, ALL_DEFAULT_SETTINGS.triangleAngle);
+    case 'gap':
+    case 'gapX':
+      return clampNumber(value, 0, 8, ALL_DEFAULT_SETTINGS.gapX);
+    case 'gapY':
+      return clampNumber(value, 0, 8, ALL_DEFAULT_SETTINGS.gapY);
+    case 'inactiveOpacity':
+      return clampNumber(value, 0, 100, ALL_DEFAULT_SETTINGS.inactiveOpacity);
+    case 'daysFontSize':
+      return clampNumber(value, 0.4, 2.5, ALL_DEFAULT_SETTINGS.daysFontSize);
+    case 'decimals':
+      return clampNumber(value, 0, 10, ALL_DEFAULT_SETTINGS.decimals);
+    case 'percentBoxSize':
+      return ['small', 'medium', 'large'].includes(value) ? value : ALL_DEFAULT_SETTINGS.percentBoxSize;
+    case 'perimeterThickness':
+      return clampNumber(value, 2, 24, ALL_DEFAULT_SETTINGS.perimeterThickness);
+    case 'spaceTop':
+    case 'spaceRight':
+    case 'spaceBottom':
+    case 'spaceLeft':
+      return clampNumber(value, 0, Number.POSITIVE_INFINITY, ALL_DEFAULT_SETTINGS[key]);
+    default:
+      return value;
+  }
+};
+
+export const normalizeAllSettingValueWithTheme = (key, value, theme) => {
+  if (key === VIEW_COLOR_SETTINGS.primary || key === VIEW_COLOR_SETTINGS.alternate) {
+    return normalizeColorSettingValue(key, value, theme);
+  }
+
+  return normalizeAllSettingValue(key, value);
 };
 
 export const getCountdownSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}, fallbackColors) => {
@@ -760,6 +1060,103 @@ export const getProgressSettingsFromSearchParams = (searchParams, theme, persist
       2,
       80,
       PROGRESS_DEFAULT_SETTINGS.lineWidth,
+    ),
+    ...spacing,
+    ...colors,
+  };
+};
+
+export const getAllSettingsFromSearchParams = (searchParams, theme, persistedSettings = {}, fallbackColors) => {
+  const dotsMode = searchParams.get('dotsMode') ?? persistedSettings.dotsMode;
+  const triangleMode = searchParams.get('triangleMode') ?? persistedSettings.triangleMode;
+  const legacyGap = searchParams.get('gap');
+  const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
+  const spacing = getLegacySideSpacing(searchParams, persistedSettings, ALL_DEFAULT_SETTINGS);
+  const { totalDays } = getYearMeta();
+  const defaultDotsCount = dotsMode === 'custom' ? ALL_DEFAULT_SETTINGS.dotsCount : totalDays;
+
+  return {
+    dotsMode: ['days', 'custom'].includes(dotsMode) ? dotsMode : ALL_DEFAULT_SETTINGS.dotsMode,
+    dotsCount: clampNumber(
+      searchParams.get('dotsCount') ?? persistedSettings.dotsCount,
+      1,
+      2000,
+      defaultDotsCount,
+    ),
+    showDays:
+      searchParams.get('showDays') === 'true' || persistedSettings.showDays === true
+        ? true
+        : searchParams.get('showDays') === 'false' || persistedSettings.showDays === false
+          ? false
+          : ALL_DEFAULT_SETTINGS.showDays,
+    showPercentBox:
+      searchParams.get('showPercentBox') === 'true' || persistedSettings.showPercentBox === true
+        ? true
+        : searchParams.get('showPercentBox') === 'false' || persistedSettings.showPercentBox === false
+          ? false
+          : ALL_DEFAULT_SETTINGS.showPercentBox,
+    showPerimeter:
+      searchParams.get('showPerimeter') === 'true' || persistedSettings.showPerimeter === true
+        ? true
+        : searchParams.get('showPerimeter') === 'false' || persistedSettings.showPerimeter === false
+          ? false
+          : ALL_DEFAULT_SETTINGS.showPerimeter,
+    shape: ['circle', 'square', 'triangle'].includes(searchParams.get('shape') ?? persistedSettings.shape)
+      ? searchParams.get('shape') ?? persistedSettings.shape
+      : ALL_DEFAULT_SETTINGS.shape,
+    triangleMode: ['upright', 'inverted', 'alternating', 'angle'].includes(triangleMode)
+      ? triangleMode
+      : ALL_DEFAULT_SETTINGS.triangleMode,
+    triangleAngle: clampNumber(
+      searchParams.get('triangleAngle') ?? persistedSettings.triangleAngle,
+      0,
+      360,
+      ALL_DEFAULT_SETTINGS.triangleAngle,
+    ),
+    gapX: clampNumber(
+      searchParams.get('gapX') ?? legacyGap ?? persistedSettings.gapX,
+      0,
+      8,
+      ALL_DEFAULT_SETTINGS.gapX,
+    ),
+    gapY: clampNumber(
+      searchParams.get('gapY') ?? legacyGap ?? persistedSettings.gapY,
+      0,
+      8,
+      ALL_DEFAULT_SETTINGS.gapY,
+    ),
+    inactiveOpacity: clampNumber(
+      searchParams.get('inactiveOpacity') ?? persistedSettings.inactiveOpacity,
+      0,
+      100,
+      ALL_DEFAULT_SETTINGS.inactiveOpacity,
+    ),
+    daysFontSize: clampNumber(
+      searchParams.get('daysFontSize') ?? persistedSettings.daysFontSize,
+      0.4,
+      2.5,
+      ALL_DEFAULT_SETTINGS.daysFontSize,
+    ),
+    daysLabel:
+      searchParams.get('daysLabel') === 'true' || persistedSettings.daysLabel === true
+        ? true
+        : searchParams.get('daysLabel') === 'false' || persistedSettings.daysLabel === false
+          ? false
+          : ALL_DEFAULT_SETTINGS.daysLabel,
+    decimals: clampNumber(
+      searchParams.get('decimals') ?? persistedSettings.decimals,
+      0,
+      10,
+      ALL_DEFAULT_SETTINGS.decimals,
+    ),
+    percentBoxSize: ['small', 'medium', 'large'].includes(searchParams.get('percentBoxSize') ?? persistedSettings.percentBoxSize)
+      ? searchParams.get('percentBoxSize') ?? persistedSettings.percentBoxSize
+      : ALL_DEFAULT_SETTINGS.percentBoxSize,
+    perimeterThickness: clampNumber(
+      searchParams.get('perimeterThickness') ?? persistedSettings.perimeterThickness,
+      2,
+      24,
+      ALL_DEFAULT_SETTINGS.perimeterThickness,
     ),
     ...spacing,
     ...colors,
