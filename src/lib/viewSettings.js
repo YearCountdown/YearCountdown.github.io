@@ -51,10 +51,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   dots: {
@@ -125,10 +125,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   pie: {
@@ -171,10 +171,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   progress: {
@@ -227,10 +227,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
   all: {
@@ -388,10 +388,10 @@ export const VIEW_SETTINGS_CONFIG = {
       { key: 'spaceAll', type: 'spacing-helper', label: 'All', inlineGroup: 'space-top' },
       { key: 'spaceX', type: 'spacing-helper', label: 'X', inlineGroup: 'space-top' },
       { key: 'spaceY', type: 'spacing-helper', label: 'Y', inlineGroup: 'space-top' },
-      { key: 'spaceTop', type: 'number', label: 'Top', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceLeft', type: 'number', label: 'Left', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
-      { key: 'spaceRight', type: 'number', label: 'Right', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
-      { key: 'spaceBottom', type: 'number', label: 'Bottom', min: 0, step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceTop', type: 'number', label: 'Top', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceLeft', type: 'number', label: 'Left', step: 0.1, suffix: '%', inlineGroup: 'space-middle' },
+      { key: 'spaceRight', type: 'number', label: 'Right', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
+      { key: 'spaceBottom', type: 'number', label: 'Bottom', step: 0.1, suffix: '%', inlineGroup: 'space-bottom' },
     ],
   },
 };
@@ -726,15 +726,50 @@ const getResolvedColorSettings = (searchParams, theme, fallbackColors) => {
 };
 
 const getLegacySideSpacing = (searchParams, persistedSettings, defaults) => {
-  const inset = clampNumber(searchParams.get('inset') ?? persistedSettings.inset, 0, Number.POSITIVE_INFINITY, 0);
-  const outerX = clampNumber(searchParams.get('outerX') ?? persistedSettings.outerX, 0, Number.POSITIVE_INFINITY, 0);
-  const outerY = clampNumber(searchParams.get('outerY') ?? persistedSettings.outerY, 0, Number.POSITIVE_INFINITY, 0);
+  const inset = clampNumber(
+    searchParams.get('inset') ?? persistedSettings.inset,
+    Number.NEGATIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+    0,
+  );
+  const outerX = clampNumber(
+    searchParams.get('outerX') ?? persistedSettings.outerX,
+    Number.NEGATIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+    0,
+  );
+  const outerY = clampNumber(
+    searchParams.get('outerY') ?? persistedSettings.outerY,
+    Number.NEGATIVE_INFINITY,
+    Number.POSITIVE_INFINITY,
+    0,
+  );
 
   return {
-    spaceTop: clampNumber(searchParams.get('spaceTop') ?? persistedSettings.spaceTop, 0, Number.POSITIVE_INFINITY, inset + outerY + (defaults?.spaceTop ?? 0)),
-    spaceRight: clampNumber(searchParams.get('spaceRight') ?? persistedSettings.spaceRight, 0, Number.POSITIVE_INFINITY, inset + outerX + (defaults?.spaceRight ?? 0)),
-    spaceBottom: clampNumber(searchParams.get('spaceBottom') ?? persistedSettings.spaceBottom, 0, Number.POSITIVE_INFINITY, inset + outerY + (defaults?.spaceBottom ?? 0)),
-    spaceLeft: clampNumber(searchParams.get('spaceLeft') ?? persistedSettings.spaceLeft, 0, Number.POSITIVE_INFINITY, inset + outerX + (defaults?.spaceLeft ?? 0)),
+    spaceTop: clampNumber(
+      searchParams.get('spaceTop') ?? persistedSettings.spaceTop,
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      inset + outerY + (defaults?.spaceTop ?? 0),
+    ),
+    spaceRight: clampNumber(
+      searchParams.get('spaceRight') ?? persistedSettings.spaceRight,
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      inset + outerX + (defaults?.spaceRight ?? 0),
+    ),
+    spaceBottom: clampNumber(
+      searchParams.get('spaceBottom') ?? persistedSettings.spaceBottom,
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      inset + outerY + (defaults?.spaceBottom ?? 0),
+    ),
+    spaceLeft: clampNumber(
+      searchParams.get('spaceLeft') ?? persistedSettings.spaceLeft,
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      inset + outerX + (defaults?.spaceLeft ?? 0),
+    ),
   };
 };
 
@@ -773,7 +808,7 @@ export const normalizeCountdownSettingValue = (key, value, theme) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, Number.POSITIVE_INFINITY, COUNTDOWN_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, COUNTDOWN_DEFAULT_SETTINGS[key]);
     case VIEW_COLOR_SETTINGS.primary:
     case VIEW_COLOR_SETTINGS.alternate:
       return normalizeColorSettingValue(key, value, theme);
@@ -803,7 +838,7 @@ export const normalizeDotsSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, Number.POSITIVE_INFINITY, DOTS_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, DOTS_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -831,7 +866,7 @@ export const normalizePieSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, Number.POSITIVE_INFINITY, PIE_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, PIE_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -861,7 +896,7 @@ export const normalizeProgressSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, Number.POSITIVE_INFINITY, PROGRESS_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, PROGRESS_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
@@ -913,7 +948,7 @@ export const normalizeAllSettingValue = (key, value) => {
     case 'spaceRight':
     case 'spaceBottom':
     case 'spaceLeft':
-      return clampNumber(value, 0, Number.POSITIVE_INFINITY, ALL_DEFAULT_SETTINGS[key]);
+      return clampNumber(value, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, ALL_DEFAULT_SETTINGS[key]);
     default:
       return value;
   }
