@@ -244,7 +244,7 @@ const RAW_SAMPLE_ITEMS = [
         mode: 'seconds',
         labels: false,
         frame: false,
-        fontSize: 0.5,
+        fontSize: 0.35,
         spaceTop: 14,
         spaceRight: 8,
         spaceBottom: 8,
