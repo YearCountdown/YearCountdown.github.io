@@ -2,17 +2,96 @@
 
 ## Overview
 
-**YearCountdown** is a minimal web app that shows how much of the current year has passed — and how much is left.
+**YearCountdown** is a small React application that turns the current year into a few focused visual readings instead of one generic progress bar.
 
-Live at: [yearcountdown.github.io](https://yearcountdown.github.io)
+Live deployments:
+- [yearcountdown.github.io](https://yearcountdown.github.io)
+- [theyearcountdown.vercel.app](https://theyearcountdown.vercel.app/)
 
-## Features
+## Routes
 
-- Days / time elapsed in the current year
-- Countdown timer to year end
-- Visual progress bars and dot indicators
-- Theme selection
-- Embeddable widgets
+### Homepage
+
+- `/`
+- Editorial landing page with:
+  - animated hero
+  - live countdown preview
+  - sections explaining the four main readings of the year
+  - lock-screen / wallpaper guidance
+
+### Views
+
+- `/view/countdown`
+- `/view/dots`
+- `/view/pie`
+- `/view/progress`
+
+Each view is designed as a focused full-screen reading. Normal view routes keep the site header. `embed=true` hides shell chrome and uses the view as a standalone embed.
+
+Examples:
+
+- `/view/dots`
+- `/view/dots?embed=true`
+- `/view/pie?embed=true`
+
+## Main Features
+
+- Four dedicated year views:
+  - Countdown
+  - Dots
+  - Pie
+  - Progress
+- Shareable embed links from every view
+- Per-view settings persisted in cookies
+- Homepage theme controls
+- View-specific appearance and display controls
+- GitHub Pages and Vercel deployment support
+
+## Appearance Model
+
+### Homepage
+
+- Homepage uses site theme only: `light` or `dark`
+- Homepage header, footer, and loader follow the homepage theme
+
+### View Pages
+
+- Views support appearance settings in the gear panel
+- View appearance is query-driven for sharing and embed links
+- View settings are also persisted locally via cookies
+- When a view is opened, the site theme follows that view unless an explicit `theme` query param is present
+
+## View Notes
+
+### Countdown
+
+- Live countdown to the next January 1
+- Responsive multi-unit layout
+- Settings include display mode, frame, and labels
+
+### Dots
+
+- One dot per day of the current year
+- Completed days and remaining days are visually separated
+- Settings include shape, spacing, inset, outer spacing, and inactive opacity
+
+### Pie
+
+- Circular or rectangular reading of year progress
+- Filled and outline modes
+- Full-screen and centered variants
+
+### Progress
+
+- Full-field or line-based linear reading
+- Full-screen mode by default
+- Adjustable decimals, line width, and layout spacing
+
+## Embed Behavior
+
+- `embed=true` hides header and settings gear
+- Embed links preserve current view settings
+- The embed icon remains visible with a small glass badge for contrast
 
 ## License
 

@@ -1,6 +1,6 @@
 # YearCountdown
 
-A minimal web app to visualize how much of the current year has passed.
+A minimal web app for reading the current year in multiple visual forms.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -8,16 +8,24 @@ A minimal web app to visualize how much of the current year has passed.
 
 [yearcountdown.github.io](https://yearcountdown.github.io)
 
+Also available on Vercel:
+- [theyearcountdown.vercel.app](https://theyearcountdown.vercel.app/)
+
 Deploy targets:
 - GitHub Pages
 - Vercel
 
 ## Features
 
-- Year progress countdown & elapsed time
-- Progress bars, dots, and timer views
-- Theme selection
-- Embeddable widgets
+- Homepage with animated hero and case-study style sections
+- Four view routes:
+  - `/view/countdown`
+  - `/view/dots`
+  - `/view/pie`
+  - `/view/progress`
+- Per-view settings with shareable embed URLs
+- Theme-aware homepage and embed-friendly views
+- GitHub Pages and Vercel deployment support
 
 ## Quick Start
 

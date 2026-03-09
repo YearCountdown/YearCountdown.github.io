@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+)
+- [Node.js](https://nodejs.org/) 20+
 - npm
 
 ## Setup
@@ -17,49 +17,99 @@ npm install
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Start dev server |
-| `npm run build` | Production build to `dist/` |
-| `npm run preview` | Preview production build |
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Create a production build in `dist/` |
+| `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run ESLint |
+
+## Runtime Structure
+
+### Shells
+
+- Homepage shell:
+  - scrollable
+  - header and footer visible
+  - homepage appearance is theme-only
+- View shell:
+  - immersive `/view/*` routes
+  - no footer
+  - copy-embed and settings affordances
+  - `embed=true` removes shell chrome
+
+### Main Routes
+
+- `/`
+- `/view/countdown`
+- `/view/dots`
+- `/view/pie`
+- `/view/progress`
+
+## Settings Model
+
+### Homepage
+
+- homepage theme is controlled separately
+- homepage branding follows homepage theme
+
+### View Pages
+
+- view state is stored through:
+  - query params for shareable URLs
+  - cookies for persistence between visits
+- appearance controls are managed from the view gear
+- copied embed links preserve the active view configuration
 
 ## Deployment
 
 ### GitHub Pages
 
-- Push to `main`
-- GitHub Actions builds and deploys `dist/` using `.github/workflows/deploy.yml`
-- SPA deep-link reloads are handled by `public/404.html`
+- deployment happens from pushes to `main`
+- workflow file: [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
+- the workflow runs:
+  - `npm ci`
+  - `npm run build`
+  - deploys `dist/`
+- SPA deep-link reloads are handled by:
+  - [`public/404.html`](../public/404.html)
+  - route restoration logic in [`index.html`](../index.html)
 
 ### Vercel
 
-- Import the repository into Vercel
-- Vercel uses [vercel.json](../vercel.json) for:
-  - build command: `npm run build`
-  - output directory: `dist`
-  - SPA rewrites to `index.html`
-- No additional routing setup is required for `/view/*` routes
+- config file: [`vercel.json`](../vercel.json)
+- Vercel uses:
+  - `npm run build`
+  - output directory `dist`
+  - rewrite of all routes to `index.html`
 
 ## Project Structure
 
-```
-├── public/          # Static assets
+```text
+.
+├── docs/
+├── public/
 ├── src/
-│   ├── components/  # Reusable UI (e.g., SampleHeading.jsx)
-│   ├── pages/       # Route components (Home.jsx, NotFound.jsx)
-│   ├── assets/      # Images, icons
-│   ├── main.jsx     # Entry point & Routing
-│   └── index.css    # Tailwind v4 entry & Theme
-├── docs/            # Documentation
-├── vite.config.js   # Vite config (Tailwind plugin enabled)
-└── package.json     # Deps: GSAP, React Router, Tailwind v4
-
+│   ├── components/
+│   ├── content/
+│   ├── context/
+│   ├── hooks/
+│   ├── layouts/
+│   ├── lib/
+│   ├── pages/
+│   ├── index.css
+│   └── main.jsx
+├── .github/workflows/
+├── vercel.json
+├── vite.config.js
+└── package.json
 ```
 
 ## Tech Stack
 
-* **Styling:** Tailwind CSS v4 (Vite-native)
-* **Animation:** GSAP with `@gsap/react`
-* **Routing:** React Router v6
+- React 19
+- React Router 7
+- Vite 7
+- Tailwind CSS 4
+- GSAP
 
 ## Contributing
 
