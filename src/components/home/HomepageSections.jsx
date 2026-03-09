@@ -40,7 +40,20 @@ const MODE_ITEMS = [
   },
 ];
 
-const GALLERY_ITEMS = SAMPLE_ITEMS;
+const HOMEPAGE_GALLERY_SAMPLE_IDS = [
+  'all-mint-topfield',
+  'countdown-clean',
+  'pie-circle-outline',
+  'progress-line',
+  'dots-circles',
+  'all-composed',
+  'pie-violet-rectangle',
+  'progress-emerald-field',
+];
+
+const GALLERY_ITEMS = HOMEPAGE_GALLERY_SAMPLE_IDS
+  .map((sampleId) => SAMPLE_ITEMS.find((item) => item.id === sampleId))
+  .filter(Boolean);
 
 const GALLERY_FRAME_CLASSES = {
   portrait: {
