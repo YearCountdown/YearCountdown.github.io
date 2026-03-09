@@ -287,6 +287,7 @@ const getGalleryPreviewUrl = ({ id, viewId, viewState, theme }) => {
   params.set('theme', theme);
   params.set('primary', viewState.primary);
   params.set('alternate', viewState.alternate);
+  params.set('logo', 'false');
   params.set('_gallery', id);
 
   Object.entries(viewState).forEach(([key, value]) => {

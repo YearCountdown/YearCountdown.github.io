@@ -25,6 +25,7 @@ Live deployments:
 - `/view/dots`
 - `/view/pie`
 - `/view/progress`
+- `/view/all`
 
 Each view is designed as a focused full-screen reading. Normal view routes keep the site header. `embed=true` hides shell chrome and uses the view as a standalone embed.
 
@@ -33,14 +34,16 @@ Examples:
 - `/view/dots`
 - `/view/dots?embed=true`
 - `/view/pie?embed=true`
+- `/view/dots?embed=true&logo=false`
 
 ## Main Features
 
-- Four dedicated year views:
+- Five dedicated year views:
   - Countdown
   - Dots
   - Pie
   - Progress
+  - All
 - Shareable embed links from every view
 - Direct PageShot wallpaper URLs from every view
 - Per-view settings persisted in cookies
@@ -93,6 +96,7 @@ Examples:
 - `embed=true` hides header and settings gear
 - Embed links preserve current view settings
 - The embed icon remains visible with a small glass badge for contrast
+- `logo=false` hides the small embed logo badge when a chrome-free preview is needed
 
 ## Wallpaper URLs
 

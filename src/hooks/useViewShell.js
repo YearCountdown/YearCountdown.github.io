@@ -249,6 +249,7 @@ const useViewShell = (themeOverride) => {
       queryTheme,
       theme,
       isEmbed: isEmbedMode(searchParams),
+      isEmbedLogoVisible: searchParams.get('logo') !== 'false',
       viewId: activeViewId,
       viewConfig,
       viewLinkMeta: getViewLinkMeta(location.pathname),

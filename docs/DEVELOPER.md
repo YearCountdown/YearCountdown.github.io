@@ -43,6 +43,7 @@ npm install
 - `/view/dots`
 - `/view/pie`
 - `/view/progress`
+- `/view/all`
 
 ## Settings Model
 
@@ -59,6 +60,9 @@ npm install
 - appearance controls are managed from the view gear
 - copied embed links preserve the active view configuration
 - copied wallpaper URLs preserve the active view configuration plus requested image size
+- embed-specific shell flags:
+  - `embed=true` removes shell chrome
+  - `logo=false` hides the embed corner logo
 
 ## Deployment
 

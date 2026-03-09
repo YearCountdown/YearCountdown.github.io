@@ -18,11 +18,12 @@ Deploy targets:
 ## Features
 
 - Homepage with animated hero and case-study style sections
-- Four view routes:
+- Five view routes:
   - `/view/countdown`
   - `/view/dots`
   - `/view/pie`
   - `/view/progress`
+  - `/view/all`
 - Per-view settings with shareable embed URLs
 - Direct PageShot wallpaper URLs for Shortcuts and lock-screen automation
 - Theme-aware homepage and embed-friendly views

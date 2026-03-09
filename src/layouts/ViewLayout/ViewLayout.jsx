@@ -22,6 +22,7 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
   } = useTheme();
   const {
     isEmbed,
+    isEmbedLogoVisible,
     queryTheme,
     appearanceBrandToneMode,
     appearanceTextToneMode,
@@ -116,7 +117,7 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
       >
         {children}
       </main>
-      {isEmbed ? (
+      {isEmbed && isEmbedLogoVisible ? (
         <div
           className="pointer-events-none fixed z-30"
           style={{
