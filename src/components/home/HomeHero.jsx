@@ -133,6 +133,12 @@ const HomeHero = () => {
           <p className="text-lg font-light uppercase tracking-[0.24em] text-black/56 dark:text-white/56 sm:text-xl">
             See the year as one clear measure.
           </p>
+          <Link
+            to="/samples"
+            className="inline-flex w-full items-center justify-center rounded-full border border-black/12 px-6 py-3 text-xs uppercase tracking-[0.32em] text-black transition-colors hover:border-black/22 hover:bg-black/[0.03] dark:border-white/12 dark:text-white dark:hover:border-white/22 dark:hover:bg-white/[0.04]"
+          >
+            View Samples
+          </Link>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 pt-3 lg:justify-start">
             {heroLinks.map((link) => (
               <Link

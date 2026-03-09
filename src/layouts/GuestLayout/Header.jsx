@@ -4,7 +4,7 @@ import gsap from 'gsap';
 
 import BrandLockup from '../../components/BrandLockup';
 import { useTheme } from '../../context/ThemeContext';
-import { NAV_LINKS } from '../../lib/navigation';
+import { FEATURE_NAV_LINKS } from '../../lib/navigation';
 import { THEMES } from '../../lib/theme';
 
 const getNavLinkClassName = ({ isActive }) => {
@@ -255,7 +255,12 @@ const Header = ({ variant = 'home' }) => {
   }, []);
 
   const isViewLayout = variant === 'view';
-  const rightNavLinks = isViewLayout ? NAV_LINKS.filter((link) => link.to !== '/') : NAV_LINKS;
+  const homePrimaryLinks = [
+    { label: 'Home', to: '/' },
+    { label: 'Samples', to: '/samples' },
+  ];
+  const viewLinks = FEATURE_NAV_LINKS;
+  const mobileNavLinks = isViewLayout ? FEATURE_NAV_LINKS : [...homePrimaryLinks, ...FEATURE_NAV_LINKS];
 
   const handleThemeToggle = () => toggleTheme();
 
@@ -275,16 +280,32 @@ const Header = ({ variant = 'home' }) => {
           <BrandLockup className="max-w-[12rem]" textClassName="inline" colorMode="theme" />
 
           <div className="flex items-center justify-end gap-2 sm:gap-3">
-            <nav aria-label="Primary" className="hidden items-center gap-6 md:flex lg:gap-8">
-              {rightNavLinks.map((link) => (
-                <NavLink key={link.to} to={link.to} end={link.to === '/'} className={getNavLinkClassName}>
-                  {link.label}
-                </NavLink>
-              ))}
+            <nav aria-label="Primary" className="hidden items-center gap-6 min-[991px]:flex lg:gap-8">
+              {isViewLayout ? (
+                viewLinks.map((link) => (
+                  <NavLink key={link.to} to={link.to} end={link.to === '/'} className={getNavLinkClassName}>
+                    {link.label}
+                  </NavLink>
+                ))
+              ) : (
+                <>
+                  {homePrimaryLinks.map((link) => (
+                    <NavLink key={link.to} to={link.to} end={link.to === '/'} className={getNavLinkClassName}>
+                      {link.label}
+                    </NavLink>
+                  ))}
+                  <span aria-hidden="true" className="h-4 w-px bg-black/14 dark:bg-white/14" />
+                  {viewLinks.map((link) => (
+                    <NavLink key={link.to} to={link.to} end={link.to === '/'} className={getNavLinkClassName}>
+                      {link.label}
+                    </NavLink>
+                  ))}
+                </>
+              )}
             </nav>
 
             {!isViewLayout ? (
-              <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} className="hidden md:inline-flex" />
+              <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} className="hidden min-[991px]:inline-flex" />
             ) : null}
 
             <button
@@ -305,7 +326,7 @@ const Header = ({ variant = 'home' }) => {
         <div
           id="mobile-navigation"
           ref={overlayRef}
-          className="fixed inset-0 z-50 bg-white/58 opacity-0 backdrop-blur-none md:hidden dark:bg-black/58"
+          className="fixed inset-0 z-50 bg-white/58 opacity-0 backdrop-blur-none min-[991px]:hidden dark:bg-black/58"
         >
           <div ref={menuContentRef} className="flex min-h-screen flex-col px-4 py-4 opacity-0 sm:px-6">
             <div className="flex items-center justify-between">
@@ -322,7 +343,7 @@ const Header = ({ variant = 'home' }) => {
             </div>
 
             <nav aria-label="Mobile primary" className="pointer-events-auto flex flex-1 flex-col items-center justify-center gap-7 text-center">
-              {rightNavLinks.map((link) => (
+              {mobileNavLinks.map((link) => (
                 <NavLink
                   key={link.to}
                   to={link.to}

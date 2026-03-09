@@ -96,6 +96,15 @@ const ThemeToggleButton = ({ theme, onToggle }) => {
   );
 };
 
+
+const ResizeHandleIcon = () => {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current">
+      <path d="M8 7 3 12l5 5M16 7l5 5-5 5M10.5 5v14M13.5 5v14" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+};
+
 const MenuToggleButton = ({ open, onClick }) => {
   return (
     <button
@@ -285,12 +294,31 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
   );
 };
 
+const DEFAULT_SIDEBAR_WIDTH = 352;
+const MIN_SIDEBAR_WIDTH = 280;
+const MAX_SIDEBAR_WIDTH = 520;
+
 const SamplesPage = () => {
   const { theme, setTheme, toggleTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState('');
   const searchInputRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    if (typeof window === 'undefined') {
+      return DEFAULT_SIDEBAR_WIDTH;
+    }
+
+    const storedWidth = window.localStorage.getItem('yearcountdown.samples.sidebarWidth');
+    const parsedWidth = Number.parseFloat(storedWidth ?? '');
+
+    if (!Number.isFinite(parsedWidth)) {
+      return DEFAULT_SIDEBAR_WIDTH;
+    }
+
+    return Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, parsedWidth));
+  });
+  const resizingRef = useRef(false);
   const requestedSampleId = searchParams.get('sample');
   const selectedSample = getSampleById(requestedSampleId) ?? SAMPLE_ITEMS[0];
   const [previewTheme, setPreviewTheme] = useState(selectedSample.theme);
@@ -342,6 +370,46 @@ const SamplesPage = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSidebarOpen]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.localStorage.setItem('yearcountdown.samples.sidebarWidth', String(sidebarWidth));
+  }, [sidebarWidth]);
+
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      if (!resizingRef.current || window.innerWidth < 1024) {
+        return;
+      }
+
+      const nextWidth = Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, event.clientX));
+      setSidebarWidth(nextWidth);
+    };
+
+    const handleMouseUp = () => {
+      if (!resizingRef.current) {
+        return;
+      }
+
+      resizingRef.current = false;
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      resizingRef.current = false;
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
 
   const viewId = selectedSample.viewId;
   const viewConfig = VIEW_SETTINGS_CONFIG[viewId];
@@ -487,8 +555,21 @@ const SamplesPage = () => {
     setIsSidebarOpen(false);
   };
 
+  const handleResizeStart = () => {
+    if (typeof window === 'undefined' || window.innerWidth < 1024) {
+      return;
+    }
+
+    resizingRef.current = true;
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+  };
+
   return (
-    <div className="relative h-screen overflow-hidden bg-stone-100 text-black dark:bg-zinc-950 dark:text-white">
+    <div
+      className="relative h-screen overflow-hidden bg-stone-100 text-black dark:bg-zinc-950 dark:text-white"
+      style={{ '--samples-sidebar-width': `${sidebarWidth}px` }}
+    >
       <div className="pointer-events-none absolute left-4 top-4 z-40 lg:hidden">
         <div className="pointer-events-auto">
           <MenuToggleButton open={isSidebarOpen} onClick={() => setIsSidebarOpen((current) => !current)} />
@@ -505,7 +586,7 @@ const SamplesPage = () => {
       ) : null}
 
       <aside
-        className={`absolute inset-y-0 left-0 z-40 w-[min(22rem,calc(100vw-3rem))] border-r border-black/10 bg-stone-100 transition-transform duration-300 dark:border-white/10 dark:bg-zinc-950 lg:w-[22rem] ${
+        className={`absolute inset-y-0 left-0 z-40 w-[min(22rem,calc(100vw-3rem))] border-r border-black/10 bg-stone-100 transition-transform duration-300 dark:border-white/10 dark:bg-zinc-950 lg:w-[var(--samples-sidebar-width)] ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
@@ -581,18 +662,29 @@ const SamplesPage = () => {
               ) : null}
             </div>
           </div>
+          <button
+            type="button"
+            aria-label="Resize samples sidebar"
+            onMouseDown={handleResizeStart}
+            className="absolute right-0 top-1/2 z-20 hidden h-28 w-8 translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center lg:flex"
+          >
+            <span className="pointer-events-none absolute inset-y-0 left-1/2 w-[5px] -translate-x-1/2 rounded-full" style={{ backgroundColor: previewState.primary }} />
+            <span className="pointer-events-none relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-stone-100/92 text-black/70 shadow-sm backdrop-blur-sm transition-colors duration-200 dark:border-white/10 dark:bg-zinc-950/92 dark:text-white/70">
+              <ResizeHandleIcon />
+            </span>
+          </button>
         </div>
       </aside>
 
-      <section className="relative h-full min-w-0 overflow-hidden lg:pl-[22rem]" style={{ backgroundColor: previewState.alternate }}>
-        <div className="absolute inset-0 lg:left-[22rem]">
+      <section className="relative h-full min-w-0 overflow-hidden lg:pl-[var(--samples-sidebar-width)]" style={{ backgroundColor: previewState.alternate }}>
+        <div className="absolute inset-0 lg:left-[var(--samples-sidebar-width)]">
           <div className="h-full w-full" key={selectedSample.id}>
             {renderSampleView({ viewId, viewState: previewState, textTone: resolvedTextTone })}
           </div>
         </div>
 
         <div className="pointer-events-none absolute inset-0">
-          <div className="pointer-events-auto absolute bottom-4 left-4 z-30 sm:bottom-6 sm:left-6 lg:left-[calc(22rem+1.5rem)]">
+          <div className="pointer-events-auto absolute bottom-4 left-4 z-30 sm:bottom-6 sm:left-6 lg:left-[calc(var(--samples-sidebar-width)+1.5rem)]">
             <CopyEmbedAction
               sharedUrl={sharedUrl}
               variant="floating"
