@@ -4,6 +4,7 @@ import BrandLockup from '../../components/BrandLockup';
 import CopyEmbedAction from '../../components/CopyEmbedAction';
 import { useTheme } from '../../context/ThemeContext';
 import useViewShell from '../../hooks/useViewShell';
+import { getToneColor, withAlpha } from '../../lib/viewColors';
 import Header from '../GuestLayout/Header';
 import ViewSettingsGear from '../../components/ViewSettingsGear';
 
@@ -80,6 +81,8 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
   }, [appearanceTextToneMode, setViewTextToneMode, viewTextToneMode]);
 
   const viewTitle = viewConfig?.title ?? viewLinkMeta?.title ?? 'View';
+  const activeAlternateColor = viewState?.[viewId]?.alternate ?? viewColors.alternate;
+  const activeTextToneColor = getToneColor(resolvedTextTone);
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-stone-100 text-black dark:bg-zinc-950 dark:text-white">
@@ -96,14 +99,23 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
             compact
             colorMode="color"
             iconToneMode={resolvedBrandIconTone}
-            className="pointer-events-auto rounded-full border border-black/10 bg-white/36 p-2 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-black/34"
+            className="pointer-events-auto rounded-full p-2 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-xl"
+            style={{
+              backgroundColor: withAlpha(activeAlternateColor, 0.62),
+              border: `1px solid ${withAlpha(activeTextToneColor, 0.12)}`,
+            }}
             textClassName="hidden"
           />
         </div>
       ) : null}
       {!isEmbed ? (
         <div className="fixed bottom-4 left-4 z-40 sm:bottom-6 sm:left-6">
-          <CopyEmbedAction sharedUrl={sharedUrl} variant="floating" />
+          <CopyEmbedAction
+            sharedUrl={sharedUrl}
+            variant="floating"
+            backgroundColor={activeAlternateColor}
+            toneColor={activeTextToneColor}
+          />
         </div>
       ) : null}
       <ViewSettingsGear

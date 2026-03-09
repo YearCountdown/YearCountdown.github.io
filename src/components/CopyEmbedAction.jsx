@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { withAlpha } from '../lib/viewColors';
+
 const CopyIcon = ({ copied, className = 'h-4 w-4' }) => {
   if (copied) {
     return (
@@ -44,6 +46,8 @@ const CopyEmbedAction = ({
   className = '',
   label = 'Copy embed link',
   copiedLabel = 'Copied embed link',
+  backgroundColor = '#ffffff',
+  toneColor = '#111111',
 }) => {
   const [isCopied, setIsCopied] = useState(false);
   const copiedTimeoutRef = useRef(null);
@@ -82,7 +86,12 @@ const CopyEmbedAction = ({
       <button
         type="button"
         onClick={handleCopyLink}
-        className={`group inline-flex cursor-pointer items-center justify-start gap-3 rounded-full border border-black/10 bg-white/42 px-3 py-2 text-black/86 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/58 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:border-white/10 dark:bg-black/40 dark:text-white/86 dark:hover:bg-black/52 dark:focus-visible:ring-white/40 ${className}`}
+        className={`group inline-flex cursor-pointer items-center justify-start gap-3 rounded-full px-3 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40 ${className}`}
+        style={{
+          backgroundColor: withAlpha(backgroundColor, 0.62),
+          border: `1px solid ${withAlpha(toneColor, 0.12)}`,
+          color: withAlpha(toneColor, 0.88),
+        }}
       >
         <span
           className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ${
@@ -92,9 +101,14 @@ const CopyEmbedAction = ({
           <CopyIcon copied={isCopied} className={`h-4 w-4 transition-transform duration-200 ${isCopied ? 'scale-110' : ''}`} />
         </span>
         <span
-          className={`overflow-hidden rounded-full border border-black/8 bg-white/68 px-0 py-0 text-left text-xs uppercase tracking-[0.22em] text-black/80 backdrop-blur-xl transition-all duration-200 dark:border-white/8 dark:bg-black/46 dark:text-white/80 ${
+          className={`overflow-hidden rounded-full px-0 py-0 text-left text-xs uppercase tracking-[0.22em] backdrop-blur-xl transition-all duration-200 ${
             isCopied ? 'max-w-[15rem] px-4 py-2' : 'max-w-0 group-hover:max-w-[15rem] group-hover:px-4 group-hover:py-2'
           }`}
+          style={{
+            backgroundColor: withAlpha(backgroundColor, 0.78),
+            border: `1px solid ${withAlpha(toneColor, 0.1)}`,
+            color: withAlpha(toneColor, 0.8),
+          }}
         >
           <span className={`block whitespace-nowrap transition-transform duration-200 ${isCopied ? 'translate-x-0' : 'translate-x-1 group-hover:translate-x-0'}`}>
             {isCopied ? copiedLabel : label}

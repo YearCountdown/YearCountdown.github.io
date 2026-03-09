@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import CopyEmbedAction from './CopyEmbedAction';
 import { useTheme } from '../context/ThemeContext';
-import { VIEW_BRAND_TONE_MODES, VIEW_COLOR_PRESETS } from '../lib/viewColors';
+import { VIEW_BRAND_TONE_MODES, VIEW_COLOR_PRESETS, withAlpha } from '../lib/viewColors';
 
 const GearIcon = () => {
   return (
@@ -288,6 +288,11 @@ const ViewSettingsGear = ({
       : VIEW_BRAND_TONE_MODES.DARK;
   const gearIconColor = resolvedGearIconTone === VIEW_BRAND_TONE_MODES.LIGHT ? 'rgba(255,255,255,0.88)' : 'rgba(17,17,17,0.88)';
   const resolvedTextToneMode = resolvedTextTone === VIEW_BRAND_TONE_MODES.LIGHT ? VIEW_BRAND_TONE_MODES.LIGHT : VIEW_BRAND_TONE_MODES.DARK;
+  const gearBackgroundColor = withAlpha(resolvedColors.alternate, 0.62);
+  const gearBorderColor = withAlpha(
+    resolvedGearIconTone === VIEW_BRAND_TONE_MODES.LIGHT ? '#ffffff' : '#111111',
+    0.12,
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -553,8 +558,12 @@ const ViewSettingsGear = ({
         onClick={() => setIsOpen((current) => !current)}
         aria-label={isOpen ? 'Close settings panel' : 'Open settings panel'}
         aria-expanded={isOpen}
-        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-black/10 bg-white/40 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/56 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:border-white/10 dark:bg-black/36 dark:hover:bg-black/48 dark:focus-visible:ring-white/40"
-        style={{ color: gearIconColor }}
+        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40"
+        style={{
+          color: gearIconColor,
+          backgroundColor: gearBackgroundColor,
+          border: `1px solid ${gearBorderColor}`,
+        }}
       >
         <GearIcon />
       </button>

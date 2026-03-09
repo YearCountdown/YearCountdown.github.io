@@ -13,6 +13,7 @@ const BrandLockup = ({
   iconOnly = false,
   colorMode = 'theme',
   iconToneMode = 'auto',
+  style,
   ariaLabel = 'Go to home page',
   onClick,
 }) => {
@@ -33,6 +34,7 @@ const BrandLockup = ({
       to={to}
       onClick={onClick}
       aria-label={ariaLabel}
+      style={style}
       className={`inline-flex min-w-0 items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40 ${className}`}
     >
       <span className={`relative inline-flex shrink-0 items-center justify-center overflow-visible ${markWrapperClassName}`}>
