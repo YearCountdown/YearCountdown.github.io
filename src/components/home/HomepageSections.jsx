@@ -68,26 +68,6 @@ const GALLERY_ITEMS = [
     },
   },
   {
-    id: 'dots-triangles',
-    label: 'Dots / Triangles',
-    viewId: 'dots',
-    theme: THEMES.DARK,
-    viewState: {
-      ...DOTS_DEFAULT_SETTINGS,
-      shape: 'triangle',
-      triangleMode: 'alternating',
-      gapX: 0.6,
-      gapY: 0.5,
-      inactiveOpacity: 7,
-      spaceTop: 4,
-      spaceRight: 4,
-      spaceBottom: 5,
-      spaceLeft: 4,
-      primary: '#34d399',
-      alternate: '#000000',
-    },
-  },
-  {
     id: 'countdown-clean',
     label: 'Countdown / Clean',
     viewId: 'countdown',
@@ -104,6 +84,25 @@ const GALLERY_ITEMS = [
       spaceLeft: 8,
       primary: '#ffffff',
       alternate: '#000000',
+    },
+  },
+  {
+    id: 'countdown-days',
+    label: 'Countdown / Days',
+    viewId: 'countdown',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...COUNTDOWN_DEFAULT_SETTINGS,
+      mode: 'days',
+      labels: true,
+      frame: false,
+      fontSize: 1.3,
+      spaceTop: 12,
+      spaceRight: 8,
+      spaceBottom: 8,
+      spaceLeft: 8,
+      primary: '#1d4ed8',
+      alternate: '#fff7ed',
     },
   },
   {
@@ -126,6 +125,63 @@ const GALLERY_ITEMS = [
     },
   },
   {
+    id: 'pie-circle-outline',
+    label: 'Pie / Circle Outline',
+    viewId: 'pie',
+    theme: THEMES.DARK,
+    viewState: {
+      ...PIE_DEFAULT_SETTINGS,
+      shape: 'circle',
+      style: 'outline',
+      fullScreen: true,
+      decimals: 1,
+      spaceTop: 3,
+      spaceRight: 3,
+      spaceBottom: 3,
+      spaceLeft: 3,
+      primary: '#22d3ee',
+      alternate: '#0f172a',
+    },
+  },
+  {
+    id: 'pie-circle-filled',
+    label: 'Pie / Circle Filled',
+    viewId: 'pie',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...PIE_DEFAULT_SETTINGS,
+      shape: 'circle',
+      style: 'filled',
+      fullScreen: false,
+      decimals: 2,
+      spaceTop: 8,
+      spaceRight: 8,
+      spaceBottom: 8,
+      spaceLeft: 8,
+      primary: '#b91c1c',
+      alternate: '#fffaf0',
+    },
+  },
+  {
+    id: 'pie-rect-outline',
+    label: 'Pie / Rectangle Outline',
+    viewId: 'pie',
+    theme: THEMES.DARK,
+    viewState: {
+      ...PIE_DEFAULT_SETTINGS,
+      shape: 'rectangle',
+      style: 'outline',
+      fullScreen: true,
+      decimals: 0,
+      spaceTop: 4,
+      spaceRight: 4,
+      spaceBottom: 4,
+      spaceLeft: 4,
+      primary: '#bef264',
+      alternate: '#000000',
+    },
+  },
+  {
     id: 'progress-line',
     label: 'Progress / Line',
     viewId: 'progress',
@@ -143,6 +199,25 @@ const GALLERY_ITEMS = [
       spaceLeft: 6,
       primary: '#000000',
       alternate: '#ffffff',
+    },
+  },
+  {
+    id: 'progress-field',
+    label: 'Progress / Field',
+    viewId: 'progress',
+    theme: THEMES.DARK,
+    viewState: {
+      ...PROGRESS_DEFAULT_SETTINGS,
+      mode: 'field',
+      fullScreen: true,
+      decimals: 1,
+      fontSize: 1,
+      spaceTop: 6,
+      spaceRight: 6,
+      spaceBottom: 6,
+      spaceLeft: 6,
+      primary: '#7c3aed',
+      alternate: '#f5f5dc',
     },
   },
   {
@@ -169,10 +244,30 @@ const GALLERY_ITEMS = [
       alternate: '#000000',
     },
   },
+  {
+    id: 'dots-triangles',
+    label: 'Dots / Triangles',
+    viewId: 'dots',
+    theme: THEMES.DARK,
+    viewState: {
+      ...DOTS_DEFAULT_SETTINGS,
+      shape: 'triangle',
+      triangleMode: 'alternating',
+      gapX: 0.6,
+      gapY: 0.5,
+      inactiveOpacity: 7,
+      spaceTop: 4,
+      spaceRight: 4,
+      spaceBottom: 5,
+      spaceLeft: 4,
+      primary: '#34d399',
+      alternate: '#000000',
+    },
+  },
 ];
 
-const getGalleryPreviewUrl = ({ viewId, viewState, theme }) => {
-  return getSharedViewUrl({
+const getGalleryPreviewUrl = ({ id, viewId, viewState, theme }) => {
+  const baseUrl = getSharedViewUrl({
     pathname: `/view/${viewId}`,
     origin: '',
     theme,
@@ -185,6 +280,24 @@ const getGalleryPreviewUrl = ({ viewId, viewState, theme }) => {
       textToneMode: VIEW_BRAND_TONE_MODES.AUTO,
     },
   });
+
+  const url = new URL(baseUrl, 'https://yearcountdown.github.io');
+  const params = url.searchParams;
+  params.set('embed', 'true');
+  params.set('theme', theme);
+  params.set('primary', viewState.primary);
+  params.set('alternate', viewState.alternate);
+  params.set('_gallery', id);
+
+  Object.entries(viewState).forEach(([key, value]) => {
+    if (value === undefined || value === null || typeof value === 'object') {
+      return;
+    }
+
+    params.set(key, String(value));
+  });
+
+  return `${url.pathname}?${params.toString()}`;
 };
 
 const CONTROL_COLUMNS = [

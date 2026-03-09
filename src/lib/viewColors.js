@@ -21,6 +21,12 @@ export const VIEW_COLOR_PRESETS = [
   { id: 'orange-white', label: 'Orange / White', primary: '#ea580c', alternate: '#ffffff' },
   { id: 'gold-black', label: 'Gold / Black', primary: '#d4a017', alternate: '#000000' },
   { id: 'mint-black', label: 'Mint / Black', primary: '#34d399', alternate: '#000000' },
+  { id: 'cobalt-cream', label: 'Cobalt / Cream', primary: '#1d4ed8', alternate: '#fff7ed' },
+  { id: 'crimson-ivory', label: 'Crimson / Ivory', primary: '#b91c1c', alternate: '#fffaf0' },
+  { id: 'cyan-ink', label: 'Cyan / Ink', primary: '#22d3ee', alternate: '#0f172a' },
+  { id: 'chartreuse-black', label: 'Chartreuse / Black', primary: '#bef264', alternate: '#000000' },
+  { id: 'violet-sand', label: 'Violet / Sand', primary: '#7c3aed', alternate: '#f5f5dc' },
+  { id: 'coral-navy', label: 'Coral / Navy', primary: '#fb7185', alternate: '#111827' },
 ];
 
 export const DEFAULT_VIEW_COLORS = {
