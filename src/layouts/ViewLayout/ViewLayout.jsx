@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import BrandLockup from '../../components/BrandLockup';
+import CopyEmbedAction from '../../components/CopyEmbedAction';
 import { useTheme } from '../../context/ThemeContext';
 import useViewShell from '../../hooks/useViewShell';
 import Header from '../GuestLayout/Header';
@@ -98,6 +99,11 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
             className="pointer-events-auto"
             textClassName="hidden"
           />
+        </div>
+      ) : null}
+      {!isEmbed ? (
+        <div className="fixed bottom-4 left-4 z-40 sm:bottom-6 sm:left-6">
+          <CopyEmbedAction sharedUrl={sharedUrl} variant="floating" />
         </div>
       ) : null}
       <ViewSettingsGear

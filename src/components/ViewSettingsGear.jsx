@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import CopyEmbedAction from './CopyEmbedAction';
 import { useTheme } from '../context/ThemeContext';
 import { VIEW_BRAND_TONE_MODES, VIEW_COLOR_PRESETS } from '../lib/viewColors';
 
@@ -22,44 +23,6 @@ const GearIcon = () => {
       <circle cx="19" cy="17" r="2" strokeWidth="1.7" />
     </svg>
   );
-};
-
-const CopyIcon = ({ copied }) => {
-  if (copied) {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current">
-        <path d="m5 12 4.2 4.2L19 6.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current">
-      <path
-        d="M9 9.75A1.75 1.75 0 0 1 10.75 8h7.5A1.75 1.75 0 0 1 20 9.75v8.5A1.75 1.75 0 0 1 18.25 20h-7.5A1.75 1.75 0 0 1 9 18.25Zm-5-4A1.75 1.75 0 0 1 5.75 4h7.5A1.75 1.75 0 0 1 15 5.75V6.5"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
-
-const copyText = async (value) => {
-  if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(value);
-    return;
-  }
-
-  const input = document.createElement('textarea');
-  input.value = value;
-  input.setAttribute('readonly', '');
-  input.style.position = 'absolute';
-  input.style.left = '-9999px';
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand('copy');
-  document.body.removeChild(input);
 };
 
 const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
@@ -310,10 +273,8 @@ const ViewSettingsGear = ({
 }) => {
   const { theme, setTheme, viewColors, setViewColors } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
   const [activeTab, setActiveTab] = useState(appearanceOnly ? 'appearance' : 'view');
   const containerRef = useRef(null);
-  const copiedTimeoutRef = useRef(null);
   const hasViewTab = !appearanceOnly;
   const resolvedColors = appearanceColors ?? viewColors;
   const handleThemeChange = onThemeChange ?? setTheme;
@@ -355,14 +316,6 @@ const ViewSettingsGear = ({
   }, [isOpen]);
 
   useEffect(() => {
-    return () => {
-      if (copiedTimeoutRef.current) {
-        window.clearTimeout(copiedTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     if (isHidden) {
       setIsOpen(false);
     }
@@ -377,23 +330,6 @@ const ViewSettingsGear = ({
   if (isHidden) {
     return null;
   }
-
-  const handleCopyLink = async () => {
-    try {
-      await copyText(sharedUrl);
-      setIsCopied(true);
-
-      if (copiedTimeoutRef.current) {
-        window.clearTimeout(copiedTimeoutRef.current);
-      }
-
-      copiedTimeoutRef.current = window.setTimeout(() => {
-        setIsCopied(false);
-      }, 1400);
-    } catch {
-      setIsCopied(false);
-    }
-  };
 
   return (
     <div ref={containerRef} className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
@@ -597,24 +533,17 @@ const ViewSettingsGear = ({
             ) : (
               <>
                 {renderControls({ controls, viewId, viewState, updateViewSetting })}
-
-                {sharedUrl ? (
-                  <div>
-                    <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
-                      Share
-                    </p>
-                    <button
-                      type="button"
-                      onClick={handleCopyLink}
-                      className="flex w-full cursor-pointer items-center justify-between rounded-2xl bg-black/6 px-4 py-3 text-left text-sm text-black transition-colors hover:bg-black/10 dark:bg-white/6 dark:text-white dark:hover:bg-white/10"
-                    >
-                      <span>{isCopied ? 'Copied embed link' : 'Copy embed link'}</span>
-                      <CopyIcon copied={isCopied} />
-                    </button>
-                  </div>
-                ) : null}
               </>
             )}
+
+            {sharedUrl ? (
+              <div>
+                <p className="mb-2 text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                  Share
+                </p>
+                <CopyEmbedAction sharedUrl={sharedUrl} />
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}
