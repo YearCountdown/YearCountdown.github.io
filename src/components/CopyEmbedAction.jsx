@@ -82,7 +82,7 @@ const CopyEmbedAction = ({
       <button
         type="button"
         onClick={handleCopyLink}
-        className={`group inline-flex cursor-pointer items-center justify-start gap-3 rounded-full bg-white/12 px-3 py-2 text-black/82 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/18 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:bg-black/18 dark:text-white/82 dark:hover:bg-black/26 dark:focus-visible:ring-white/40 ${className}`}
+        className={`group inline-flex cursor-pointer items-center justify-start gap-3 rounded-full border border-black/10 bg-white/42 px-3 py-2 text-black/86 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/58 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:border-white/10 dark:bg-black/40 dark:text-white/86 dark:hover:bg-black/52 dark:focus-visible:ring-white/40 ${className}`}
       >
         <span
           className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ${
@@ -92,7 +92,7 @@ const CopyEmbedAction = ({
           <CopyIcon copied={isCopied} className={`h-4 w-4 transition-transform duration-200 ${isCopied ? 'scale-110' : ''}`} />
         </span>
         <span
-          className={`overflow-hidden rounded-full bg-white/46 px-0 py-0 text-left text-xs uppercase tracking-[0.22em] text-black/76 backdrop-blur-xl transition-all duration-200 dark:bg-white/10 dark:text-white/76 ${
+          className={`overflow-hidden rounded-full border border-black/8 bg-white/68 px-0 py-0 text-left text-xs uppercase tracking-[0.22em] text-black/80 backdrop-blur-xl transition-all duration-200 dark:border-white/8 dark:bg-black/46 dark:text-white/80 ${
             isCopied ? 'max-w-[15rem] px-4 py-2' : 'max-w-0 group-hover:max-w-[15rem] group-hover:px-4 group-hover:py-2'
           }`}
         >

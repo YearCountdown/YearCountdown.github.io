@@ -553,7 +553,7 @@ const ViewSettingsGear = ({
         onClick={() => setIsOpen((current) => !current)}
         aria-label={isOpen ? 'Close settings panel' : 'Open settings panel'}
         aria-expanded={isOpen}
-        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40"
+        className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-black/10 bg-white/40 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 hover:bg-white/56 hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:border-white/10 dark:bg-black/36 dark:hover:bg-black/48 dark:focus-visible:ring-white/40"
         style={{ color: gearIconColor }}
       >
         <GearIcon />

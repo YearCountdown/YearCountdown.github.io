@@ -90,13 +90,13 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
         {children}
       </main>
       {isEmbed ? (
-        <div className="pointer-events-none fixed left-2 top-2 z-30 opacity-50 sm:left-3 sm:top-3">
+        <div className="pointer-events-none fixed left-2 top-2 z-30 sm:left-3 sm:top-3">
           <BrandLockup
             iconOnly
             compact
             colorMode="color"
             iconToneMode={resolvedBrandIconTone}
-            className="pointer-events-auto"
+            className="pointer-events-auto rounded-full border border-black/10 bg-white/36 p-2 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-black/34"
             textClassName="hidden"
           />
         </div>
