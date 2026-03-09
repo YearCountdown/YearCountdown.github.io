@@ -39,6 +39,7 @@ npm install
 ### Main Routes
 
 - `/`
+- `/samples`
 - `/view/countdown`
 - `/view/dots`
 - `/view/pie`

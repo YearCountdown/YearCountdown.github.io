@@ -9,11 +9,13 @@ const footerGroups = [
       { label: 'Dots', href: '/view/dots', external: false },
       { label: 'Pie', href: '/view/pie', external: false },
       { label: 'Progress', href: '/view/progress', external: false },
+      { label: 'All', href: '/view/all', external: false },
     ],
   },
   {
     title: 'Project',
     links: [
+      { label: 'Samples', href: '/samples', external: false },
       { label: 'GitHub Pages', href: 'https://yearcountdown.github.io', external: true },
       { label: 'Vercel', href: 'https://theyearcountdown.vercel.app/', external: true },
       { label: 'Source', href: 'https://github.com/YearCountdown/YearCountdown.github.io', external: true },

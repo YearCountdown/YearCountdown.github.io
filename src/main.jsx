@@ -12,6 +12,7 @@ import PiePage from './pages/views/PiePage';
 import ProgressPage from './pages/views/ProgressPage';
 import FeaturePage from './pages/FeaturePage';
 import Home from './pages/Home/Home.jsx';
+import SamplesPage from './pages/SamplesPage';
 import NotFound from './pages/errors/NotFound';
 
 import './index.css';
@@ -32,6 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/samples" element={<SamplesPage />} />
         <Route path="/view/countdown" element={<CountdownPage />} />
         <Route path="/view/dots" element={<DotsPage />} />
         <Route path="/view/pie" element={<PiePage />} />

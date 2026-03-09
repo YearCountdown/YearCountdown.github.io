@@ -101,9 +101,11 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, prima
   const remaining = palette.outlineTrack;
   const elapsed = palette.primary;
   const lineThickness = clamp(lineWidth, 2, Math.max(2, height * 0.4));
-  const labelGap = clamp(fontSize * 0.24, 4, 12);
-  const labelBand = clamp(fontSize * 1.05, 18, Math.max(18, height * 0.2));
-  const lineY = clamp(labelBand + labelGap, labelBand + labelGap, height - lineThickness);
+  const labelGap = clamp(fontSize * 0.18, 3, 10);
+  const labelBand = clamp(fontSize * 1.02, 16, Math.max(16, height * 0.18));
+  const blockHeight = labelBand + labelGap + lineThickness;
+  const blockTop = Math.max(0, (height - blockHeight) / 2);
+  const lineY = blockTop + labelBand + labelGap;
 
   return (
     <div className="relative h-full w-full">
@@ -126,8 +128,11 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, prima
         }}
       />
       <div
-        className="absolute inset-x-0 top-0 flex items-start justify-center"
-        style={{ height: `${labelBand}px` }}
+        className="absolute inset-x-0 flex items-start justify-center"
+        style={{
+          top: `${blockTop}px`,
+          height: `${labelBand}px`,
+        }}
       >
         <div
           className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-3 text-center"

@@ -27,6 +27,14 @@ Live deployments:
 - `/view/progress`
 - `/view/all`
 
+### Samples
+
+- `/samples`
+- Full-page samples browser with:
+  - searchable categorized sample list on the left
+  - live interactive preview on the right
+  - no global header or footer
+
 Each view is designed as a focused full-screen reading. Normal view routes keep the site header. `embed=true` hides shell chrome and uses the view as a standalone embed.
 
 Examples:
@@ -44,6 +52,8 @@ Examples:
   - Pie
   - Progress
   - All
+- Dedicated samples browser:
+  - `/samples`
 - Shareable embed links from every view
 - Direct PageShot wallpaper URLs from every view
 - Per-view settings persisted in cookies

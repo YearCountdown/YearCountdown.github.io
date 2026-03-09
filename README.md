@@ -24,6 +24,8 @@ Deploy targets:
   - `/view/pie`
   - `/view/progress`
   - `/view/all`
+- Samples browser:
+  - `/samples`
 - Per-view settings with shareable embed URLs
 - Direct PageShot wallpaper URLs for Shortcuts and lock-screen automation
 - Theme-aware homepage and embed-friendly views
