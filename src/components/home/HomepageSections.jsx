@@ -68,20 +68,20 @@ const USE_CASE_COLUMNS = [
 
 const WALLPAPER_STEPS = [
   {
-    title: 'Open Shortcuts',
-    body: 'Use the Shortcuts app on iPhone and create a personal automation that runs daily.',
+    title: 'Prepare A Direct URL',
+    body: 'Copy a stable YearCountdown embed link first. This gives you a clean full-screen route that can be opened the same way every day.',
   },
   {
-    title: 'Set A Daily Trigger',
-    body: 'Choose a time such as 12:01 AM so the wallpaper can be refreshed with the next state of the year.',
+    title: 'Build The Shortcut',
+    body: 'In Shortcuts, create a shortcut that uses URL, then Get Contents of URL, then Set Wallpaper. Paste your direct YearCountdown link into the URL step.',
   },
   {
-    title: 'Open A Saved View URL',
-    body: 'Use your configured YearCountdown route, ideally the copied embed link for a cleaner fullscreen display.',
+    title: 'Configure Wallpaper Output',
+    body: 'Choose whether the shortcut updates the Lock Screen, Home Screen, or both. Turn off Show Preview so it can run without stopping for confirmation.',
   },
   {
-    title: 'Capture Or Keep Live',
-    body: 'Take a screenshot for a lock screen wallpaper, or leave the page open on a dedicated device for a persistent year display.',
+    title: 'Automate It Daily',
+    body: 'In the Automation tab, create a Time of Day automation, set it to Daily, and use Run Shortcut to trigger your saved wallpaper shortcut automatically.',
   },
 ];
 
@@ -95,11 +95,11 @@ const WALLPAPER_NOTES = [
     ],
   },
   {
-    title: 'Why Embed Links Matter',
+    title: 'Practical Notes',
     items: [
-      'They remove header and settings chrome.',
-      'They preserve theme and view-specific settings.',
-      'They turn the route into a cleaner capture target for wallpapers.',
+      'Test the shortcut once manually before adding the automation.',
+      'Use embed links because they remove header and settings chrome.',
+      'The copied link preserves the active theme and view-specific settings.',
     ],
   },
 ];
@@ -141,7 +141,7 @@ const HomepageSections = () => {
         id="setup"
         eyebrow="Wallpaper And Setup"
         title="Use YearCountdown on an iPhone lock screen."
-        body="A configured view route can become a daily lock screen wallpaper or a live display. The cleanest path is to use an embed link and automate how that route is opened."
+        body="The clean path is to copy a stable embed URL, build one Shortcut that sets the wallpaper from that URL, then run it daily with a Time of Day automation."
         shapeVariant="signal"
       >
         <div className="grid gap-px bg-black/8 dark:bg-white/8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
