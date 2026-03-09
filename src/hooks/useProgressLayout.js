@@ -58,15 +58,19 @@ const useProgressLayout = ({
     const drawHeight = Math.max(0, height - topPx - bottomPx);
     const boxWidth = fullScreen ? drawWidth : drawWidth * (mode === 'field' ? 0.8 : 0.74);
     const boxHeight = fullScreen ? drawHeight : drawHeight * (mode === 'field' ? 0.68 : 0.5);
-    const boxLeft = leftPx + (drawWidth - boxWidth) / 2;
-    const boxTop = topPx + (drawHeight - boxHeight) / 2;
+    const boxOffsetLeft = (drawWidth - boxWidth) / 2;
+    const boxOffsetTop = (drawHeight - boxHeight) / 2;
     const textBase = Math.min(boxWidth, boxHeight);
 
     return {
       width,
       height,
-      boxLeft,
-      boxTop,
+      contentLeft: leftPx,
+      contentTop: topPx,
+      contentWidth: drawWidth,
+      contentHeight: drawHeight,
+      boxOffsetLeft,
+      boxOffsetTop,
       boxWidth,
       boxHeight,
       fullScreenFontSize: clamp(textBase * (mode === 'field' ? 0.13 : 0.11), 16, 64),

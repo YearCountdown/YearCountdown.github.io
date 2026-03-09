@@ -179,35 +179,45 @@ const ProgressView = ({
       <div
         className="absolute"
         style={{
-          left: `${layout.boxLeft}px`,
-          top: `${layout.boxTop}px`,
-          width: `${layout.boxWidth}px`,
-          height: `${layout.boxHeight}px`,
+          left: `${layout.contentLeft}px`,
+          top: `${layout.contentTop}px`,
+          width: `${layout.contentWidth}px`,
+          height: `${layout.contentHeight}px`,
         }}
       >
-        {mode === 'line' ? (
-          <LineMode
-            width={layout.boxWidth}
-            height={layout.boxHeight}
-            percentage={percentage}
-            label={fittedLabel.label}
-            fontSize={fittedLabel.fontSize}
-            lineWidth={lineWidth}
-            primaryColor={primaryColor}
-            alternateColor={alternateColor}
-            textToneColor={textToneColor}
-          />
-        ) : (
-          <FieldMode
-            width={layout.boxWidth}
-            height={layout.boxHeight}
-            percentage={percentage}
-            label={fittedLabel.label}
-            fontSize={fittedLabel.fontSize}
-            primaryColor={primaryColor}
-            alternateColor={alternateColor}
-          />
-        )}
+        <div
+          className="absolute"
+          style={{
+            left: `${layout.boxOffsetLeft}px`,
+            top: `${layout.boxOffsetTop}px`,
+            width: `${layout.boxWidth}px`,
+            height: `${layout.boxHeight}px`,
+          }}
+        >
+          {mode === 'line' ? (
+            <LineMode
+              width={layout.boxWidth}
+              height={layout.boxHeight}
+              percentage={percentage}
+              label={fittedLabel.label}
+              fontSize={fittedLabel.fontSize}
+              lineWidth={lineWidth}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
+              textToneColor={textToneColor}
+            />
+          ) : (
+            <FieldMode
+              width={layout.boxWidth}
+              height={layout.boxHeight}
+              percentage={percentage}
+              label={fittedLabel.label}
+              fontSize={fittedLabel.fontSize}
+              primaryColor={primaryColor}
+              alternateColor={alternateColor}
+            />
+          )}
+        </div>
       </div>
     </section>
   );

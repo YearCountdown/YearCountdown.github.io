@@ -91,12 +91,14 @@ const DotsView = ({
   return (
     <section
       ref={containerRef}
-      className="flex h-full w-full items-center justify-center"
+      className="relative h-full w-full overflow-hidden"
       style={{ backgroundColor: alternateColor }}
     >
       <div
-        className="grid"
+        className="absolute grid"
         style={{
+          left: `${grid.leftPx}px`,
+          top: `${grid.topPx}px`,
           width: `${grid.innerWidth}px`,
           height: `${grid.innerHeight}px`,
           gridTemplateColumns: `repeat(${grid.columns}, ${grid.dotSize}px)`,

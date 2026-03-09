@@ -283,15 +283,48 @@ const PieView = ({
       <div
         className="absolute"
         style={{
-          left: `${layout.boxLeft}px`,
-          top: `${layout.boxTop}px`,
-          width: `${layout.boxWidth}px`,
-          height: `${layout.boxHeight}px`,
+          left: `${layout.contentLeft}px`,
+          top: `${layout.contentTop}px`,
+          width: `${layout.contentWidth}px`,
+          height: `${layout.contentHeight}px`,
         }}
       >
-        {isRectangle ? (
-          isFilled ? (
-            <RectFilled
+        <div
+          className="absolute"
+          style={{
+            left: `${layout.boxOffsetLeft}px`,
+            top: `${layout.boxOffsetTop}px`,
+            width: `${layout.boxWidth}px`,
+            height: `${layout.boxHeight}px`,
+          }}
+        >
+          {isRectangle ? (
+            isFilled ? (
+              <RectFilled
+                width={layout.boxWidth}
+                height={layout.boxHeight}
+                percentage={percentage}
+                label={percentageLabel}
+                ids={ids}
+                showCenterLabel={showCenterLabel}
+                fontSize={layout.fullScreenFontSize}
+                primaryColor={primaryColor}
+                alternateColor={alternateColor}
+              />
+            ) : (
+              <RectOutline
+                width={layout.boxWidth}
+                height={layout.boxHeight}
+                percentage={percentage}
+                label={percentageLabel}
+                showCenterLabel={showCenterLabel}
+                fontSize={layout.fullScreenFontSize}
+                primaryColor={primaryColor}
+                alternateColor={alternateColor}
+              />
+            )
+          ) : isFilled ? (
+            <CircleFilled
               width={layout.boxWidth}
               height={layout.boxHeight}
               percentage={percentage}
@@ -303,7 +336,7 @@ const PieView = ({
               alternateColor={alternateColor}
             />
           ) : (
-            <RectOutline
+            <CircleOutline
               width={layout.boxWidth}
               height={layout.boxHeight}
               percentage={percentage}
@@ -313,40 +346,17 @@ const PieView = ({
               primaryColor={primaryColor}
               alternateColor={alternateColor}
             />
-          )
-        ) : isFilled ? (
-          <CircleFilled
-            width={layout.boxWidth}
-            height={layout.boxHeight}
-            percentage={percentage}
-            label={percentageLabel}
-            ids={ids}
-            showCenterLabel={showCenterLabel}
-            fontSize={layout.fullScreenFontSize}
-            primaryColor={primaryColor}
-            alternateColor={alternateColor}
-          />
-        ) : (
-          <CircleOutline
-            width={layout.boxWidth}
-            height={layout.boxHeight}
-            percentage={percentage}
-            label={percentageLabel}
-            showCenterLabel={showCenterLabel}
-            fontSize={layout.fullScreenFontSize}
-            primaryColor={primaryColor}
-            alternateColor={alternateColor}
-          />
-        )}
+          )}
+        </div>
       </div>
 
       {layout.showBelowLabel ? (
         <div
           className="absolute text-center"
           style={{
-            left: 0,
-            right: 0,
-            top: `${layout.labelY}px`,
+            left: `${layout.contentLeft}px`,
+            width: `${layout.contentWidth}px`,
+            top: `${layout.contentTop + layout.labelOffsetY}px`,
             minHeight: `${layout.labelHeight}px`,
             fontSize: `${layout.belowFontSize}px`,
             fontWeight: 300,
