@@ -1,63 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import useCountdown from '../../hooks/useCountdown';
-import useDotsGrid from '../../hooks/useDotsGrid';
 import useYearProgress from '../../hooks/useYearProgress';
 import { getToneColor, getViewSurfacePalette, withAlpha } from '../../lib/viewColors';
+import DotsView from './DotsView';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-const getTriangleRotation = ({ triangleMode, triangleAngle, row, column }) => {
-  if (triangleMode === 'angle') {
-    return triangleAngle;
-  }
-
-  if (triangleMode === 'inverted') {
-    return 180;
-  }
-
-  if (triangleMode === 'alternating') {
-    return (row + column) % 2 === 0 ? 0 : 180;
-  }
-
-  return 0;
-};
-
-const getDotStyle = ({ status, shape, size, rotation, primaryColor, inactiveOpacity }) => {
-  if (status === 'filler') {
-    return {
-      visibility: 'hidden',
-      width: `${size}px`,
-      height: `${size}px`,
-    };
-  }
-
-  const baseStyle = {
-    width: `${size}px`,
-    height: `${size}px`,
-    backgroundColor: status === 'future' ? withAlpha(primaryColor, inactiveOpacity / 100) : primaryColor,
-    transform: `rotate(${rotation}deg)`,
-  };
-
-  if (shape === 'circle') {
-    return {
-      ...baseStyle,
-      borderRadius: '9999px',
-    };
-  }
-
-  if (shape === 'square') {
-    return {
-      ...baseStyle,
-      borderRadius: '12%',
-    };
-  }
-
-  return {
-    ...baseStyle,
-    clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-  };
-};
 
 const getCardSurface = (primaryColor, textToneColor) => ({
   backgroundColor: withAlpha(primaryColor, 0.06),
@@ -250,16 +198,6 @@ const AllView = ({
   const totalDots = dotsMode === 'custom' ? dotsCount : undefined;
   const completedDots =
     dotsMode === 'custom' ? Math.round((progress.percentage / 100) * Math.max(1, dotsCount)) : undefined;
-  const { containerRef: dotsRef, dots, grid } = useDotsGrid({
-    gapXPercent: gapX,
-    gapYPercent: gapY,
-    spaceTopPercent: 0,
-    spaceRightPercent: 0,
-    spaceBottomPercent: 0,
-    spaceLeftPercent: 0,
-    totalDots,
-    completedCount: completedDots,
-  });
   const textToneColor = getToneColor(textTone);
 
   useEffect(() => {
@@ -449,7 +387,6 @@ const AllView = ({
 
       {layout.dotsHeight > 0 ? (
         <div
-          ref={dotsRef}
           className="absolute overflow-hidden"
           style={{
             left: `${layout.contentLeft}px`,
@@ -458,49 +395,22 @@ const AllView = ({
             height: `${layout.dotsHeight}px`,
           }}
         >
-          <div
-            className="absolute grid"
-            style={{
-              left: `${grid.leftPx}px`,
-              top: `${grid.topPx}px`,
-              width: `${grid.innerWidth}px`,
-              height: `${grid.innerHeight}px`,
-              gridTemplateColumns: `repeat(${grid.columns}, ${grid.dotSize}px)`,
-              gridAutoRows: `${grid.dotSize}px`,
-              columnGap: `${grid.gapXPx}px`,
-              rowGap: `${grid.gapYPx}px`,
-              justifyContent: 'space-between',
-              alignContent: 'space-between',
-            }}
-          >
-            {dots.map((dot, index) => {
-              const column = index % grid.columns;
-              const row = Math.floor(index / grid.columns);
-
-              return (
-                <div
-                  key={dot.key}
-                  aria-hidden="true"
-                  style={getDotStyle({
-                    status: dot.status,
-                    shape,
-                    size: grid.dotSize,
-                    rotation:
-                      shape === 'triangle'
-                        ? getTriangleRotation({
-                            triangleMode,
-                            triangleAngle,
-                            row,
-                            column,
-                          })
-                        : 0,
-                    primaryColor,
-                    inactiveOpacity,
-                  })}
-                />
-              );
-            })}
-          </div>
+          <DotsView
+            shape={shape}
+            triangleMode={triangleMode}
+            triangleAngle={triangleAngle}
+            gapX={gapX}
+            gapY={gapY}
+            spaceTop={0}
+            spaceRight={0}
+            spaceBottom={0}
+            spaceLeft={0}
+            inactiveOpacity={inactiveOpacity}
+            primaryColor={primaryColor}
+            alternateColor={alternateColor}
+            totalDots={totalDots}
+            completedCount={completedDots}
+          />
         </div>
       ) : null}
     </section>

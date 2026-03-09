@@ -78,6 +78,8 @@ const DotsView = ({
   inactiveOpacity = 5,
   primaryColor,
   alternateColor,
+  totalDots,
+  completedCount,
 }) => {
   const { containerRef, dots, grid } = useDotsGrid({
     gapXPercent: gapX,
@@ -86,6 +88,8 @@ const DotsView = ({
     spaceRightPercent: spaceRight,
     spaceBottomPercent: spaceBottom,
     spaceLeftPercent: spaceLeft,
+    totalDots,
+    completedCount,
   });
 
   return (
