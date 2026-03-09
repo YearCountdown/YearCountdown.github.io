@@ -310,7 +310,7 @@ const SamplesPage = () => {
     setBrandToneMode(VIEW_BRAND_TONE_MODES.AUTO);
     setTextToneMode(VIEW_BRAND_TONE_MODES.AUTO);
     setIsSidebarOpen(false);
-  }, [selectedSample, setTheme]);
+  }, [selectedSample.id]);
 
   useEffect(() => {
     if (requestedSampleId && getSampleById(requestedSampleId)) {
