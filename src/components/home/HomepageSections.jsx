@@ -68,20 +68,20 @@ const USE_CASE_COLUMNS = [
 
 const WALLPAPER_STEPS = [
   {
-    title: 'Prepare A Direct URL',
-    body: 'Copy a stable YearCountdown embed link first. This gives you a clean full-screen route that can be opened the same way every day.',
+    title: 'Prepare A Direct Image URL',
+    body: 'Create or host one stable YearCountdown wallpaper image first. The Shortcut should point to a direct image URL, not a web page route.',
   },
   {
-    title: 'Build The Shortcut',
-    body: 'In Shortcuts, create a shortcut that uses URL, then Get Contents of URL, then Set Wallpaper. Paste your direct YearCountdown link into the URL step.',
+    title: 'Build A Daily Wallpaper Shortcut',
+    body: 'In Shortcuts, create a new shortcut and add these actions in order: URL, Get Contents of URL, then Set Wallpaper. Paste the direct image URL into the URL action.',
   },
   {
-    title: 'Configure Wallpaper Output',
-    body: 'Choose whether the shortcut updates the Lock Screen, Home Screen, or both. Turn off Show Preview so it can run without stopping for confirmation.',
+    title: 'Configure And Test It',
+    body: 'In Set Wallpaper, choose Lock Screen, Home Screen, or both. Open Show More and turn off Show Preview, then run the shortcut once to confirm the wallpaper updates correctly.',
   },
   {
     title: 'Automate It Daily',
-    body: 'In the Automation tab, create a Time of Day automation, set it to Daily, and use Run Shortcut to trigger your saved wallpaper shortcut automatically.',
+    body: 'Open Automation, create a personal Time of Day automation, set it to Daily, add Run Shortcut, choose your wallpaper shortcut, then turn off Ask Before Running.',
   },
 ];
 
@@ -97,9 +97,9 @@ const WALLPAPER_NOTES = [
   {
     title: 'Practical Notes',
     items: [
-      'Test the shortcut once manually before adding the automation.',
-      'Use embed links because they remove header and settings chrome.',
-      'The copied link preserves the active theme and view-specific settings.',
+      'Apple Shortcuts can run Time of Day automations automatically without asking.',
+      'Use embed links as clean capture sources when creating the wallpaper image itself.',
+      'The copied embed link preserves the active theme and view-specific settings before capture.',
     ],
   },
 ];
@@ -141,7 +141,7 @@ const HomepageSections = () => {
         id="setup"
         eyebrow="Wallpaper And Setup"
         title="Use YearCountdown on an iPhone lock screen."
-        body="The clean path is to copy a stable embed URL, build one Shortcut that sets the wallpaper from that URL, then run it daily with a Time of Day automation."
+        body="For automatic wallpaper updates, first produce one stable YearCountdown image, then use Shortcuts to fetch that image URL and set it as wallpaper on a daily schedule."
         shapeVariant="signal"
       >
         <div className="grid gap-px bg-black/8 dark:bg-white/8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
