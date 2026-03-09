@@ -68,12 +68,12 @@ const USE_CASE_COLUMNS = [
 
 const WALLPAPER_STEPS = [
   {
-    title: 'Prepare A Direct Image URL',
-    body: 'Create or host one stable YearCountdown wallpaper image first. The Shortcut should point to a direct image URL, not a web page route.',
+    title: 'Choose Your View',
+    body: 'Open the YearCountdown view you want, adjust its settings, then use the gear panel to copy the wallpaper URL for that exact configuration.',
   },
   {
     title: 'Build A Daily Wallpaper Shortcut',
-    body: 'In Shortcuts, create a new shortcut and add these actions in order: URL, Get Contents of URL, then Set Wallpaper. Paste the direct image URL into the URL action.',
+    body: 'In Shortcuts, create a new shortcut and add these actions in order: URL, Get Contents of URL, then Set Wallpaper. Paste the copied wallpaper URL into the URL action.',
   },
   {
     title: 'Configure And Test It',
@@ -98,8 +98,8 @@ const WALLPAPER_NOTES = [
     title: 'Practical Notes',
     items: [
       'Apple Shortcuts can run Time of Day automations automatically without asking.',
-      'Use embed links as clean capture sources when creating the wallpaper image itself.',
-      'The copied embed link preserves the active theme and view-specific settings before capture.',
+      'The wallpaper URL is a direct PNG endpoint, not an HTML page route.',
+      'The copied wallpaper URL preserves the active theme, colors, and view-specific settings.',
     ],
   },
 ];
@@ -141,7 +141,7 @@ const HomepageSections = () => {
         id="setup"
         eyebrow="Wallpaper And Setup"
         title="Use YearCountdown on an iPhone lock screen."
-        body="For automatic wallpaper updates, first produce one stable YearCountdown image, then use Shortcuts to fetch that image URL and set it as wallpaper on a daily schedule."
+        body="The wallpaper URL copies a direct PNG image for the active view. Use that URL in Shortcuts so iPhone can fetch the image and set it as wallpaper on a daily schedule."
         shapeVariant="signal"
       >
         <div className="grid gap-px bg-black/8 dark:bg-white/8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">

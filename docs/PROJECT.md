@@ -42,6 +42,7 @@ Examples:
   - Pie
   - Progress
 - Shareable embed links from every view
+- Direct wallpaper PNG URLs from every view
 - Per-view settings persisted in cookies
 - Homepage theme controls
 - View-specific appearance and display controls
@@ -92,6 +93,21 @@ Examples:
 - `embed=true` hides header and settings gear
 - Embed links preserve current view settings
 - The embed icon remains visible with a small glass badge for contrast
+
+## Wallpaper URLs
+
+- Every view gear can copy a direct wallpaper PNG URL
+- Wallpaper URLs point to the Vercel deployment, not GitHub Pages
+- Wallpaper URLs preserve:
+  - active view settings
+  - theme
+  - primary and secondary colors
+  - text tone
+  - requested image width and height
+- Intended use:
+  - iPhone Shortcuts
+  - direct image fetching
+  - daily wallpaper automation
 
 ## License
 

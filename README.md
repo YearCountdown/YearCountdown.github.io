@@ -24,6 +24,7 @@ Deploy targets:
   - `/view/pie`
   - `/view/progress`
 - Per-view settings with shareable embed URLs
+- Direct wallpaper PNG URLs for Shortcuts and lock-screen automation
 - Theme-aware homepage and embed-friendly views
 - GitHub Pages and Vercel deployment support
 

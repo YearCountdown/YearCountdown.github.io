@@ -3,6 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import CopyEmbedAction from './CopyEmbedAction';
 import { useTheme } from '../context/ThemeContext';
 import { VIEW_BRAND_TONE_MODES, VIEW_COLOR_PRESETS, withAlpha } from '../lib/viewColors';
+import {
+  WALLPAPER_DIMENSION_MAX,
+  WALLPAPER_DIMENSION_MIN,
+  clampWallpaperDimension,
+  getViewportWallpaperSize,
+} from '../lib/wallpaper';
 
 const GearIcon = () => {
   return (
@@ -251,6 +257,28 @@ const ColorInput = ({ label, value, onChange }) => {
   );
 };
 
+const WallpaperDimensionInput = ({ label, value, onChange }) => {
+  return (
+    <div className="min-w-0 flex-1">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {label}
+        </p>
+        <span className="shrink-0 text-xs text-black/45 dark:text-white/45">px</span>
+      </div>
+      <input
+        type="number"
+        min={WALLPAPER_DIMENSION_MIN}
+        max={WALLPAPER_DIMENSION_MAX}
+        step={1}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
+      />
+    </div>
+  );
+};
+
 const ViewSettingsGear = ({
   viewId,
   viewTitle,
@@ -259,6 +287,8 @@ const ViewSettingsGear = ({
   controls = [],
   viewState,
   updateViewSetting,
+  wallpaperUrl = '',
+  buildWallpaperUrl,
   appearanceOnly = false,
   themeOnly = false,
   appearanceColors,
@@ -274,6 +304,14 @@ const ViewSettingsGear = ({
   const { theme, setTheme, viewColors, setViewColors } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(appearanceOnly ? 'appearance' : 'view');
+  const [wallpaperSize, setWallpaperSize] = useState(() => {
+    const viewport = getViewportWallpaperSize();
+
+    return {
+      width: String(viewport.width),
+      height: String(viewport.height),
+    };
+  });
   const containerRef = useRef(null);
   const hasViewTab = !appearanceOnly;
   const resolvedColors = appearanceColors ?? viewColors;
@@ -334,9 +372,36 @@ const ViewSettingsGear = ({
     }
   }, [hasViewTab]);
 
+  useEffect(() => {
+    const viewport = getViewportWallpaperSize();
+
+    setWallpaperSize({
+      width: String(viewport.width),
+      height: String(viewport.height),
+    });
+  }, [viewId]);
+
   if (isHidden) {
     return null;
   }
+
+  const resolvedWallpaperWidth = clampWallpaperDimension(wallpaperSize.width, getViewportWallpaperSize().width);
+  const resolvedWallpaperHeight = clampWallpaperDimension(wallpaperSize.height, getViewportWallpaperSize().height);
+  const resolvedWallpaperUrl = buildWallpaperUrl
+    ? buildWallpaperUrl({
+        width: resolvedWallpaperWidth,
+        height: resolvedWallpaperHeight,
+      })
+    : wallpaperUrl;
+
+  const resetWallpaperSizeToViewport = () => {
+    const viewport = getViewportWallpaperSize();
+
+    setWallpaperSize({
+      width: String(viewport.width),
+      height: String(viewport.height),
+    });
+  };
 
   return (
     <div ref={containerRef} className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
@@ -549,6 +614,55 @@ const ViewSettingsGear = ({
                   Share
                 </p>
                 <CopyEmbedAction sharedUrl={sharedUrl} />
+              </div>
+            ) : null}
+
+            {resolvedWallpaperUrl ? (
+              <div>
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+                    Wallpaper URL
+                  </p>
+                  <button
+                    type="button"
+                    onClick={resetWallpaperSizeToViewport}
+                    className="cursor-pointer text-[0.65rem] uppercase tracking-[0.2em] text-black/45 transition-colors hover:text-black dark:text-white/45 dark:hover:text-white"
+                  >
+                    Use viewport
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <WallpaperDimensionInput
+                    label="Width"
+                    value={wallpaperSize.width}
+                    onChange={(value) =>
+                      setWallpaperSize((current) => ({
+                        ...current,
+                        width: value,
+                      }))
+                    }
+                  />
+                  <WallpaperDimensionInput
+                    label="Height"
+                    value={wallpaperSize.height}
+                    onChange={(value) =>
+                      setWallpaperSize((current) => ({
+                        ...current,
+                        height: value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="mt-3 text-xs leading-5 text-black/45 dark:text-white/45">
+                  {resolvedWallpaperWidth} x {resolvedWallpaperHeight}px
+                </div>
+                <div className="mt-3">
+                  <CopyEmbedAction
+                    sharedUrl={resolvedWallpaperUrl}
+                    label="Copy wallpaper URL"
+                    copiedLabel="Copied wallpaper URL"
+                  />
+                </div>
               </div>
             ) : null}
           </div>

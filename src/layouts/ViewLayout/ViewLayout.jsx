@@ -35,6 +35,8 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
     updateAppearanceTextToneMode,
     updateViewSetting,
     sharedUrl,
+    wallpaperUrl,
+    buildWallpaperUrl,
   } = useViewShell(theme);
 
   useEffect(() => {
@@ -136,6 +138,8 @@ const ViewLayout = ({ children, mainClassName = '', fullBleed = false }) => {
         controls={viewConfig?.controls ?? []}
         viewState={viewState}
         updateViewSetting={updateViewSetting}
+        wallpaperUrl={wallpaperUrl}
+        buildWallpaperUrl={buildWallpaperUrl}
         appearanceColors={
           viewState?.[viewId]
             ? {

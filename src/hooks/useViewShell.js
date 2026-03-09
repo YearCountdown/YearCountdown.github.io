@@ -10,6 +10,7 @@ import {
   resolveViewTextTone,
   resolveViewColors,
 } from '../lib/viewColors';
+import { getViewportWallpaperSize, getWallpaperUrl } from '../lib/wallpaper';
 import {
   COUNTDOWN_DEFAULT_SETTINGS,
   DOTS_DEFAULT_SETTINGS,
@@ -92,6 +93,7 @@ const useViewShell = (themeOverride) => {
       mode: appearanceTextToneMode,
       backgroundColor: activeViewState?.alternate ?? themeDefaults.alternate,
     });
+    const viewportWallpaperSize = getViewportWallpaperSize();
 
     const updateSearchParams = (entries) => {
       const nextParams = new URLSearchParams(location.search);
@@ -248,6 +250,25 @@ const useViewShell = (themeOverride) => {
           textToneMode: appearanceTextToneMode,
         },
       }),
+      wallpaperUrl: getWallpaperUrl({
+        viewId: activeViewId,
+        theme,
+        viewState: activeViewState,
+        colors: activeViewState,
+        textToneMode: appearanceTextToneMode,
+        width: viewportWallpaperSize.width,
+        height: viewportWallpaperSize.height,
+      }),
+      buildWallpaperUrl: ({ width, height }) =>
+        getWallpaperUrl({
+          viewId: activeViewId,
+          theme,
+          viewState: activeViewState,
+          colors: activeViewState,
+          textToneMode: appearanceTextToneMode,
+          width,
+          height,
+        }),
     };
   }, [
     contextTheme,

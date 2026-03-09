@@ -58,6 +58,7 @@ npm install
   - cookies for persistence between visits
 - appearance controls are managed from the view gear
 - copied embed links preserve the active view configuration
+- copied wallpaper URLs preserve the active view configuration plus requested image size
 
 ## Deployment
 
@@ -66,7 +67,7 @@ npm install
 - deployment happens from pushes to `main`
 - workflow file: [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
 - the workflow runs:
-  - `npm ci`
+  - `npm install`
   - `npm run build`
   - deploys `dist/`
 - SPA deep-link reloads are handled by:
@@ -79,7 +80,8 @@ npm install
 - Vercel uses:
   - `npm run build`
   - output directory `dist`
-  - rewrite of all routes to `index.html`
+  - SPA rewrites to `index.html` for app routes
+  - `api/wallpaper/*.png` functions for direct wallpaper image generation
 
 ## Project Structure
 
