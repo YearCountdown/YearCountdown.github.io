@@ -50,6 +50,7 @@ const CopyEmbedAction = ({
   toneColor = '#111111',
 }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const copiedTimeoutRef = useRef(null);
 
   useEffect(() => {
@@ -82,10 +83,16 @@ const CopyEmbedAction = ({
   };
 
   if (variant === 'floating') {
+    const isExpanded = isCopied || isHovered;
+
     return (
       <button
         type="button"
         onClick={handleCopyLink}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsHovered(true)}
+        onBlur={() => setIsHovered(false)}
         className={`group inline-flex cursor-pointer items-center justify-start gap-3 rounded-full px-3 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 dark:focus-visible:ring-white/40 ${className}`}
         style={{
           backgroundColor: withAlpha(backgroundColor, 0.62),
@@ -101,16 +108,17 @@ const CopyEmbedAction = ({
           <CopyIcon copied={isCopied} className={`h-4 w-4 transition-transform duration-200 ${isCopied ? 'scale-110' : ''}`} />
         </span>
         <span
-          className={`overflow-hidden rounded-full px-0 py-0 text-left text-xs uppercase tracking-[0.22em] backdrop-blur-xl transition-all duration-200 ${
-            isCopied ? 'max-w-[15rem] px-4 py-2' : 'max-w-0 group-hover:max-w-[15rem] group-hover:px-4 group-hover:py-2'
+          className={`overflow-hidden rounded-full text-left text-xs uppercase tracking-[0.22em] transition-all duration-200 ${
+            isExpanded ? 'max-w-[15rem] px-4 py-2 opacity-100 backdrop-blur-xl' : 'max-w-0 px-0 py-0 opacity-0 backdrop-blur-none'
           }`}
           style={{
-            backgroundColor: withAlpha(backgroundColor, 0.78),
-            border: `1px solid ${isCopied ? withAlpha(toneColor, 0.1) : 'transparent'}`,
+            backgroundColor: isExpanded ? withAlpha(backgroundColor, 0.78) : 'transparent',
+            border: isExpanded ? `1px solid ${withAlpha(toneColor, 0.1)}` : '0 solid transparent',
             color: withAlpha(toneColor, 0.8),
           }}
+          aria-hidden={!isExpanded}
         >
-          <span className={`block whitespace-nowrap transition-transform duration-200 ${isCopied ? 'translate-x-0' : 'translate-x-1 group-hover:translate-x-0'}`}>
+          <span className={`block whitespace-nowrap transition-transform duration-200 ${isExpanded ? 'translate-x-0' : 'translate-x-1'}`}>
             {isCopied ? copiedLabel : label}
           </span>
         </span>
