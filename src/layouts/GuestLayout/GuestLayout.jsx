@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import ViewSettingsGear from '../../components/ViewSettingsGear';
 import { useTheme } from '../../context/ThemeContext';
@@ -9,6 +10,11 @@ const GuestLayout = ({ children }) => {
   const { pathname } = useLocation();
   const { setTheme } = useTheme();
   const isHomePage = pathname === '/';
+
+  useEffect(() => {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }, []);
 
   return (
     <div className="relative min-h-screen bg-stone-100 text-black dark:bg-zinc-950 dark:text-white">
