@@ -22,7 +22,13 @@ const AllPage = () => {
         daysFontSize={viewState.all.daysFontSize}
         daysLabel={viewState.all.daysLabel}
         decimals={viewState.all.decimals}
+        summaryLayout={viewState.all.summaryLayout}
+        summaryHeight={viewState.all.summaryHeight}
+        summaryGap={viewState.all.summaryGap}
         percentBoxSize={viewState.all.percentBoxSize}
+        percentFontSize={viewState.all.percentFontSize}
+        percentGap={viewState.all.percentGap}
+        progressBarHeight={viewState.all.progressBarHeight}
         perimeterThickness={viewState.all.perimeterThickness}
         spaceTop={viewState.all.spaceTop}
         spaceRight={viewState.all.spaceRight}

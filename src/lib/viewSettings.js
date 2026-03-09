@@ -365,6 +365,34 @@ export const VIEW_SETTINGS_CONFIG = {
         showWhen: (state) => state.showPercentBox,
       },
       {
+        key: 'summaryLayout',
+        type: 'select',
+        label: 'Summary Layout',
+        options: [
+          { label: 'Auto', value: 'auto' },
+          { label: 'Row', value: 'row' },
+          { label: 'Stack', value: 'stack' },
+        ],
+      },
+      {
+        key: 'summaryHeight',
+        type: 'range',
+        label: 'Summary Height',
+        min: 0.6,
+        max: 1.6,
+        step: 0.1,
+        suffix: 'x',
+      },
+      {
+        key: 'summaryGap',
+        type: 'range',
+        label: 'Summary Gap',
+        min: 0,
+        max: 24,
+        step: 1,
+        suffix: 'px',
+      },
+      {
         key: 'percentBoxSize',
         type: 'select',
         label: 'Box Size',
@@ -374,6 +402,36 @@ export const VIEW_SETTINGS_CONFIG = {
           { label: 'Medium', value: 'medium' },
           { label: 'Large', value: 'large' },
         ],
+      },
+      {
+        key: 'percentFontSize',
+        type: 'range',
+        label: 'Percent Font',
+        min: 0.6,
+        max: 2,
+        step: 0.1,
+        suffix: 'x',
+        showWhen: (state) => state.showPercentBox,
+      },
+      {
+        key: 'percentGap',
+        type: 'range',
+        label: 'Percent Gap',
+        min: 0,
+        max: 24,
+        step: 1,
+        suffix: 'px',
+        showWhen: (state) => state.showPercentBox,
+      },
+      {
+        key: 'progressBarHeight',
+        type: 'range',
+        label: 'Bar Height',
+        min: 4,
+        max: 24,
+        step: 1,
+        suffix: 'px',
+        showWhen: (state) => state.showPercentBox,
       },
       {
         key: 'perimeterThickness',
@@ -589,8 +647,26 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.decimals !== ALL_DEFAULT_SETTINGS.decimals) {
       params.set('decimals', String(viewState.decimals));
     }
+    if (viewState.summaryLayout !== ALL_DEFAULT_SETTINGS.summaryLayout) {
+      params.set('summaryLayout', viewState.summaryLayout);
+    }
+    if (viewState.summaryHeight !== ALL_DEFAULT_SETTINGS.summaryHeight) {
+      params.set('summaryHeight', String(viewState.summaryHeight));
+    }
+    if (viewState.summaryGap !== ALL_DEFAULT_SETTINGS.summaryGap) {
+      params.set('summaryGap', String(viewState.summaryGap));
+    }
     if (viewState.percentBoxSize !== ALL_DEFAULT_SETTINGS.percentBoxSize) {
       params.set('percentBoxSize', viewState.percentBoxSize);
+    }
+    if (viewState.percentFontSize !== ALL_DEFAULT_SETTINGS.percentFontSize) {
+      params.set('percentFontSize', String(viewState.percentFontSize));
+    }
+    if (viewState.percentGap !== ALL_DEFAULT_SETTINGS.percentGap) {
+      params.set('percentGap', String(viewState.percentGap));
+    }
+    if (viewState.progressBarHeight !== ALL_DEFAULT_SETTINGS.progressBarHeight) {
+      params.set('progressBarHeight', String(viewState.progressBarHeight));
     }
     if (viewState.perimeterThickness !== ALL_DEFAULT_SETTINGS.perimeterThickness) {
       params.set('perimeterThickness', String(viewState.perimeterThickness));
@@ -685,7 +761,13 @@ export const ALL_DEFAULT_SETTINGS = {
   daysFontSize: 1,
   daysLabel: true,
   decimals: 2,
+  summaryLayout: 'auto',
+  summaryHeight: 1,
+  summaryGap: 0,
   percentBoxSize: 'medium',
+  percentFontSize: 1,
+  percentGap: 0,
+  progressBarHeight: 12,
   perimeterThickness: 6,
   spaceTop: 0,
   spaceRight: 0,
@@ -940,8 +1022,20 @@ export const normalizeAllSettingValue = (key, value) => {
       return clampNumber(value, 0.4, 2.5, ALL_DEFAULT_SETTINGS.daysFontSize);
     case 'decimals':
       return clampNumber(value, 0, 10, ALL_DEFAULT_SETTINGS.decimals);
+    case 'summaryLayout':
+      return ['auto', 'row', 'stack'].includes(value) ? value : ALL_DEFAULT_SETTINGS.summaryLayout;
+    case 'summaryHeight':
+      return clampNumber(value, 0.6, 1.6, ALL_DEFAULT_SETTINGS.summaryHeight);
+    case 'summaryGap':
+      return clampNumber(value, 0, 24, ALL_DEFAULT_SETTINGS.summaryGap);
     case 'percentBoxSize':
       return ['small', 'medium', 'large'].includes(value) ? value : ALL_DEFAULT_SETTINGS.percentBoxSize;
+    case 'percentFontSize':
+      return clampNumber(value, 0.6, 2, ALL_DEFAULT_SETTINGS.percentFontSize);
+    case 'percentGap':
+      return clampNumber(value, 0, 24, ALL_DEFAULT_SETTINGS.percentGap);
+    case 'progressBarHeight':
+      return clampNumber(value, 4, 24, ALL_DEFAULT_SETTINGS.progressBarHeight);
     case 'perimeterThickness':
       return clampNumber(value, 2, 24, ALL_DEFAULT_SETTINGS.perimeterThickness);
     case 'spaceTop':
@@ -1184,9 +1278,42 @@ export const getAllSettingsFromSearchParams = (searchParams, theme, persistedSet
       10,
       ALL_DEFAULT_SETTINGS.decimals,
     ),
+    summaryLayout: ['auto', 'row', 'stack'].includes(searchParams.get('summaryLayout') ?? persistedSettings.summaryLayout)
+      ? searchParams.get('summaryLayout') ?? persistedSettings.summaryLayout
+      : ALL_DEFAULT_SETTINGS.summaryLayout,
+    summaryHeight: clampNumber(
+      searchParams.get('summaryHeight') ?? persistedSettings.summaryHeight,
+      0.6,
+      1.6,
+      ALL_DEFAULT_SETTINGS.summaryHeight,
+    ),
+    summaryGap: clampNumber(
+      searchParams.get('summaryGap') ?? persistedSettings.summaryGap,
+      0,
+      24,
+      ALL_DEFAULT_SETTINGS.summaryGap,
+    ),
     percentBoxSize: ['small', 'medium', 'large'].includes(searchParams.get('percentBoxSize') ?? persistedSettings.percentBoxSize)
       ? searchParams.get('percentBoxSize') ?? persistedSettings.percentBoxSize
       : ALL_DEFAULT_SETTINGS.percentBoxSize,
+    percentFontSize: clampNumber(
+      searchParams.get('percentFontSize') ?? persistedSettings.percentFontSize,
+      0.6,
+      2,
+      ALL_DEFAULT_SETTINGS.percentFontSize,
+    ),
+    percentGap: clampNumber(
+      searchParams.get('percentGap') ?? persistedSettings.percentGap,
+      0,
+      24,
+      ALL_DEFAULT_SETTINGS.percentGap,
+    ),
+    progressBarHeight: clampNumber(
+      searchParams.get('progressBarHeight') ?? persistedSettings.progressBarHeight,
+      4,
+      24,
+      ALL_DEFAULT_SETTINGS.progressBarHeight,
+    ),
     perimeterThickness: clampNumber(
       searchParams.get('perimeterThickness') ?? persistedSettings.perimeterThickness,
       2,

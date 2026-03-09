@@ -108,15 +108,26 @@ const DaysCard = ({ countdownDays, daysLabel, daysFontSize, width, height, prima
   );
 };
 
-const PercentCard = ({ percentageLabel, percentage, width, height, primaryColor, textToneColor }) => {
+const PercentCard = ({
+  percentageLabel,
+  percentage,
+  width,
+  height,
+  primaryColor,
+  textToneColor,
+  percentFontSize,
+  percentGap,
+  progressBarHeight,
+}) => {
   const cardSurface = getCardSurface(primaryColor, textToneColor);
   const base = Math.min(width, height);
   const horizontalPadding = clamp(base * 0.12, 14, 24);
   const verticalPadding = clamp(base * 0.1, 12, 20);
   const radius = clamp(base * 0.18, 18, 28);
-  const percentageFontSize = clamp(base * (percentageLabel.length > 6 ? 0.18 : 0.21), 18, 60);
-  const labelSize = clamp(percentageFontSize * 0.22, 10, 18);
-  const progressBarHeight = clamp(height * 0.09, 6, 16);
+  const percentageSize = clamp(base * (percentageLabel.length > 6 ? 0.18 : 0.21) * percentFontSize, 18, 72);
+  const labelSize = clamp(percentageSize * 0.22, 10, 18);
+  const barHeight = clamp(progressBarHeight, 4, 24);
+  const bodyGap = clamp(base * 0.08 + percentGap, 12, 40);
 
   return (
     <div
@@ -125,6 +136,7 @@ const PercentCard = ({ percentageLabel, percentage, width, height, primaryColor,
         ...cardSurface,
         borderRadius: `${radius}px`,
         padding: `${verticalPadding}px ${horizontalPadding}px`,
+        gap: `${bodyGap}px`,
       }}
     >
       <p
@@ -138,9 +150,9 @@ const PercentCard = ({ percentageLabel, percentage, width, height, primaryColor,
         Year Done
       </p>
       <span
-        className="mt-2 block overflow-hidden text-ellipsis whitespace-nowrap font-light leading-none"
+        className="block overflow-hidden text-ellipsis whitespace-nowrap font-light leading-none"
         style={{
-          fontSize: `${percentageFontSize}px`,
+          fontSize: `${percentageSize}px`,
           letterSpacing: '-0.06em',
           color: textToneColor,
         }}
@@ -148,9 +160,9 @@ const PercentCard = ({ percentageLabel, percentage, width, height, primaryColor,
         {percentageLabel}
       </span>
       <div
-        className="mt-auto overflow-hidden rounded-full"
+        className="overflow-hidden rounded-full"
         style={{
-          height: `${progressBarHeight}px`,
+          height: `${barHeight}px`,
           backgroundColor: withAlpha(textToneColor, 0.1),
         }}
       >
@@ -182,6 +194,12 @@ const AllView = ({
   daysLabel = true,
   decimals = 2,
   percentBoxSize = 'medium',
+  summaryLayout = 'auto',
+  summaryHeight = 1,
+  summaryGap = 0,
+  percentFontSize = 1,
+  percentGap = 0,
+  progressBarHeight = 12,
   perimeterThickness = 6,
   spaceTop = 0,
   spaceRight = 0,
@@ -256,29 +274,33 @@ const AllView = ({
     const aspectRatio = contentHeight > 0 ? contentWidth / contentHeight : 1;
     const isNarrow = contentWidth < 720;
     const isShort = contentHeight < 520;
-    const isStacked = topItemCount === 2 && (contentWidth < 760 || contentHeight < 560 || aspectRatio < 1.2);
-    const topGap = topItemCount > 0 ? clamp(frameMin * 0.028, 10, 24) : 0;
-    const preferredTopHeight =
+    const shouldStack =
+      topItemCount === 2 &&
+      (summaryLayout === 'stack' ||
+        (summaryLayout === 'auto' && (contentWidth < 520 || contentHeight < 260 || aspectRatio < 0.95)));
+    const topGap = topItemCount > 0 ? clamp(frameMin * 0.028 + summaryGap, 8, 40) : 0;
+    const preferredTopHeightBase =
       topItemCount === 0
         ? 0
         : topItemCount === 1
           ? clamp(contentHeight * (isShort ? 0.16 : 0.14), 68, 128)
-          : isStacked
+          : shouldStack
             ? clamp(contentHeight * (isShort ? 0.3 : 0.26), 120, 210)
             : clamp(contentHeight * (isNarrow ? 0.2 : 0.17), 82, 150);
+    const preferredTopHeight = preferredTopHeightBase * summaryHeight;
     const maxTopHeight =
       topItemCount === 0
         ? 0
         : topItemCount === 1
           ? contentHeight * 0.22
-          : isStacked
+          : shouldStack
             ? contentHeight * 0.36
             : contentHeight * 0.24;
     const topHeight = topItemCount === 0 ? 0 : Math.min(preferredTopHeight, maxTopHeight);
     const dotsTop = contentTop + topHeight + topGap;
     const dotsHeight = Math.max(0, contentHeight - topHeight - topGap);
-    const topColumns = topItemCount === 2 && !isStacked ? 2 : 1;
-    const topRows = topItemCount === 2 && isStacked ? 2 : topItemCount > 0 ? 1 : 0;
+    const topColumns = topItemCount === 2 && !shouldStack ? 2 : 1;
+    const topRows = topItemCount === 2 && shouldStack ? 2 : topItemCount > 0 ? 1 : 0;
     const percentBoxShare =
       percentBoxSize === 'small' ? 0.42 : percentBoxSize === 'large' ? 0.58 : 0.5;
     const daysBoxWidth =
@@ -318,6 +340,12 @@ const AllView = ({
     outerSize.width,
     perimeterThickness,
     percentBoxSize,
+    percentFontSize,
+    percentGap,
+    progressBarHeight,
+    summaryGap,
+    summaryHeight,
+    summaryLayout,
     showDays,
     showPercentBox,
     showPerimeter,
@@ -380,6 +408,9 @@ const AllView = ({
               height={layout.topCellHeight}
               primaryColor={primaryColor}
               textToneColor={textToneColor}
+              percentFontSize={percentFontSize}
+              percentGap={percentGap}
+              progressBarHeight={progressBarHeight}
             />
           ) : null}
         </div>
