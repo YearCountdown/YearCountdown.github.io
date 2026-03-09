@@ -6,6 +6,32 @@ import { getViewSurfacePalette } from '../../lib/viewColors';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+const getFittedProgressLabel = ({ percentage, decimals, fontSize, width, mode }) => {
+  const safeDecimals = clamp(Math.round(decimals), 0, 10);
+  const charWidthFactor = mode === 'field' ? 0.58 : 0.54;
+  const maxChars = Math.max(4, Math.floor(width / Math.max(fontSize * charWidthFactor, 1)));
+  let currentDecimals = safeDecimals;
+  let label = `${percentage.toFixed(currentDecimals)}%`;
+
+  while (currentDecimals > 0 && label.length > maxChars) {
+    currentDecimals -= 1;
+    label = `${percentage.toFixed(currentDecimals)}%`;
+  }
+
+  if (label.length > maxChars) {
+    const sliceLength = Math.max(3, maxChars - 1);
+    label = `${label.slice(0, sliceLength)}…`;
+  }
+
+  const estimatedWidth = label.length * fontSize * charWidthFactor;
+  const fitScale = estimatedWidth > width ? width / estimatedWidth : 1;
+
+  return {
+    label,
+    fontSize: Math.max(12, fontSize * fitScale),
+  };
+};
+
 const FieldTextLayers = ({ label, fontSize, width, height, progressWidth, primaryColor, alternateColor, clipId }) => {
   const palette = getViewSurfacePalette(primaryColor, alternateColor);
   const onRemaining = palette.textOnRemaining;
@@ -99,7 +125,7 @@ const LineMode = ({ width, height, percentage, label, fontSize, lineWidth, prima
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className="text-center"
+          className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-3 text-center"
           style={{
             fontSize: `${fontSize}px`,
             fontWeight: 300,
@@ -128,7 +154,7 @@ const ProgressView = ({
   alternateColor,
   textToneColor,
 }) => {
-  const { percentage, percentageLabel } = useYearProgress(decimals);
+  const { percentage } = useYearProgress(decimals);
   const { containerRef, layout } = useProgressLayout({
     mode,
     fullScreen,
@@ -137,7 +163,14 @@ const ProgressView = ({
     outerYPercent: outerY,
   });
   const textScale = fullScreen ? layout.fullScreenFontSize : layout.centeredFontSize;
-  const computedFontSize = textScale * fontSize;
+  const baseFontSize = textScale * fontSize;
+  const fittedLabel = getFittedProgressLabel({
+    percentage,
+    decimals,
+    fontSize: baseFontSize,
+    width: layout.boxWidth,
+    mode,
+  });
 
   return (
     <section ref={containerRef} className="relative h-full w-full overflow-hidden" style={{ backgroundColor: alternateColor }}>
@@ -155,8 +188,8 @@ const ProgressView = ({
             width={layout.boxWidth}
             height={layout.boxHeight}
             percentage={percentage}
-            label={percentageLabel}
-            fontSize={computedFontSize}
+            label={fittedLabel.label}
+            fontSize={fittedLabel.fontSize}
             lineWidth={lineWidth}
             primaryColor={primaryColor}
             alternateColor={alternateColor}
@@ -167,8 +200,8 @@ const ProgressView = ({
             width={layout.boxWidth}
             height={layout.boxHeight}
             percentage={percentage}
-            label={percentageLabel}
-            fontSize={computedFontSize}
+            label={fittedLabel.label}
+            fontSize={fittedLabel.fontSize}
             primaryColor={primaryColor}
             alternateColor={alternateColor}
           />

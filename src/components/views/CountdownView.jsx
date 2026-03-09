@@ -66,7 +66,7 @@ const CountdownUnit = ({ value, label, showLabels, tokens, primaryColor, alterna
       </span>
       {showLabels ? (
         <span
-          className="mt-2 uppercase"
+          className="mt-2 block max-w-full overflow-hidden text-ellipsis whitespace-nowrap uppercase"
           style={{
             fontSize: `${tokens.labelSize}px`,
             letterSpacing: `${tokens.labelTracking}em`,
@@ -100,12 +100,19 @@ const CountdownView = ({
   mode = 'all',
   frame = false,
   labels = true,
+  fontSize = 1,
   primaryColor,
   alternateColor,
   textToneColor,
 }) => {
   const countdown = useCountdown();
   const { containerRef, tokens } = useResponsiveCountdown({ mode, labels });
+  const scaledTokens = {
+    ...tokens,
+    subtitleSize: tokens.subtitleSize * fontSize,
+    numberSize: tokens.numberSize * fontSize,
+    labelSize: tokens.labelSize * fontSize,
+  };
   const modeLabel = tokens.tier === 'micro' ? SHORT_MODE_LABELS[mode] : MODE_LABELS[mode];
 
   if (mode !== 'all') {
@@ -122,11 +129,11 @@ const CountdownView = ({
         }}
       >
         <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-center">
-          <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
+          <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens: scaledTokens })}>
             <p
               className="uppercase"
               style={{
-                fontSize: `${tokens.subtitleSize}px`,
+                fontSize: `${scaledTokens.subtitleSize}px`,
                 letterSpacing: `${tokens.subtitleTracking}em`,
                 color: withAlpha(textToneColor, 0.68),
               }}
@@ -136,7 +143,7 @@ const CountdownView = ({
             <span
               className="block font-light leading-none"
               style={{
-                fontSize: `${tokens.numberSize}px`,
+                fontSize: `${scaledTokens.numberSize}px`,
                 letterSpacing: `${tokens.numberTracking}em`,
                 color: primaryColor,
               }}
@@ -145,9 +152,9 @@ const CountdownView = ({
             </span>
             {labels ? (
               <span
-                className="uppercase"
+                className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap uppercase"
                 style={{
-                  fontSize: `${tokens.labelSize}px`,
+                  fontSize: `${scaledTokens.labelSize}px`,
                   letterSpacing: `${tokens.labelTracking}em`,
                   color: withAlpha(textToneColor, 0.82),
                 }}
@@ -171,11 +178,11 @@ const CountdownView = ({
       }}
     >
       <div className="mx-auto flex h-full w-full max-w-7xl items-center justify-center">
-        <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens })}>
+        <div className="flex w-full flex-col items-center justify-center text-center" style={getShellStyle({ frame, tokens: scaledTokens })}>
           <p
             className="uppercase"
             style={{
-              fontSize: `${tokens.subtitleSize}px`,
+              fontSize: `${scaledTokens.subtitleSize}px`,
               letterSpacing: `${tokens.subtitleTracking}em`,
               color: withAlpha(textToneColor, 0.68),
             }}
@@ -194,7 +201,7 @@ const CountdownView = ({
               value={countdown.days}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.days : UNIT_LABELS.days}
               showLabels={labels}
-              tokens={tokens}
+              tokens={scaledTokens}
               primaryColor={primaryColor}
               alternateColor={withAlpha(textToneColor, 0.82)}
             />
@@ -202,7 +209,7 @@ const CountdownView = ({
               value={countdown.hours}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.hours : UNIT_LABELS.hours}
               showLabels={labels}
-              tokens={tokens}
+              tokens={scaledTokens}
               primaryColor={primaryColor}
               alternateColor={withAlpha(textToneColor, 0.82)}
             />
@@ -210,7 +217,7 @@ const CountdownView = ({
               value={countdown.minutes}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.minutes : UNIT_LABELS.minutes}
               showLabels={labels}
-              tokens={tokens}
+              tokens={scaledTokens}
               primaryColor={primaryColor}
               alternateColor={withAlpha(textToneColor, 0.82)}
             />
@@ -218,7 +225,7 @@ const CountdownView = ({
               value={countdown.seconds}
               label={tokens.useShortLabels ? SHORT_UNIT_LABELS.seconds : UNIT_LABELS.seconds}
               showLabels={labels}
-              tokens={tokens}
+              tokens={scaledTokens}
               primaryColor={primaryColor}
               alternateColor={withAlpha(textToneColor, 0.82)}
             />

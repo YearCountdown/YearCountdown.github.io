@@ -20,6 +20,18 @@ const getTier = ({ width, height, aspectRatio }) => {
   return 'balanced';
 };
 
+const shouldUseShortLabels = ({ tier, width, height, aspectRatio }) => {
+  if (tier === 'micro') {
+    return true;
+  }
+
+  if (tier === 'compact') {
+    return width <= 390 || height <= 320 || aspectRatio <= 0.88;
+  }
+
+  return false;
+};
+
 const getAllModeColumns = ({ tier, width, height, aspectRatio }) => {
   if (tier === 'micro') {
     if (width <= 170 || aspectRatio < 0.72) {
@@ -79,9 +91,10 @@ const getCountdownTokens = ({ width, height, mode, labels }) => {
   const minDimension = Math.min(safeWidth, safeHeight);
   const aspectRatio = safeWidth / safeHeight;
   const tier = getTier({ width: safeWidth, height: safeHeight, aspectRatio });
+  const useShortLabels = shouldUseShortLabels({ tier, width: safeWidth, height: safeHeight, aspectRatio });
   const frame = getFramePadding(tier, minDimension);
   const subtitleSize = clamp(minDimension * 0.034, tier === 'micro' ? 6.5 : 9, tier === 'wide' ? 13 : 12);
-  const subtitleTracking = tier === 'micro' ? 0.12 : tier === 'compact' ? 0.22 : 0.3;
+  const subtitleTracking = tier === 'micro' ? 0.12 : tier === 'compact' ? 0.18 : 0.3;
 
   if (mode !== 'all') {
     const numberSize = clamp(
@@ -101,9 +114,9 @@ const getCountdownTokens = ({ width, height, mode, labels }) => {
       stackGap: clamp(minDimension * 0.03, tier === 'micro' ? 4 : 8, tier === 'wide' ? 26 : 18),
       numberSize,
       numberTracking: tier === 'micro' ? 0.015 : tier === 'compact' ? 0.045 : 0.08,
-      labelSize: clamp(minDimension * 0.03, tier === 'micro' ? 6.5 : 9, 13),
-      labelTracking: tier === 'micro' ? 0.08 : 0.22,
-      useShortLabels: tier === 'micro',
+      labelSize: clamp(minDimension * 0.028, tier === 'micro' ? 6 : 8, 12),
+      labelTracking: useShortLabels ? 0.08 : tier === 'compact' ? 0.14 : 0.22,
+      useShortLabels,
     };
   }
 
@@ -136,9 +149,9 @@ const getCountdownTokens = ({ width, height, mode, labels }) => {
     stackGap: gap,
     numberSize,
     numberTracking: tier === 'micro' ? 0.012 : tier === 'compact' ? 0.05 : 0.08,
-    labelSize: clamp(minDimension * 0.026, tier === 'micro' ? 6 : 9, 12),
-    labelTracking: tier === 'micro' ? 0.06 : tier === 'compact' ? 0.18 : 0.24,
-    useShortLabels: tier === 'micro',
+    labelSize: clamp(minDimension * (useShortLabels ? 0.022 : 0.026), tier === 'micro' ? 5.5 : 8, 12),
+    labelTracking: useShortLabels ? 0.06 : tier === 'compact' ? 0.16 : 0.24,
+    useShortLabels,
   };
 };
 

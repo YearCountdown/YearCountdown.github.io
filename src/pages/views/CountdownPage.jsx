@@ -12,6 +12,7 @@ const CountdownPage = () => {
         mode={viewState.countdown.mode}
         frame={viewState.countdown.frame}
         labels={viewState.countdown.labels}
+        fontSize={viewState.countdown.fontSize}
         primaryColor={viewState.countdown.primary}
         alternateColor={viewState.countdown.alternate}
         textToneColor={getToneColor(resolvedTextTone)}

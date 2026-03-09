@@ -38,6 +38,15 @@ export const VIEW_SETTINGS_CONFIG = {
         trueLabel: 'Show',
         falseLabel: 'Hide',
       },
+      {
+        key: 'fontSize',
+        type: 'range',
+        label: 'Font Size',
+        min: 0.6,
+        max: 2.5,
+        step: 0.1,
+        suffix: 'x',
+      },
     ],
   },
   dots: {
@@ -167,7 +176,7 @@ export const VIEW_SETTINGS_CONFIG = {
       },
       {
         key: 'decimals',
-        type: 'number',
+        type: 'range',
         label: 'Decimals',
         min: 0,
         max: 10,
@@ -226,7 +235,7 @@ export const VIEW_SETTINGS_CONFIG = {
       },
       {
         key: 'decimals',
-        type: 'number',
+        type: 'range',
         label: 'Decimals',
         min: 0,
         max: 10,
@@ -234,7 +243,7 @@ export const VIEW_SETTINGS_CONFIG = {
       },
       {
         key: 'fontSize',
-        type: 'number',
+        type: 'range',
         label: 'Font Size',
         min: 0.6,
         max: 2.5,
@@ -243,7 +252,7 @@ export const VIEW_SETTINGS_CONFIG = {
       },
       {
         key: 'lineWidth',
-        type: 'number',
+        type: 'range',
         label: 'Line Width',
         min: 2,
         max: 80,
@@ -326,6 +335,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     }
     if (viewState.labels !== COUNTDOWN_DEFAULT_SETTINGS.labels) {
       params.set('labels', String(viewState.labels));
+    }
+    if (viewState.fontSize !== COUNTDOWN_DEFAULT_SETTINGS.fontSize) {
+      params.set('fontSize', String(viewState.fontSize));
     }
   }
 
@@ -428,6 +440,7 @@ export const COUNTDOWN_DEFAULT_SETTINGS = {
   mode: 'all',
   frame: false,
   labels: true,
+  fontSize: 1,
 };
 
 export const DOTS_DEFAULT_SETTINGS = {
@@ -517,6 +530,8 @@ export const normalizeCountdownSettingValue = (key, value, theme) => {
     case 'frame':
     case 'labels':
       return value === true || value === 'true';
+    case 'fontSize':
+      return clampNumber(value, 0.6, 2.5, COUNTDOWN_DEFAULT_SETTINGS.fontSize);
     case VIEW_COLOR_SETTINGS.primary:
     case VIEW_COLOR_SETTINGS.alternate:
       return normalizeColorSettingValue(key, value, theme);
@@ -643,6 +658,12 @@ export const getCountdownSettingsFromSearchParams = (searchParams, theme, persis
         : labels === 'false' || labels === false
           ? false
           : COUNTDOWN_DEFAULT_SETTINGS.labels,
+    fontSize: clampNumber(
+      searchParams.get('fontSize') ?? persistedSettings.fontSize,
+      0.6,
+      2.5,
+      COUNTDOWN_DEFAULT_SETTINGS.fontSize,
+    ),
     ...colors,
   };
 };
