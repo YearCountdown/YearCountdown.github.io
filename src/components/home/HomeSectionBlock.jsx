@@ -174,7 +174,7 @@ export const ModeGrid = ({ items }) => {
           key={item.to}
           to={item.to}
           data-home-card
-          className="group relative overflow-hidden bg-stone-100 px-6 py-8 pr-24 transition-colors hover:bg-black/3 dark:bg-zinc-950 dark:hover:bg-white/[0.03] sm:px-8 sm:py-10 sm:pr-28"
+          className={`group relative overflow-hidden bg-stone-100 px-6 py-8 pr-24 transition-colors hover:bg-black/3 dark:bg-zinc-950 dark:hover:bg-white/[0.03] sm:px-8 sm:py-10 sm:pr-28 ${item.id === 'all' ? 'lg:col-span-2' : ''}`}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-black/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 dark:bg-white/15" />
           <ModeHoverPreview id={item.id} />

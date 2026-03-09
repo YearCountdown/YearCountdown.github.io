@@ -314,7 +314,7 @@ const Header = ({ variant = 'home' }) => {
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
               onClick={handleMenuToggle}
-              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center text-black/82 transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 md:hidden dark:text-white/82 dark:focus-visible:ring-white/40"
+              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center text-black/82 transition-opacity duration-200 hover:opacity-65 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30 min-[991px]:hidden dark:text-white/82 dark:focus-visible:ring-white/40"
             >
               <MenuIcon isOpen={isMobileMenuOpen} />
             </button>
