@@ -142,6 +142,20 @@ const ModeHoverPreview = ({ id }) => {
     );
   }
 
+  if (id === 'all') {
+    return (
+      <div className="absolute inset-y-5 right-5 flex w-16 translate-x-6 items-center justify-center opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
+        <div className="relative h-10 w-10 text-black/20 dark:text-white/20">
+          <span className="absolute inset-0 rounded-[22%] border border-current" />
+          <span className="absolute left-[20%] top-[20%] h-[0.42rem] w-[0.42rem] rounded-full bg-current" />
+          <span className="absolute left-[50%] top-[20%] h-[0.42rem] w-[0.42rem] rounded-full bg-current" />
+          <span className="absolute left-[20%] top-[50%] h-[0.42rem] w-[0.42rem] rounded-full bg-current" />
+          <span className="absolute left-[50%] top-[50%] h-[0.42rem] w-[0.42rem] rounded-full bg-current" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="absolute inset-y-5 right-5 flex w-16 translate-x-6 items-center justify-center opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
       <div className="flex h-3 w-16 overflow-hidden border border-black/20 text-black/20 dark:border-white/20 dark:text-white/20">

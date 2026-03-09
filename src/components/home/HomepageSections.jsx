@@ -1,5 +1,18 @@
+import { Link } from 'react-router-dom';
+
 import HomeSectionBlock, { ModeGrid, TwoColumnList } from './HomeSectionBlock';
 import IPhoneLockscreenVector from './IPhoneLockscreenVector';
+import { FEATURE_NAV_LINKS } from '../../lib/navigation';
+import { THEMES } from '../../lib/theme';
+import { getWallpaperUrl } from '../../lib/wallpaper';
+import {
+  ALL_DEFAULT_SETTINGS,
+  COUNTDOWN_DEFAULT_SETTINGS,
+  DOTS_DEFAULT_SETTINGS,
+  PIE_DEFAULT_SETTINGS,
+  PROGRESS_DEFAULT_SETTINGS,
+} from '../../lib/viewSettings';
+import { VIEW_BRAND_TONE_MODES } from '../../lib/viewColors';
 
 const MODE_ITEMS = [
   {
@@ -26,7 +39,152 @@ const MODE_ITEMS = [
     to: '/view/progress',
     body: 'A split-field progress surface or minimal line mode that turns the entire view into a clean reading of elapsed and remaining time.',
   },
+  {
+    id: 'all',
+    title: 'All',
+    to: '/view/all',
+    body: 'A composed view that keeps days and progress in a reserved top strip while the full lower canvas becomes a responsive dot field.',
+  },
 ];
+
+const GALLERY_ITEMS = [
+  {
+    id: 'dots-circles',
+    label: 'Dots / Circles',
+    viewId: 'dots',
+    theme: THEMES.DARK,
+    viewState: {
+      ...DOTS_DEFAULT_SETTINGS,
+      shape: 'circle',
+      gapX: 0.45,
+      gapY: 0.45,
+      inactiveOpacity: 4,
+      spaceTop: 3,
+      spaceRight: 3,
+      spaceBottom: 3,
+      spaceLeft: 3,
+      primary: '#ffffff',
+      alternate: '#000000',
+    },
+  },
+  {
+    id: 'dots-triangles',
+    label: 'Dots / Triangles',
+    viewId: 'dots',
+    theme: THEMES.DARK,
+    viewState: {
+      ...DOTS_DEFAULT_SETTINGS,
+      shape: 'triangle',
+      triangleMode: 'alternating',
+      gapX: 0.6,
+      gapY: 0.5,
+      inactiveOpacity: 7,
+      spaceTop: 4,
+      spaceRight: 4,
+      spaceBottom: 5,
+      spaceLeft: 4,
+      primary: '#34d399',
+      alternate: '#000000',
+    },
+  },
+  {
+    id: 'countdown-clean',
+    label: 'Countdown / Clean',
+    viewId: 'countdown',
+    theme: THEMES.DARK,
+    viewState: {
+      ...COUNTDOWN_DEFAULT_SETTINGS,
+      mode: 'all',
+      labels: true,
+      frame: false,
+      fontSize: 0.9,
+      spaceTop: 10,
+      spaceRight: 8,
+      spaceBottom: 8,
+      spaceLeft: 8,
+      primary: '#ffffff',
+      alternate: '#000000',
+    },
+  },
+  {
+    id: 'pie-rect',
+    label: 'Pie / Rectangle',
+    viewId: 'pie',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...PIE_DEFAULT_SETTINGS,
+      shape: 'rectangle',
+      style: 'filled',
+      fullScreen: true,
+      decimals: 1,
+      spaceTop: 4,
+      spaceRight: 4,
+      spaceBottom: 4,
+      spaceLeft: 4,
+      primary: '#ea580c',
+      alternate: '#ffffff',
+    },
+  },
+  {
+    id: 'progress-line',
+    label: 'Progress / Line',
+    viewId: 'progress',
+    theme: THEMES.LIGHT,
+    viewState: {
+      ...PROGRESS_DEFAULT_SETTINGS,
+      mode: 'line',
+      fullScreen: true,
+      decimals: 2,
+      fontSize: 0.85,
+      lineWidth: 18,
+      spaceTop: 10,
+      spaceRight: 6,
+      spaceBottom: 10,
+      spaceLeft: 6,
+      primary: '#000000',
+      alternate: '#ffffff',
+    },
+  },
+  {
+    id: 'all-composed',
+    label: 'All / Composed',
+    viewId: 'all',
+    theme: THEMES.DARK,
+    viewState: {
+      ...ALL_DEFAULT_SETTINGS,
+      dotsMode: 'days',
+      showDays: true,
+      showPercentBox: true,
+      showPerimeter: true,
+      shape: 'circle',
+      percentBoxSize: 'medium',
+      perimeterThickness: 6,
+      gapX: 0.45,
+      gapY: 0.45,
+      spaceTop: 3,
+      spaceRight: 3,
+      spaceBottom: 3,
+      spaceLeft: 3,
+      primary: '#ffffff',
+      alternate: '#000000',
+    },
+  },
+];
+
+const getGalleryWallpaper = ({ viewId, viewState, theme }) => {
+  return getWallpaperUrl({
+    viewId,
+    theme,
+    viewState,
+    colors: {
+      primary: viewState.primary,
+      alternate: viewState.alternate,
+    },
+    textToneMode: VIEW_BRAND_TONE_MODES.AUTO,
+    width: 720,
+    height: 1280,
+  });
+};
 
 const CONTROL_COLUMNS = [
   {
@@ -108,9 +266,69 @@ const HomepageSections = () => {
   return (
     <>
       <HomeSectionBlock
+        id="gallery"
+        eyebrow="Gallery"
+        title="Check out how other users are creating yearly countdown views."
+        body="A curated stream of wallpaper-ready compositions built from the same live views, embed settings, and export links used throughout the app."
+        shapeVariant="rhythm"
+      >
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.28fr)_minmax(0,0.72fr)] lg:gap-12">
+          <aside data-home-reveal className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-[0.34em] text-black/42 dark:text-white/42">View Options</p>
+              <ul className="space-y-2">
+                {FEATURE_NAV_LINKS.map((link) => (
+                  <li key={link.to} className="text-sm uppercase tracking-[0.24em] text-black/58 dark:text-white/58 sm:text-base">
+                    {link.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <p className="max-w-xs text-sm leading-7 text-black/58 dark:text-white/58 sm:text-base sm:leading-8">
+              Scroll sideways to compare different shapes, densities, and layouts. Every frame here is generated from the same
+              wallpaper export flow used in the settings gear.
+            </p>
+          </aside>
+
+          <div className="overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max snap-x snap-mandatory gap-5 sm:gap-6">
+              {GALLERY_ITEMS.map((item) => (
+                <article
+                  key={item.id}
+                  data-home-card
+                  className="group w-[18rem] shrink-0 snap-start overflow-hidden border border-black/8 bg-stone-100 transition-transform duration-300 hover:-translate-y-1 dark:border-white/8 dark:bg-zinc-950 sm:w-[20rem] lg:w-[22rem]"
+                >
+                  <Link to={`/view/${item.viewId}`} className="block">
+                    <div className="aspect-[9/16] overflow-hidden bg-black/4 dark:bg-white/[0.04]">
+                      <img
+                        src={getGalleryWallpaper(item)}
+                        alt={`${item.label} gallery preview`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between gap-4 px-5 py-4">
+                      <div>
+                        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-black/38 dark:text-white/38">Gallery</p>
+                        <h3 className="mt-2 text-lg font-light uppercase tracking-[0.06em] text-black dark:text-white sm:text-xl">
+                          {item.label}
+                        </h3>
+                      </div>
+                      <span className="text-[0.65rem] uppercase tracking-[0.26em] text-black/35 dark:text-white/35">Open</span>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </HomeSectionBlock>
+
+      <HomeSectionBlock
         id="modes"
         eyebrow="Visualization Modes"
-        title="Four readings of the same year."
+        title="Five readings of the same year."
         body="Each route reduces the same clock into a different visual system. Pick the interpretation that best matches the device, display surface, or kind of attention you want to bring to the year."
         shapeVariant="frames"
       >

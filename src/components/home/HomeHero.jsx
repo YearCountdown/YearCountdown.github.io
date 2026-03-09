@@ -107,6 +107,7 @@ const HomeHero = () => {
       { label: 'Dots', to: '/view/dots' },
       { label: 'Pie', to: '/view/pie' },
       { label: 'Progress', to: '/view/progress' },
+      { label: 'All', to: '/view/all' },
     ],
     [],
   );
