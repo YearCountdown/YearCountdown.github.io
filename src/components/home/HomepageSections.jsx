@@ -49,6 +49,23 @@ const MODE_ITEMS = [
 
 const GALLERY_ITEMS = [
   {
+    id: 'all-mint-topfield',
+    label: 'All / Mint Topfield',
+    viewId: 'all',
+    theme: THEMES.DARK,
+    viewState: {
+      ...ALL_DEFAULT_SETTINGS,
+      dotsMode: 'custom',
+      dotsCount: 365,
+      spaceTop: 55,
+      spaceRight: 10,
+      spaceBottom: 25,
+      spaceLeft: 10,
+      primary: '#34d399',
+      alternate: '#000000',
+    },
+  },
+  {
     id: 'dots-circles',
     label: 'Dots / Circles',
     viewId: 'dots',
