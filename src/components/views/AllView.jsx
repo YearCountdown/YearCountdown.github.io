@@ -277,7 +277,7 @@ const AllView = ({
     const shouldStack =
       topItemCount === 2 &&
       (summaryLayout === 'stack' ||
-        (summaryLayout === 'auto' && (contentWidth < 520 || contentHeight < 260 || aspectRatio < 0.95)));
+        (summaryLayout === 'auto' && (contentWidth < 200 || contentHeight < 170 || aspectRatio < 0.55)));
     const topGap = topItemCount > 0 ? clamp(frameMin * 0.028 + summaryGap, 8, 40) : 0;
     const preferredTopHeightBase =
       topItemCount === 0
@@ -286,7 +286,7 @@ const AllView = ({
           ? clamp(contentHeight * (isShort ? 0.16 : 0.14), 68, 128)
           : shouldStack
             ? clamp(contentHeight * (isShort ? 0.3 : 0.26), 120, 210)
-            : clamp(contentHeight * (isNarrow ? 0.2 : 0.17), 82, 150);
+            : clamp(contentHeight * (isNarrow ? 0.22 : 0.17), 96, 160);
     const preferredTopHeight = preferredTopHeightBase * summaryHeight;
     const maxTopHeight =
       topItemCount === 0
@@ -295,10 +295,10 @@ const AllView = ({
           ? contentHeight * 0.22
           : shouldStack
             ? contentHeight * 0.36
-            : contentHeight * 0.24;
+            : contentHeight * 0.28;
     const topHeight = topItemCount === 0 ? 0 : Math.min(preferredTopHeight, maxTopHeight);
     const dotsTop = contentTop + topHeight + topGap;
-    const dotsHeight = Math.max(0, contentHeight - topHeight - topGap);
+    const dotsHeight = Math.max(0, contentTop + contentHeight - dotsTop);
     const topColumns = topItemCount === 2 && !shouldStack ? 2 : 1;
     const topRows = topItemCount === 2 && shouldStack ? 2 : topItemCount > 0 ? 1 : 0;
     const percentBoxShare =
@@ -423,7 +423,7 @@ const AllView = ({
             left: `${layout.contentLeft}px`,
             top: `${layout.dotsTop}px`,
             width: `${layout.contentWidth}px`,
-            height: `${layout.dotsHeight}px`,
+            bottom: `${Math.max(0, layout.viewportHeight - (layout.contentTop + layout.contentHeight))}px`,
           }}
         >
           <DotsView
