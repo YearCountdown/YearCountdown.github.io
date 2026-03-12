@@ -1,8 +1,13 @@
 # YearCountdown
 
+|![YearCountdown](public/logo/logo-light-bg.svg)|<h1>YearCountdown</h1>|
+|-|-|
+
 A minimal web app for reading the current year in multiple visual forms.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
+[![Watch](http://www.video-thumbnail.com/youtube/BBVOtLgd258)](https://youtu.be/BBVOtLgd258)
 
 ## Live
 
