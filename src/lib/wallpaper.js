@@ -1,5 +1,6 @@
 import { getSharedViewUrl } from './viewSettings';
 import { resolveTheme } from './theme';
+import { SYSTEM_TIMEZONE, formatTimezoneOffset } from './timeMath';
 import { VIEW_BRAND_TONE_MODES, normalizeViewBrandToneMode, resolveViewColors } from './viewColors';
 
 export const WALLPAPER_BASE_URL = 'https://pageshot.site/v1/screenshot';
@@ -46,6 +47,10 @@ export const getPreferredWallpaperSize = (deviceProfile = null) => {
   };
 };
 
+const getCurrentSystemTimezoneForWallpaper = () => {
+  return formatTimezoneOffset(-new Date().getTimezoneOffset());
+};
+
 export const getWallpaperUrl = ({
   viewId,
   theme,
@@ -65,12 +70,19 @@ export const getWallpaperUrl = ({
     primary: colors?.primary ?? viewState.primary,
     alternate: colors?.alternate ?? viewState.alternate,
   });
+  const wallpaperViewState = {
+    ...viewState,
+    timezone:
+      viewState.timezone && viewState.timezone !== SYSTEM_TIMEZONE
+        ? viewState.timezone
+        : getCurrentSystemTimezoneForWallpaper(),
+  };
   const embedUrl = getSharedViewUrl({
     pathname: `/view/${viewId}`,
     origin: WALLPAPER_SOURCE_ORIGIN,
     theme: currentTheme,
     viewId,
-    viewState,
+    viewState: wallpaperViewState,
     colors: {
       primary: resolvedColors.primary,
       alternate: resolvedColors.alternate,
