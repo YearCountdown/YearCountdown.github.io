@@ -11,6 +11,7 @@ const useDotsGrid = ({
   spaceLeftPercent,
   totalDots,
   completedCount,
+  timezone,
 }) => {
   const containerRef = useRef(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
@@ -60,6 +61,7 @@ const useDotsGrid = ({
       spaceLeftPercent,
       totalDotsOverride: totalDots,
       completedCountOverride: completedCount,
+      timezone,
     });
 
     return {
@@ -82,6 +84,7 @@ const useDotsGrid = ({
     spaceRightPercent,
     spaceTopPercent,
     totalDots,
+    timezone,
   ]);
 };
 

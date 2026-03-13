@@ -100,6 +100,7 @@ const CountdownView = ({
   mode = 'all',
   frame = false,
   labels = true,
+  timezone = '',
   fontSize = 1,
   spaceTop = 0,
   spaceRight = 0,
@@ -109,7 +110,7 @@ const CountdownView = ({
   alternateColor,
   textToneColor,
 }) => {
-  const countdown = useCountdown();
+  const countdown = useCountdown(timezone);
   const { containerRef, tokens } = useResponsiveCountdown({ mode, labels });
   const spacingBase = Math.min(tokens.width, tokens.height);
   const contentPadding = {

@@ -12,6 +12,7 @@ const CountdownPage = () => {
         mode={viewState.countdown.mode}
         frame={viewState.countdown.frame}
         labels={viewState.countdown.labels}
+        timezone={viewState.countdown.timezone}
         fontSize={viewState.countdown.fontSize}
         spaceTop={viewState.countdown.spaceTop}
         spaceRight={viewState.countdown.spaceRight}

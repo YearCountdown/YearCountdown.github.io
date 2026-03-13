@@ -82,8 +82,9 @@ export const getDotsSnapshot = ({
   totalDotsOverride,
   completedCountOverride,
   nowTime = Date.now(),
+  timezone,
 }) => {
-  const { totalDays, currentDayIndex } = getYearMeta(nowTime);
+  const { totalDays, currentDayIndex } = getYearMeta(nowTime, timezone);
   const totalDots = Number.isFinite(totalDotsOverride)
     ? Math.max(1, Math.round(totalDotsOverride))
     : totalDays;

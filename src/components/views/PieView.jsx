@@ -268,6 +268,7 @@ const PieView = ({
   style = 'filled',
   fullScreen = false,
   decimals = 2,
+  timezone = '',
   spaceTop = 0,
   spaceRight = 0,
   spaceBottom = 0,
@@ -276,7 +277,7 @@ const PieView = ({
   alternateColor,
   textToneColor,
 }) => {
-  const { percentage, percentageLabel } = useYearProgress(decimals);
+  const { percentage, percentageLabel } = useYearProgress(decimals, timezone);
   const { containerRef, layout } = usePieLayout({
     shape,
     fullScreen,

@@ -155,6 +155,7 @@ const ProgressView = ({
   mode = 'field',
   fullScreen = true,
   decimals = 2,
+  timezone = '',
   fontSize = 1,
   lineWidth = 12,
   spaceTop = 0,
@@ -165,7 +166,7 @@ const ProgressView = ({
   alternateColor,
   textToneColor,
 }) => {
-  const { percentage } = useYearProgress(decimals);
+  const { percentage } = useYearProgress(decimals, timezone);
   const { containerRef, layout } = useProgressLayout({
     mode,
     fullScreen,

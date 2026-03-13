@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { SECOND, getCountdownSnapshot, getCountdownTarget } from '../lib/timeMath';
+import { SECOND, getCountdownSnapshot } from '../lib/timeMath';
 
-const useCountdown = () => {
-  const [target] = useState(() => getCountdownTarget());
+const useCountdown = (timezone) => {
   const [nowTime, setNowTime] = useState(() => Date.now());
 
   useEffect(() => {
@@ -18,10 +17,9 @@ const useCountdown = () => {
 
   return useMemo(() => {
     return {
-      ...getCountdownSnapshot(nowTime),
-      target,
+      ...getCountdownSnapshot(nowTime, timezone),
     };
-  }, [nowTime, target]);
+  }, [nowTime, timezone]);
 };
 
 export default useCountdown;

@@ -74,6 +74,7 @@ Examples:
 - View appearance is query-driven for sharing and embed links
 - View settings are also persisted locally via cookies
 - When a view is opened, the site theme follows that view unless an explicit `theme` query param is present
+- Views can optionally override runtime time with a `timezone` setting such as `UTC+4`
 
 ## View Notes
 
@@ -81,7 +82,7 @@ Examples:
 
 - Live countdown to the next January 1
 - Responsive multi-unit layout
-- Settings include display mode, frame, and labels
+- Settings include display mode, timezone, frame, and labels
 
 ### Dots
 
@@ -117,7 +118,13 @@ Examples:
   - theme
   - primary and secondary colors
   - text tone
+  - optional timezone override
   - requested image width and height
+- Accepted timezone format:
+  - `UTC±H`
+  - optional minutes such as `UTC+5:30`
+- Blank timezone uses runtime local time
+- Invalid timezone values fall back to `UTC+0`
 - Intended use:
   - iPhone Shortcuts
   - direct image fetching

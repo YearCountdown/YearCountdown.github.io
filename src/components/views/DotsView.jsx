@@ -69,6 +69,7 @@ const DotsView = ({
   shape = 'circle',
   triangleMode = 'upright',
   triangleAngle = 0,
+  timezone = '',
   gapX = 0.5,
   gapY = 0.5,
   spaceTop = 0,
@@ -90,6 +91,7 @@ const DotsView = ({
     spaceLeftPercent: spaceLeft,
     totalDots,
     completedCount,
+    timezone,
   });
 
   return (
