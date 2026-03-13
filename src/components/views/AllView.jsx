@@ -184,6 +184,7 @@ const AllView = ({
   showDays = true,
   showPercentBox = true,
   showPerimeter = true,
+  timezone = '',
   shape = 'circle',
   triangleMode = 'alternating',
   triangleAngle = 0,
@@ -211,8 +212,8 @@ const AllView = ({
 }) => {
   const outerRef = useRef(null);
   const [outerSize, setOuterSize] = useState({ width: 0, height: 0 });
-  const countdown = useCountdown();
-  const progress = useYearProgress(decimals);
+  const countdown = useCountdown(timezone);
+  const progress = useYearProgress(decimals, timezone);
   const totalDots = dotsMode === 'custom' ? dotsCount : undefined;
   const completedDots =
     dotsMode === 'custom' ? Math.round((progress.percentage / 100) * Math.max(1, dotsCount)) : undefined;
@@ -430,6 +431,7 @@ const AllView = ({
             shape={shape}
             triangleMode={triangleMode}
             triangleAngle={triangleAngle}
+            timezone={timezone}
             gapX={gapX}
             gapY={gapY}
             spaceTop={0}

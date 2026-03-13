@@ -33,6 +33,7 @@ Deploy targets:
   - `/samples`
 - Per-view settings with shareable embed URLs
 - Direct PageShot wallpaper URLs for Shortcuts and lock-screen automation
+- Optional timezone override for shared views and wallpapers
 - Theme-aware homepage and embed-friendly views
 - GitHub Pages and Vercel deployment support
 
@@ -46,6 +47,20 @@ npm run dev
 ## Documentation
 
 See [docs/README.md](./docs/README.md) for full documentation.
+
+## Timezone Override
+
+Views can optionally pin their clock to a UTC offset by setting `timezone` in the query string or gear panel.
+
+Example:
+
+```text
+/view/countdown?timezone=UTC+4
+```
+
+- Accepted format: `UTC±H` with optional minutes such as `UTC+5:30`
+- Leave it blank to keep the runtime's local/system time
+- Invalid values fall back to `UTC+0`
 
 ## Contributing
 

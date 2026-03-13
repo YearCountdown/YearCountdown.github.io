@@ -11,6 +11,7 @@ const DotsPage = () => {
         shape={viewState.dots.shape}
         triangleMode={viewState.dots.triangleMode}
         triangleAngle={viewState.dots.triangleAngle}
+        timezone={viewState.dots.timezone}
         gapX={viewState.dots.gapX}
         gapY={viewState.dots.gapY}
         inactiveOpacity={viewState.dots.inactiveOpacity}

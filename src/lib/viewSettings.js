@@ -1,12 +1,25 @@
 import { NAV_LINKS } from './navigation';
 import { THEMES, resolveTheme } from './theme';
-import { getYearMeta } from './timeMath';
+import {
+  INVALID_TIMEZONE_FALLBACK,
+  SYSTEM_TIMEZONE,
+  getYearMeta,
+  normalizeTimezoneSetting,
+} from './timeMath';
 import {
   VIEW_BRAND_TONE_MODES,
   getDefaultViewColors,
   normalizeViewBrandToneMode,
   resolveViewColors,
 } from './viewColors';
+
+const TIMEZONE_CONTROL = {
+  key: 'timezone',
+  type: 'text',
+  label: 'Timezone',
+  placeholder: 'System or UTC+0',
+  hint: 'UTC+4',
+};
 
 export const VIEW_SETTINGS_CONFIG = {
   countdown: {
@@ -25,6 +38,7 @@ export const VIEW_SETTINGS_CONFIG = {
           { label: 'Seconds', value: 'seconds' },
         ],
       },
+      TIMEZONE_CONTROL,
       {
         key: 'frame',
         type: 'boolean',
@@ -71,6 +85,7 @@ export const VIEW_SETTINGS_CONFIG = {
           { label: 'Triangle', value: 'triangle' },
         ],
       },
+      TIMEZONE_CONTROL,
       {
         key: 'triangleMode',
         type: 'select',
@@ -144,6 +159,7 @@ export const VIEW_SETTINGS_CONFIG = {
           { label: 'Rectangle', value: 'rectangle' },
         ],
       },
+      TIMEZONE_CONTROL,
       {
         key: 'style',
         type: 'select',
@@ -190,6 +206,7 @@ export const VIEW_SETTINGS_CONFIG = {
           { label: 'Line', value: 'line' },
         ],
       },
+      TIMEZONE_CONTROL,
       {
         key: 'fullScreen',
         type: 'boolean',
@@ -246,6 +263,7 @@ export const VIEW_SETTINGS_CONFIG = {
           { label: 'Custom', value: 'custom' },
         ],
       },
+      TIMEZONE_CONTROL,
       {
         key: 'dotsCount',
         type: 'number',
@@ -491,6 +509,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.mode !== COUNTDOWN_DEFAULT_SETTINGS.mode) {
       params.set('mode', viewState.mode);
     }
+    if (viewState.timezone !== COUNTDOWN_DEFAULT_SETTINGS.timezone) {
+      params.set('timezone', viewState.timezone);
+    }
     if (viewState.frame !== COUNTDOWN_DEFAULT_SETTINGS.frame) {
       params.set('frame', String(viewState.frame));
     }
@@ -517,6 +538,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
   if (viewId === 'dots' && viewState) {
     if (viewState.shape !== DOTS_DEFAULT_SETTINGS.shape) {
       params.set('shape', viewState.shape);
+    }
+    if (viewState.timezone !== DOTS_DEFAULT_SETTINGS.timezone) {
+      params.set('timezone', viewState.timezone);
     }
     if (viewState.triangleMode !== DOTS_DEFAULT_SETTINGS.triangleMode) {
       params.set('triangleMode', viewState.triangleMode);
@@ -551,6 +575,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
     if (viewState.shape !== PIE_DEFAULT_SETTINGS.shape) {
       params.set('shape', viewState.shape);
     }
+    if (viewState.timezone !== PIE_DEFAULT_SETTINGS.timezone) {
+      params.set('timezone', viewState.timezone);
+    }
     if (viewState.style !== PIE_DEFAULT_SETTINGS.style) {
       params.set('style', viewState.style);
     }
@@ -577,6 +604,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
   if (viewId === 'progress' && viewState) {
     if (viewState.mode !== PROGRESS_DEFAULT_SETTINGS.mode) {
       params.set('mode', viewState.mode);
+    }
+    if (viewState.timezone !== PROGRESS_DEFAULT_SETTINGS.timezone) {
+      params.set('timezone', viewState.timezone);
     }
     if (viewState.fullScreen !== PROGRESS_DEFAULT_SETTINGS.fullScreen) {
       params.set('fullScreen', String(viewState.fullScreen));
@@ -607,6 +637,9 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
   if (viewId === 'all' && viewState) {
     if (viewState.dotsMode !== ALL_DEFAULT_SETTINGS.dotsMode) {
       params.set('dotsMode', viewState.dotsMode);
+    }
+    if (viewState.timezone !== ALL_DEFAULT_SETTINGS.timezone) {
+      params.set('timezone', viewState.timezone);
     }
     if (viewState.dotsMode === 'custom' && viewState.dotsCount !== ALL_DEFAULT_SETTINGS.dotsCount) {
       params.set('dotsCount', String(viewState.dotsCount));
@@ -701,6 +734,7 @@ export const getSharedViewUrl = ({ pathname, origin, theme, viewId, viewState, c
 
 export const COUNTDOWN_DEFAULT_SETTINGS = {
   mode: 'all',
+  timezone: SYSTEM_TIMEZONE,
   frame: false,
   labels: true,
   fontSize: 1,
@@ -712,6 +746,7 @@ export const COUNTDOWN_DEFAULT_SETTINGS = {
 
 export const DOTS_DEFAULT_SETTINGS = {
   shape: 'circle',
+  timezone: SYSTEM_TIMEZONE,
   triangleMode: 'upright',
   triangleAngle: 0,
   gapX: 0.5,
@@ -725,6 +760,7 @@ export const DOTS_DEFAULT_SETTINGS = {
 
 export const PIE_DEFAULT_SETTINGS = {
   shape: 'circle',
+  timezone: SYSTEM_TIMEZONE,
   style: 'filled',
   fullScreen: false,
   decimals: 2,
@@ -736,6 +772,7 @@ export const PIE_DEFAULT_SETTINGS = {
 
 export const PROGRESS_DEFAULT_SETTINGS = {
   mode: 'field',
+  timezone: SYSTEM_TIMEZONE,
   fullScreen: true,
   decimals: 2,
   fontSize: 1,
@@ -749,6 +786,7 @@ export const PROGRESS_DEFAULT_SETTINGS = {
 export const ALL_DEFAULT_SETTINGS = {
   dotsMode: 'days',
   dotsCount: 365,
+  timezone: SYSTEM_TIMEZONE,
   showDays: true,
   showPercentBox: true,
   showPerimeter: true,
@@ -797,6 +835,25 @@ const clampNumber = (value, min, max, fallback) => {
   }
 
   return Math.min(max, Math.max(min, parsed));
+};
+
+const normalizeTimezonePreference = (value, fallback = SYSTEM_TIMEZONE) => {
+  if (value === undefined || value === null) {
+    return fallback;
+  }
+
+  if (typeof value === 'string' && !value.trim()) {
+    return fallback;
+  }
+
+  return normalizeTimezoneSetting(value, INVALID_TIMEZONE_FALLBACK);
+};
+
+const getResolvedTimezoneSetting = (searchParams, persistedSettings, defaults) => {
+  return normalizeTimezonePreference(
+    searchParams.get('timezone') ?? persistedSettings.timezone,
+    defaults.timezone,
+  );
 };
 
 const getResolvedColorSettings = (searchParams, theme, fallbackColors) => {
@@ -881,6 +938,8 @@ export const normalizeCountdownSettingValue = (key, value, theme) => {
   switch (key) {
     case 'mode':
       return ['all', 'days', 'hours', 'minutes', 'seconds'].includes(value) ? value : COUNTDOWN_DEFAULT_SETTINGS.mode;
+    case 'timezone':
+      return normalizeTimezonePreference(value, COUNTDOWN_DEFAULT_SETTINGS.timezone);
     case 'frame':
     case 'labels':
       return value === true || value === 'true';
@@ -903,6 +962,8 @@ export const normalizeDotsSettingValue = (key, value) => {
   switch (key) {
     case 'shape':
       return ['circle', 'square', 'triangle'].includes(value) ? value : DOTS_DEFAULT_SETTINGS.shape;
+    case 'timezone':
+      return normalizeTimezonePreference(value, DOTS_DEFAULT_SETTINGS.timezone);
     case 'triangleMode':
       return ['upright', 'inverted', 'alternating', 'angle'].includes(value)
         ? value
@@ -938,6 +999,8 @@ export const normalizePieSettingValue = (key, value) => {
   switch (key) {
     case 'shape':
       return ['circle', 'rectangle'].includes(value) ? value : PIE_DEFAULT_SETTINGS.shape;
+    case 'timezone':
+      return normalizeTimezonePreference(value, PIE_DEFAULT_SETTINGS.timezone);
     case 'style':
       return ['filled', 'outline'].includes(value) ? value : PIE_DEFAULT_SETTINGS.style;
     case 'fullScreen':
@@ -966,6 +1029,8 @@ export const normalizeProgressSettingValue = (key, value) => {
   switch (key) {
     case 'mode':
       return ['field', 'line'].includes(value) ? value : PROGRESS_DEFAULT_SETTINGS.mode;
+    case 'timezone':
+      return normalizeTimezonePreference(value, PROGRESS_DEFAULT_SETTINGS.timezone);
     case 'fullScreen':
       return value === true || value === 'true';
     case 'decimals':
@@ -996,6 +1061,8 @@ export const normalizeAllSettingValue = (key, value) => {
   switch (key) {
     case 'dotsMode':
       return ['days', 'custom'].includes(value) ? value : ALL_DEFAULT_SETTINGS.dotsMode;
+    case 'timezone':
+      return normalizeTimezonePreference(value, ALL_DEFAULT_SETTINGS.timezone);
     case 'dotsCount':
       return clampNumber(value, 1, 2000, ALL_DEFAULT_SETTINGS.dotsCount);
     case 'showDays':
@@ -1062,11 +1129,13 @@ export const getCountdownSettingsFromSearchParams = (searchParams, theme, persis
   const labels = searchParams.get('labels') ?? persistedSettings.labels;
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
   const spacing = getLegacySideSpacing(searchParams, persistedSettings, COUNTDOWN_DEFAULT_SETTINGS);
+  const timezone = getResolvedTimezoneSetting(searchParams, persistedSettings, COUNTDOWN_DEFAULT_SETTINGS);
 
   return {
     mode: ['all', 'days', 'hours', 'minutes', 'seconds'].includes(mode)
       ? mode
       : COUNTDOWN_DEFAULT_SETTINGS.mode,
+    timezone,
     frame:
       frame === 'true' || frame === true
         ? true
@@ -1096,9 +1165,11 @@ export const getDotsSettingsFromSearchParams = (searchParams, theme, persistedSe
   const legacyGap = searchParams.get('gap');
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
   const spacing = getLegacySideSpacing(searchParams, persistedSettings, DOTS_DEFAULT_SETTINGS);
+  const timezone = getResolvedTimezoneSetting(searchParams, persistedSettings, DOTS_DEFAULT_SETTINGS);
 
   return {
     shape: ['circle', 'square', 'triangle'].includes(shape) ? shape : DOTS_DEFAULT_SETTINGS.shape,
+    timezone,
     triangleMode: ['upright', 'inverted', 'alternating', 'angle'].includes(triangleMode)
       ? triangleMode
       : DOTS_DEFAULT_SETTINGS.triangleMode,
@@ -1137,9 +1208,11 @@ export const getPieSettingsFromSearchParams = (searchParams, theme, persistedSet
   const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
   const spacing = getLegacySideSpacing(searchParams, persistedSettings, PIE_DEFAULT_SETTINGS);
+  const timezone = getResolvedTimezoneSetting(searchParams, persistedSettings, PIE_DEFAULT_SETTINGS);
 
   return {
     shape: ['circle', 'rectangle'].includes(shape) ? shape : PIE_DEFAULT_SETTINGS.shape,
+    timezone,
     style: ['filled', 'outline'].includes(style) ? style : PIE_DEFAULT_SETTINGS.style,
     fullScreen:
       fullScreen === 'true' || fullScreen === true
@@ -1163,9 +1236,11 @@ export const getProgressSettingsFromSearchParams = (searchParams, theme, persist
   const fullScreen = searchParams.get('fullScreen') ?? persistedSettings.fullScreen;
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
   const spacing = getLegacySideSpacing(searchParams, persistedSettings, PROGRESS_DEFAULT_SETTINGS);
+  const timezone = getResolvedTimezoneSetting(searchParams, persistedSettings, PROGRESS_DEFAULT_SETTINGS);
 
   return {
     mode: ['field', 'line'].includes(mode) ? mode : PROGRESS_DEFAULT_SETTINGS.mode,
+    timezone,
     fullScreen:
       fullScreen === 'true' || fullScreen === true
         ? true
@@ -1201,7 +1276,8 @@ export const getAllSettingsFromSearchParams = (searchParams, theme, persistedSet
   const legacyGap = searchParams.get('gap');
   const colors = getResolvedColorSettings(searchParams, theme, fallbackColors);
   const spacing = getLegacySideSpacing(searchParams, persistedSettings, ALL_DEFAULT_SETTINGS);
-  const { totalDays } = getYearMeta();
+  const timezone = getResolvedTimezoneSetting(searchParams, persistedSettings, ALL_DEFAULT_SETTINGS);
+  const { totalDays } = getYearMeta(Date.now(), timezone);
   const defaultDotsCount = dotsMode === 'custom' ? ALL_DEFAULT_SETTINGS.dotsCount : totalDays;
 
   return {
@@ -1212,6 +1288,7 @@ export const getAllSettingsFromSearchParams = (searchParams, theme, persistedSet
       2000,
       defaultDotsCount,
     ),
+    timezone,
     showDays:
       searchParams.get('showDays') === 'true' || persistedSettings.showDays === true
         ? true

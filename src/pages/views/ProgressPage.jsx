@@ -19,6 +19,7 @@ const ProgressPage = () => {
         mode={mode}
         fullScreen={fullScreen}
         decimals={decimals}
+        timezone={viewState.progress.timezone}
         fontSize={fontSize}
         lineWidth={lineWidth}
         spaceTop={spaceTop}

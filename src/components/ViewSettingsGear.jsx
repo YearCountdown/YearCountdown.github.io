@@ -57,6 +57,57 @@ const renderNumberControl = ({ control, value, viewId, updateViewSetting }) => {
   );
 };
 
+const TextSettingInput = ({ control, value, viewId, updateViewSetting }) => {
+  const [draftValue, setDraftValue] = useState(value ?? '');
+
+  const commitValue = () => {
+    updateViewSetting(viewId, control.key, draftValue);
+  };
+
+  return (
+    <input
+      type="text"
+      value={draftValue}
+      placeholder={control.placeholder ?? ''}
+      onChange={(event) => setDraftValue(event.target.value)}
+      onBlur={commitValue}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.currentTarget.blur();
+        }
+
+        if (event.key === 'Escape') {
+          setDraftValue(value ?? '');
+          event.currentTarget.blur();
+        }
+      }}
+      className="w-full rounded-2xl border border-black/10 bg-transparent px-4 py-3 text-sm text-black outline-none transition-colors focus:border-black/25 dark:border-white/10 dark:text-white dark:focus:border-white/25"
+    />
+  );
+};
+
+const renderTextControl = ({ control, value, viewId, updateViewSetting }) => {
+  return (
+    <div key={control.key}>
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="text-[0.65rem] uppercase tracking-[0.24em] text-black/40 dark:text-white/40">
+          {control.label}
+        </p>
+        <span className="shrink-0 text-xs text-black/45 dark:text-white/45">
+          {value || 'System'}
+        </span>
+      </div>
+      <TextSettingInput
+        key={`${control.key}-${value ?? ''}`}
+        control={control}
+        value={value}
+        viewId={viewId}
+        updateViewSetting={updateViewSetting}
+      />
+    </div>
+  );
+};
+
 const getSpacingHelperValue = (state, key) => {
   if (!state) {
     return '';
@@ -330,6 +381,10 @@ const renderControl = ({ control, viewId, viewState, updateViewSetting }) => {
 
   if (control.type === 'number') {
     return renderNumberControl({ control, value, viewId, updateViewSetting });
+  }
+
+  if (control.type === 'text') {
+    return renderTextControl({ control, value, viewId, updateViewSetting });
   }
 
   if (control.type === 'spacing-helper') {

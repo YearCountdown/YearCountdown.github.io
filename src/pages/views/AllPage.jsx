@@ -13,6 +13,7 @@ const AllPage = () => {
         showDays={viewState.all.showDays}
         showPercentBox={viewState.all.showPercentBox}
         showPerimeter={viewState.all.showPerimeter}
+        timezone={viewState.all.timezone}
         shape={viewState.all.shape}
         triangleMode={viewState.all.triangleMode}
         triangleAngle={viewState.all.triangleAngle}

@@ -20,6 +20,7 @@ const PiePage = () => {
         style={style}
         fullScreen={fullScreen}
         decimals={decimals}
+        timezone={viewState.pie.timezone}
         spaceTop={spaceTop}
         spaceRight={spaceRight}
         spaceBottom={spaceBottom}

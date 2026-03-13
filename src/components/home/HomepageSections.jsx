@@ -95,7 +95,7 @@ const getGalleryPreviewUrl = ({ id, viewId, viewState, theme }) => {
   params.set('_gallery', id);
 
   Object.entries(viewState).forEach(([key, value]) => {
-    if (value === undefined || value === null || typeof value === 'object') {
+    if (value === undefined || value === null || value === '' || typeof value === 'object') {
       return;
     }
 

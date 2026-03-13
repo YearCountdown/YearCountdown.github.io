@@ -61,6 +61,7 @@ npm install
 - appearance controls are managed from the view gear
 - copied embed links preserve the active view configuration
 - copied wallpaper URLs preserve the active view configuration plus requested image size
+- view time can be pinned with `timezone=UTC+4` or another UTC offset
 - embed-specific shell flags:
   - `embed=true` removes shell chrome
   - `logo=false` hides the embed corner logo

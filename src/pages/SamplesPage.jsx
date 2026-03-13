@@ -154,6 +154,7 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
         mode={viewState.mode}
         frame={viewState.frame}
         labels={viewState.labels}
+        timezone={viewState.timezone}
         fontSize={viewState.fontSize}
         spaceTop={viewState.spaceTop}
         spaceRight={viewState.spaceRight}
@@ -172,6 +173,7 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
         shape={viewState.shape}
         triangleMode={viewState.triangleMode}
         triangleAngle={viewState.triangleAngle}
+        timezone={viewState.timezone}
         gapX={viewState.gapX}
         gapY={viewState.gapY}
         inactiveOpacity={viewState.inactiveOpacity}
@@ -192,6 +194,7 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
         style={viewState.style}
         fullScreen={viewState.fullScreen}
         decimals={viewState.decimals}
+        timezone={viewState.timezone}
         spaceTop={viewState.spaceTop}
         spaceRight={viewState.spaceRight}
         spaceBottom={viewState.spaceBottom}
@@ -209,6 +212,7 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
         mode={viewState.mode}
         fullScreen={viewState.fullScreen}
         decimals={viewState.decimals}
+        timezone={viewState.timezone}
         fontSize={viewState.fontSize}
         lineWidth={viewState.lineWidth}
         spaceTop={viewState.spaceTop}
@@ -229,6 +233,7 @@ const renderSampleView = ({ viewId, viewState, textTone }) => {
       showDays={viewState.showDays}
       showPercentBox={viewState.showPercentBox}
       showPerimeter={viewState.showPerimeter}
+      timezone={viewState.timezone}
       shape={viewState.shape}
       triangleMode={viewState.triangleMode}
       triangleAngle={viewState.triangleAngle}
